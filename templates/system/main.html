@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}资产概况总览{% endblock %}
+
+{% block css %}
+<link href="{% static  "system/css/main.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-3">
+            <div id="sum"></div>
+        </div>
+        <div class="col-md-3">
+            <div id="confed"></div>
+
+        </div>
+        <div class="col-md-3">
+            <div id="free"></div>
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+ 	<script type="text/javascript">
+
+	</script>
+{% endblock %}

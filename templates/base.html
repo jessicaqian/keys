@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{% block title %}{% endblock %}</title>
+	<link href="{% static "bootstrap-3.3.7-dist/css/bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static  "system/css/base.css" %}" rel="stylesheet">
+    <link rel="shortcut icon" href="#" />
+    {% block css %}{% endblock %}
+	<script src="{% static "jquery-1.9.1/jquery.min.js" %}"></script>
+	<script src="{% static "bootstrap-3.3.7-dist/js/bootstrap.min.js" %}"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div id="title">
+            <p>中控服务器管理平台</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="nav_bar" id="main"><a href="main.html">
+                    <span class="glyphicon glyphicon-stats" aria-hidden="true"></span> 资产概况总览</a>
+                </li>
+                <li role="presentation" class="nav_bar" id="edit"><a href="#">
+                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 设备管理配置</a>
+                </li>
+                <li role="presentation" class="nav_bar" id="usr"><a href="#">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span> 用户账户管理</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+
+{% block js %}{% endblock %}
+</body>
+</html>

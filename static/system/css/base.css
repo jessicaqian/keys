@@ -1,0 +1,21 @@
+div#title{
+    height:70px;
+    background-color:#79aec8 ;
+    margin-bottom: 15px;
+    color: white;
+    font-size: 24px;
+    padding: 15px;
+
+}
+
+li.nav_bar{
+    border-left:solid 5px #337ab7;
+    margin-bottom: 10px;
+    padding-left: 5px;
+}
+
+li.nav_bar:hover{
+    border-color: #23527c;
+}
+
+
