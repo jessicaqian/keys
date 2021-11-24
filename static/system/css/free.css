@@ -1,0 +1,31 @@
+li#edit{
+    border-color: #23527c;
+}
+
+li#edit>a{
+    text-decoration: none;
+    background-color: #eee;
+    color: #23527c;
+}
+
+li#dev_free > a{
+    color: #efb041;
+    padding-left: 30px;
+}
+
+div#free_table{
+    margin-top: 30px;
+}
+
+a.config{
+    font-size: 18px;
+    padding: 0px 5px;
+}
+
+td,th{
+    text-align: center;
+}
+
+div#search_bar{
+    margin-top: 20px;
+}

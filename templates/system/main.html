@@ -9,18 +9,27 @@
 {% endblock %}
 
 {% block content %}
+    <div class="row"><label class="head">资产概况总览&nbsp&nbsp&nbsp&nbsp</label></div>
     <div class="row">
-        <div class="col-md-3">
-            <div id="sum"></div>
+        <div class="col-md-3 col-md-offset-1">
+            <div id="sum">
+                <label class="calc-title">多KEY资源池</label><br>
+                <label class="calc-num">48</label>
+            </div>
         </div>
         <div class="col-md-3">
-            <div id="confed"></div>
-
+            <div id="confed">
+                <label class="calc-title">已配置多KEY数</label><br>
+                <label class="calc-num">0</label>
+            </div>
         </div>
         <div class="col-md-3">
-            <div id="free"></div>
+            <div id="free">
+                <label class="calc-title">未配置多KEY数</label><br>
+                <label class="calc-num">48</label>
+            </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
 
         </div>
     </div>

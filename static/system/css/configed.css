@@ -1,0 +1,14 @@
+li#edit{
+    border-color: #23527c;
+}
+
+li#edit>a{
+    text-decoration: none;
+    background-color: #eee;
+    color: #23527c;
+}
+
+li#dev_configed > a{
+    color: #efb041;
+    padding-left: 30px;
+}

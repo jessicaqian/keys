@@ -9,26 +9,42 @@ li#main>a{
 }
 
 div#sum{
-    height: 150px;
-    width: 150px;
+    height: 140px;
+    width: 140px;
     background-color: #337ab7;
     margin: 30px auto 30px auto;
     border-radius: 8px;
+    text-align: center;
 }
 
 div#free{
-    height: 150px;
-    width: 150px;
+    height: 140px;
+    width: 140px;
     background-color: #f0ad4e;
     margin: 30px auto 30px auto;
     border-radius: 8px;
+    text-align: center;
 }
 
 div#confed{
-    height: 150px;
-    width: 150px;
+    height: 140px;
+    width: 140px;
     background-color: #5cb85c;
     margin: 30px auto 30px auto;
     border-radius: 8px;
+    text-align: center;
 }
 
+label.calc-title{
+    font-size: 18px;
+    color: white;
+    margin: 20px 0px 10px 0px;
+    font-weight: 500;
+}
+
+label.calc-num{
+    font-size: 50px;
+    color: white;
+    font-weight: 500;
+
+}

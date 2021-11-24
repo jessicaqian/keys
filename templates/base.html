@@ -25,8 +25,19 @@
                 <li role="presentation" class="nav_bar" id="main"><a href="main.html">
                     <span class="glyphicon glyphicon-stats" aria-hidden="true"></span> 资产概况总览</a>
                 </li>
-                <li role="presentation" class="nav_bar" id="edit"><a href="#">
+                <li role="presentation" class="nav_bar" id="edit">
+                    <a id="flow" role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 设备管理配置</a>
+                    <div class="collapse" id="collapseExample">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li role="presentation" class="nav_bar_inner" id="dev_configed"><a href="configed.html">
+                                <span class="glyphicon glyphicon-saved" aria-hidden="true"></span> 管理已配置设备</a>
+                            </li>
+                            <li role="presentation" class="nav_bar_inner" id="dev_free"><a href="free.html">
+                                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> 新增设备配置</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li role="presentation" class="nav_bar" id="usr"><a href="#">
                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span> 用户账户管理</a>
@@ -43,3 +54,5 @@
 {% block js %}{% endblock %}
 </body>
 </html>
+
+

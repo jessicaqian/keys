@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}已配置设备{% endblock %}
+
+{% block css %}
+<link href="{% static  "system/css/configed.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="row list" id="tips">
+    <div id="search">
+        <input type="text" placeholder="搜索" id="search_info">
+        <button class="btn btn-primary" id="search_button">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
+    </div>
+    <table class="table table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>文件名</th>
+                <th class="scan">浏览</th>
+                <th class="download">下载</th>
+                <th class="delete">删除</th>
+            </tr>
+        </thead>
+    <tbody>
+
+        <tr id="id{{ forloop.counter }}">
+            <td>{{ forloop.counter }}</td>
+            <td id="id_{{ forloop.counter }}">{{list}}</td>
+
+
+            <td class="scan">
+                <a class="btn" href="/system/reporterAction.html?no={{ forloop.counter }}&action=scan">
+                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </a>
+            </td>
+            <td class="download">
+                <a class="btn download" href="/system/reporterAction.html?no={{ forloop.counter }}&action=download" name="{{list}}">
+                    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                </a>
+            </td>
+            <td class="delete">
+                <a class="btn" href="/system/reporterAction.html?no={{ forloop.counter }}&action=delete">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </a>
+            </td>
+        </tr>
+
+
+    </tbody>
+    </table>
+</div>
+
+
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $('a#flow').attr('aria-expanded','true');
+    $('div#collapseExample').attr('class','collapse in');
+
+
+</script>
+{% endblock %}

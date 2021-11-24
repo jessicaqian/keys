@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}未配置设备{% endblock %}
+
+{% block css %}
+<link href="{% static  "system/css/free.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="row"><label class="head">新增设备配置&nbsp&nbsp&nbsp&nbsp</label></div>
+<div class="row" id="search_bar">
+    <div class="col-md-2 col-md-offset-1">
+        <label>可用输入接口列表</label>
+
+    </div>
+    <div class="col-md-9">
+        <input type="text" placeholder="搜索" id="search_info">
+        <button class="btn btn-primary" id="search_button">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 按名称搜索</button>
+    </div>
+</div>
+<div class="row" id="free_table">
+    <div class="col-md-8 col-md-offset-1">
+            <table class="table table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th class="download">绑定配置多KEY</th>
+                    </tr>
+                </thead>
+            <tbody>
+
+                <tr id="id{{ forloop.counter }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td id="id_{{ forloop.counter }}">1</td>
+
+
+                    <td class="scan">某某厅
+
+                    </td>
+                    <td class="download">
+                        <a class="btn config" href="#">
+                            <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
+                        </a>
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+            </table>
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+    $('a#flow').attr('aria-expanded','true');
+    $('div#collapseExample').attr('class','collapse in');
+
+</script>
+{% endblock %}
