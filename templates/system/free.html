@@ -21,9 +21,9 @@
         <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 按名称搜索</button>
     </div>
 </div>
-<div class="row" id="free_table">
+<div class="row" id="free_table_box">
     <div class="col-md-8 col-md-offset-1">
-            <table class="table table-hover table-condensed">
+            <table class="table table-hover table-condensed table-striped" id="free_table">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -33,15 +33,13 @@
                     </tr>
                 </thead>
             <tbody>
-
+{% for form in form %}
                 <tr id="id{{ forloop.counter }}">
                     <td>{{ forloop.counter }}</td>
-                    <td id="id_{{ forloop.counter }}">1</td>
+                    <td id="id_{{ forloop.counter }}">{{ form.0 }}</td>
 
 
-                    <td class="scan">某某厅
-
-                    </td>
+                    <td>{{ form.1 }}</td>
                     <td class="download">
                         <a class="btn config" href="#">
                             <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
@@ -50,7 +48,7 @@
 
                 </tr>
 
-
+ {% endfor %}
             </tbody>
             </table>
     </div>

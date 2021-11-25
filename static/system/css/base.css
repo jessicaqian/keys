@@ -39,3 +39,7 @@ label.head{
     margin-left: 20px;
     border-bottom: solid 2px #79aec8;
 }
+
+table.table-hover > tbody > tr:hover {
+    background-color: #d0dfea;
+}

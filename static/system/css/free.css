@@ -13,19 +13,33 @@ li#dev_free > a{
     padding-left: 30px;
 }
 
-div#free_table{
+div#free_table_box{
     margin-top: 30px;
+    height: 500px;
+    overflow-y: auto;
+
+}
+
+table#free_table>tbody>tr>td{
+    vertical-align:middle;
+
 }
 
 a.config{
-    font-size: 18px;
+    font-size: 16px;
     padding: 0px 5px;
 }
 
 td,th{
     text-align: center;
+
 }
+
 
 div#search_bar{
     margin-top: 20px;
+}
+
+td{
+    font-size: 13px;
 }
