@@ -43,3 +43,13 @@ div#search_bar{
 td{
     font-size: 13px;
 }
+
+input#search_info{
+    padding-top: 4px ;
+    padding-bottom: 6px;
+    margin-right: 10px;
+    width: 75%;
+
+
+}
+

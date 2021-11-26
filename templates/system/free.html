@@ -15,11 +15,12 @@
         <label>可用输入接口列表</label>
 
     </div>
-    <div class="col-md-9">
-        <input type="text" placeholder="搜索" id="search_info">
-        <button class="btn btn-primary" id="search_button">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 按名称搜索</button>
+    <div class="col-md-6">
+            <input type="text" placeholder="搜索" id="search_info">
+            <button class="btn btn-primary" id="search_button">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 按名称搜索</button>
     </div>
+    <div class="col-md-3"></div>
 </div>
 <div class="row" id="free_table_box">
     <div class="col-md-8 col-md-offset-1">
@@ -39,7 +40,7 @@
                     <td id="id_{{ forloop.counter }}">{{ form.0 }}</td>
 
 
-                    <td>{{ form.1 }}</td>
+                    <td id="name_{{ forloop.counter }}">{{ form.1 }}</td>
                     <td class="download">
                         <a class="btn config" href="#">
                             <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
@@ -64,6 +65,31 @@
 
     $('a#flow').attr('aria-expanded','true');
     $('div#collapseExample').attr('class','collapse in');
+    $('#search_button').click(function () {
+        var text = $('#search_info').val()
+        for(i = 1;i<={{form|length}};i++){
+            var file_name = $('#name_'+ i).text()
+            {#file_name=file_name.replace(".html","");#}
+            if (file_name.indexOf(text) == -1){
+                $('#id'+ i).attr('style','display:none')
+            }else {
+                var str = '<span style="background-color:#eec805">'+text+'</span>';
+                $('#name_'+ i).html($('#name_'+ i).text().replace(text,str));
+            }
 
+            console.log(file_name.indexOf(text))
+            console.log(file_name)
+        }
+
+    })
+    $("#search_info").blur(function () {
+        var text = $(this).val()
+        if(text == ''){
+            for(i = 1;i<={{form|length}};i++){
+                $('#id'+ i).removeAttr('style')
+                $('#id_'+ i + '>span').removeAttr('style')
+            }
+        }
+    })
 </script>
 {% endblock %}
