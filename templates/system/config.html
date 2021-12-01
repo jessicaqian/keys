@@ -5,18 +5,117 @@
 {% block title %}设备配置{% endblock %}
 
 {% block css %}
-<link href="{% static  "system/css/free.css" %}" rel="stylesheet">
+<link href="{% static  "system/css/config.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
+<div class="alert alert-danger" role="alert" id="myalter" style="display: none">
+    <button type="button" class="close" id="close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  <strong>IP地址不合法</strong> 请重新输入。
+</div>
 
+<div class="row sparse"><label class="head">设备配置&nbsp&nbsp&nbsp&nbsp</label></div>
 
+<div class="row sparse_min">
+    <div class="col-md-4 col-md-offset-1">
+        <label>输入接口ID:&nbsp&nbsp</label>{{ form.id }}
+    </div>
+    <div class="col-md-7">
+        <label>输入接口名称:&nbsp&nbsp</label>{{ form.name }}
+    </div>
+</div>
+<form method="post" onsubmit="return checkIP()">
+{% csrf_token %}
+    <div class="row sparse_min">
+        <div class="col-md-4 col-md-offset-1">
+            <label>多KEY设备IP<span class="red">*</span>:&nbsp&nbsp</label>{{ form.ip }}
+        </div>
+        <div class="col-md-7">
+            <label>多KEY设备描述:&nbsp&nbsp</label>{{ form.description }}
+        </div>
+    </div>
+    <div class="row sparse_min">
+        <div class="col-md-5 col-md-offset-1">
+            <label>预设 1 按键名称:&nbsp&nbsp</label>{{ form.key1 }}
+        </div>
+        <div class="col-md-6">
+            <label>预设 2 按键名称:&nbsp&nbsp</label>{{ form.key2 }}
+        </div>
+    </div>
+    <div class="row sparse_min">
+        <div class="col-md-5 col-md-offset-1">
+            <label>预设 3 按键名称:&nbsp&nbsp</label>{{ form.key3 }}
+        </div>
+        <div class="col-md-6">
+            <label>预设 4 按键名称:&nbsp&nbsp</label>{{ form.key4 }}
+        </div>
+    </div>
+    <div class="row sparse_min">
+        <div class="col-md-5 col-md-offset-1">
+            <label>预设 5 按键名称:&nbsp&nbsp</label>{{ form.key5 }}
+        </div>
+        <div class="col-md-6">
+            <label>预设 6 按键名称:&nbsp&nbsp</label>{{ form.key6 }}
+        </div>
+    </div>
+    <div class="row sparse_min">
+        <div class="col-md-5 col-md-offset-1">
+            <label>预设 7 按键名称:&nbsp&nbsp</label>{{ form.key7 }}
+        </div>
+        <div class="col-md-6">
+            <label>预设 8 按键名称:&nbsp&nbsp</label>{{ form.key8 }}
+        </div>
+    </div>
+    <div class="row sparse_min">
+        <div class="col-md-5 col-md-offset-1">
+            <label>预设 9 按键名称:&nbsp&nbsp</label>{{ form.key9 }}
+        </div>
+        <div class="col-md-6">
+            <label>预设10按键名称:&nbsp&nbsp</label>{{ form.key10 }}
+        </div>
+    </div>
+    <div class="row sparse_min">
+        <div class="col-md-5 col-md-offset-1">
+            <label>预设11按键名称:&nbsp&nbsp</label>{{ form.key11 }}
+        </div>
+        <div class="col-md-6">
+            <label>预设12按键名称:&nbsp&nbsp</label>{{ form.key12 }}
+        </div>
+    </div>
+    <div class="row sparse">
+        <div class="col-md-4 col-md-offset-8">
+            <input type="submit" value="保存并进入按键配置" class="btn btn-primary">
+        </div>
+    </div>
+</form>
 
 
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
+    $('a#flow').attr('aria-expanded','true');
+    $('div#collapseExample').attr('class','collapse in');
+    $('input#id_id').val('{{ id }}');
+    $('input#id_name').val('{{ name }}');
+    $('button#close').click(function () {
+        $('#myalter').attr('style','display:none')
+    });
+    function checkIP() {
+        obj = document.getElementById("id_ip").value;
+        //ip地址
+        var exp=/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+        var reg = obj.match(exp);
+        if(reg==null) {
+            $('#myalter').attr('style','display:block')
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 
 
 

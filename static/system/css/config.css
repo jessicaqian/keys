@@ -1,0 +1,44 @@
+li#edit{
+    border-color: #23527c;
+}
+
+li#edit>a{
+    text-decoration: none;
+    background-color: #eee;
+    color: #23527c;
+}
+
+li#dev_free > a{
+    color: #efb041;
+    padding-left: 30px;
+}
+
+input#id_description,#id_key1,#id_key2,#id_key3, #id_key4,#id_key5,
+#id_key6,#id_key7,#id_key8, #id_key9,#id_key10,#id_key11,#id_key12{
+    width: 240px;
+}
+
+input#id_ip{
+    width: 200px;
+}
+
+input.single_line{
+    border-top:0px;
+    border-left:0px;
+    border-right:0px ;
+    border-bottom:solid 1px #636b72;
+
+}
+
+input#id_id,#id_name{
+    border: none;
+    width: 250px;
+}
+
+div#myalter{
+    position: absolute;
+    z-index: 100;
+    width: 90%;
+}
+
+

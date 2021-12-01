@@ -38,8 +38,22 @@ label.head{
     font-weight: 500;
     margin-left: 20px;
     border-bottom: solid 2px #79aec8;
+
 }
 
 table.table-hover > tbody > tr:hover {
     background-color: #d0dfea;
+}
+
+div.sparse{
+    margin-bottom: 25px;
+}
+
+div.sparse_min{
+    margin-bottom: 20px;
+}
+
+
+span.red{
+    color: red;
 }

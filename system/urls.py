@@ -7,5 +7,6 @@ urlpatterns = [
     path('main.html', views.main),
     path('configed.html', views.configed),
     path('free.html', views.free),
+    path('config.html',views.config),
 
 ]

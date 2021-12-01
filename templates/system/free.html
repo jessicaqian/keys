@@ -9,8 +9,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row"><label class="head">新增设备配置&nbsp&nbsp&nbsp&nbsp</label></div>
-<div class="row" id="search_bar">
+    <div class="row sparse"><label class="head">新增设备配置&nbsp&nbsp&nbsp&nbsp</label></div>
+<div class="row sparse" id="search_bar">
     <div class="col-md-2 col-md-offset-1">
         <label>可用输入接口列表</label>
 
@@ -42,8 +42,8 @@
 
                     <td id="name_{{ forloop.counter }}">{{ form.1 }}</td>
                     <td class="download">
-                        <a class="btn config" href="#">
-                            <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
+                        <a class="btn config" href="/system/config.html?id={{ form.0 }}&name={{ form.1 }}">
+                            <span class="glyphicon glyphicon-import" aria-hidden="true" ></span>
                         </a>
                     </td>
 
