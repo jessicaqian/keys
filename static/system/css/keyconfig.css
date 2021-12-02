@@ -1,0 +1,33 @@
+div#key_set{
+    padding:0px 15px;
+}
+
+input#search_info{
+    padding-top: 4px ;
+    padding-bottom: 6px;
+    margin-right: 10px;
+    width: 40%;
+}
+
+li#edit{
+    border-color: #23527c;
+}
+
+li#edit>a{
+    text-decoration: none;
+    background-color: #eee;
+    color: #23527c;
+}
+
+li#dev_free > a{
+    color: #efb041;
+    padding-left: 30px;
+}
+
+table#key_table > thead > tr > th > span{
+    font-weight: 200;
+}
+
+table#key_table > thead > tr > th{
+    text-align: center;
+}

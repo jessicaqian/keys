@@ -17,7 +17,8 @@
 </div>
 
 <div class="row sparse"><label class="head">设备配置&nbsp&nbsp&nbsp&nbsp</label></div>
-
+<form method="post" onsubmit="return checkIP()">
+{% csrf_token %}
 <div class="row sparse_min">
     <div class="col-md-4 col-md-offset-1">
         <label>输入接口ID:&nbsp&nbsp</label>{{ form.id }}
@@ -26,8 +27,7 @@
         <label>输入接口名称:&nbsp&nbsp</label>{{ form.name }}
     </div>
 </div>
-<form method="post" onsubmit="return checkIP()">
-{% csrf_token %}
+
     <div class="row sparse_min">
         <div class="col-md-4 col-md-offset-1">
             <label>多KEY设备IP<span class="red">*</span>:&nbsp&nbsp</label>{{ form.ip }}
