@@ -18,13 +18,17 @@ def main(request):
     return render(request, 'system/main.html',)
 
 def configed(request):
-
+    conn = sqlite3.connect('db.sqlite3')
+    cursor = conn.cursor()
     if request.method == 'POST':
         pass
 
     else:
-        pass
-    return render(request, 'system/configed.html',)
+        sql = " SELECT inputName,ip,description,inputID FROM keys_set"
+        cursor.execute(sql)
+        form_configed = cursor.fetchall()
+    conn.close()
+    return render(request, 'system/configed.html',{'form':form_configed})
 
 def free(request):
     conn = sqlite3.connect('db.sqlite3')
@@ -59,14 +63,36 @@ def config(request):
             sql = " UPDATE input_select SET free = 0 WHERE dev_ID = '"+info_dict['id']+"'"
             cursor.execute(sql)
             conn.commit()
+            sql = " SELECT name FROM output_list "
+            cursor.execute(sql)
+            val = cursor.fetchall()
             conn.close()
 
 
 
-        return render(request, 'system/keyconfig.html',{'dict':info_dict})
+        return render(request, 'system/keyconfig.html',{'dict':info_dict,'output_name':val})
 
     else:
         form = ConfigForm()
         id = request.GET.get('id', default='10000000')
         name = request.GET.get('name', default='10000000')
     return render(request, 'system/config.html',{'name':name,'id':id,'form':form})
+
+def action(request):
+    if request.method == 'GET':
+        action = request.GET.get('action')
+        id = request.GET.get('id')
+        if action == 'delete':
+            conn = sqlite3.connect('db.sqlite3')
+            cursor = conn.cursor()
+            sql = "DELETE FROM keys_set WHERE inputID = '"+id+"';"
+            cursor.execute(sql)
+            conn.commit()
+            sql = " UPDATE input_select SET free = 1 WHERE dev_ID = '"+id+"'"
+            cursor.execute(sql)
+            conn.commit()
+            sql = " SELECT inputName,ip,description,inputID FROM keys_set"
+            cursor.execute(sql)
+            form_configed = cursor.fetchall()
+            conn.close()
+            return render(request, 'system/configed.html', {'form': form_configed})

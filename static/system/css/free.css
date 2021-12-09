@@ -14,15 +14,24 @@ li#dev_free > a{
 }
 
 div#free_table_box{
-    height: 500px;
-    overflow-y: auto;
+    height: 480px;
+    overflow-y: scroll;
+    border-bottom: 2px solid #ddd;
 
 }
 
 table#free_table>tbody>tr>td{
     vertical-align:middle;
-
 }
+
+table#free_table_body>tbody>tr>td{
+    vertical-align:middle;
+}
+
+table#free_table{
+    margin-bottom: 0px;
+}
+
 
 a.config{
     font-size: 16px;
@@ -43,7 +52,13 @@ input#search_info{
     padding-bottom: 6px;
     margin-right: 10px;
     width: 75%;
-
-
 }
+
+div#table_box{
+    padding-right: 17px;
+}
+
+
+
+
 

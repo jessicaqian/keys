@@ -22,39 +22,53 @@
     </div>
     <div class="col-md-3"></div>
 </div>
-<div class="row" id="free_table_box">
-    <div class="col-md-8 col-md-offset-1">
+
+    <div class="col-md-9 col-md-offset-1">
+        <div id="table_box">
             <table class="table table-hover table-condensed table-striped" id="free_table">
+                        <colgroup>
+                            <col style="width: 40px"><col style="width: 70%"><col style="width: 100px">
+                        </colgroup>
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>ID</th>
+
                         <th>名称</th>
                         <th class="download">绑定配置多KEY</th>
                     </tr>
                 </thead>
-            <tbody>
-{% for form in form %}
-                <tr id="id{{ forloop.counter }}">
-                    <td>{{ forloop.counter }}</td>
-                    <td id="id_{{ forloop.counter }}">{{ form.0 }}</td>
-
-
-                    <td id="name_{{ forloop.counter }}">{{ form.1 }}</td>
-                    <td class="download">
-                        <a class="btn config" href="/system/config.html?id={{ form.0 }}&name={{ form.1 }}">
-                            <span class="glyphicon glyphicon-import" aria-hidden="true" ></span>
-                        </a>
-                    </td>
-
-                </tr>
-
- {% endfor %}
-            </tbody>
             </table>
+        </div>
+        <div id="free_table_box">
+            <table class="table table-hover table-condensed table-striped" id="free_table_body">
+                <colgroup>
+                    <col style="width: 40px"><col style="width: 70%"><col style="width: 100px">
+                </colgroup>
+                <tbody >
+                {% for form in form %}
+                    <tr id="id{{ forloop.counter }}">
+                        <td>{{ forloop.counter }}</td>
+
+
+
+                        <td id="name_{{ forloop.counter }}">{{ form.1 }}</td>
+                        <td class="download">
+                            <a class="btn config" href="/system/config.html?id={{ form.0 }}&name={{ form.1 }}">
+                                <span class="glyphicon glyphicon-import" aria-hidden="true" ></span>
+                            </a>
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
     </div>
 
-</div>
+
 
 
 

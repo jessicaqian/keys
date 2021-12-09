@@ -1,5 +1,7 @@
 div#key_set{
     padding:0px 15px;
+    height: 500px;
+    overflow-y: auto;
 }
 
 input#search_info{
@@ -28,6 +30,26 @@ table#key_table > thead > tr > th > span{
     font-weight: 200;
 }
 
-table#key_table > thead > tr > th{
+table#key_table{
+    margin-bottom: 0px;
+}
+
+div#key_table_box{
+    height: 400px;
+    overflow-y: scroll;
+    border-bottom: 1px solid #ddd;
+
+}
+
+td,th{
     text-align: center;
+
+}
+
+td{
+    font-size: 13px;
+}
+
+div#key_table_head{
+    padding-right: 17px;
 }

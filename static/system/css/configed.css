@@ -12,3 +12,57 @@ li#dev_configed > a{
     color: #efb041;
     padding-left: 30px;
 }
+
+div#head_bar{
+    padding-left: 10px;
+}
+
+input#search_info{
+    padding-top: 4px ;
+    padding-bottom: 6px;
+    margin-right: 10px;
+    width: 75%;
+}
+
+td,th{
+    text-align: center;
+
+}
+
+td{
+    font-size: 13px;
+}
+
+table#configed_table>tbody>tr>td{
+    vertical-align:middle;
+}
+
+table#table_body>tbody>tr>td{
+    vertical-align:middle;
+}
+
+table#configed_table{
+
+    margin-bottom: 0px;
+}
+
+
+
+
+
+div#table_box{
+
+    padding-right: 17px;
+
+}
+
+div#configed_table_body{
+    height: 480px;
+    overflow-y: scroll;
+    border-bottom: 2px solid #ddd;
+}
+
+a.config{
+    font-size: 16px;
+    padding: 0px 5px;
+}

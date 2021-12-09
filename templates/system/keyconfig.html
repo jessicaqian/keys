@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="row sparse"><label class="head">按键设置&nbsp&nbsp&nbsp&nbsp</label></div>
-<div class="row sparse">
+<div class="row sparse_min">
     <div class="col-md-5 ">
         <label>输入:&nbsp&nbsp</label>{{ dict.name }}&nbsp&nbsp&nbsp&nbsp
         <label>IP:&nbsp&nbsp</label>{{ dict.ip }}&nbsp&nbsp<label>按键设置表</label>
@@ -23,44 +23,58 @@
 
 </div>
 <div class="row" id="key_set">
-
-            <table class="table table-hover table-condensed table-striped" id="key_table">
-                <thead>
-                    <tr>
-                        <th>输出名称</th>
-                        <th><span>{{ dict.key1 }}</span><br>预设1</th>
-                        <th>预设2</th>
-                        <th>预设3</th>
-                        <th>预设4</th>
-                        <th>预设5</th>
-                        <th>预设6</th>
-                        <th>预设7</th>
-                        <th>预设8</th>
-                        <th>预设9</th>
-                        <th>预设10</th>
-                        <th>预设11</th>
-                        <th>预设12</th>
-                    </tr>
-                </thead>
-            <tbody>
-{% for form in form %}
-                <tr id="id{{ forloop.counter }}">
-                    <td>{{ forloop.counter }}</td>
-                    <td id="id_{{ forloop.counter }}">{{ form.0 }}</td>
-                    <td id="name_{{ forloop.counter }}">{{ form.1 }}</td>
-                    <td class="download">
-                        <a class="btn config" href="/system/config.html?id={{ form.0 }}&name={{ form.1 }}">
-                            <span class="glyphicon glyphicon-import" aria-hidden="true" ></span>
-                        </a>
-                    </td>
-
+    <div id="key_table_head">
+        <table class="table table-hover table-condensed table-striped" id="key_table">
+            <colgroup>
+                <col style="width: 150px"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%">
+                <col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>输出名称</th>
+                    <th><span>{{ dict.key1 }}</span><br>预设1</th>
+                    <th><span>{{ dict.key2 }}</span><br>预设2</th>
+                    <th><span>{{ dict.key3 }}</span><br>预设3</th>
+                    <th><span>{{ dict.key4 }}</span><br>预设4</th>
+                    <th><span>{{ dict.key5 }}</span><br>预设5</th>
+                    <th><span>{{ dict.key6 }}</span><br>预设6</th>
+                    <th><span>{{ dict.key7 }}</span><br>预设7</th>
+                    <th><span>{{ dict.key8 }}</span><br>预设8</th>
+                    <th><span>{{ dict.key9 }}</span><br>预设9</th>
+                    <th><span>{{ dict.key10 }}</span><br>预设10</th>
+                    <th><span>{{ dict.key11 }}</span><br>预设11</th>
+                    <th><span>{{ dict.key12 }}</span><br>预设12</th>
                 </tr>
-
- {% endfor %}
+            </thead>
+        </table>
+    </div>
+    <div id="key_table_box">
+        <table class="table table-hover table-condensed table-striped" id="key_table_body">
+            <colgroup>
+                <col style="width: 150px"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%">
+                <col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%">
+            </colgroup>
+            <tbody>
+            {% for name in output_name %}
+                <tr id="id{{ forloop.counter }}">
+                    <td>{{ name.0 }}</td>
+                    <td><input name="key1" type="checkbox" value="" /></td>
+                    <td><input name="key2" type="checkbox" value="" /></td>
+                    <td><input name="key3" type="checkbox" value="" /></td>
+                    <td><input name="key4" type="checkbox" value="" /></td>
+                    <td><input name="key5" type="checkbox" value="" /></td>
+                    <td><input name="key6" type="checkbox" value="" /></td>
+                    <td><input name="key7" type="checkbox" value="" /></td>
+                    <td><input name="key8" type="checkbox" value="" /></td>
+                    <td><input name="key9" type="checkbox" value="" /></td>
+                    <td><input name="key10" type="checkbox" value="" /></td>
+                    <td><input name="key11" type="checkbox" value="" /></td>
+                    <td><input name="key12" type="checkbox" value="" /></td>
+                </tr>
+            {% endfor %}
             </tbody>
-            </table>
-
-
+        </table>
+    </div>
 </div>
 
 
