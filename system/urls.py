@@ -8,6 +8,7 @@ urlpatterns = [
     path('configed.html', views.configed),
     path('free.html', views.free),
     path('config.html',views.config),
+    path('template.html',views.template),
     path('configedaction',views.action)
 
 ]

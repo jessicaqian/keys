@@ -1,0 +1,48 @@
+li#edit{
+    border-color: #23527c;
+}
+
+li#edit>a{
+    text-decoration: none;
+    background-color: #eee;
+    color: #23527c;
+}
+
+li#dev_template > a{
+    color: #efb041;
+    padding-left: 30px;
+}
+
+a.config{
+    font-size: 16px;
+    padding: 0px 5px;
+}
+
+td,th{
+    text-align: center;
+}
+
+td{
+    font-size: 13px;
+}
+
+table#template_table{
+    margin-bottom: 0px;
+}
+
+div#template_table_box{
+    height: 400px;
+    overflow-y: scroll;
+    border-bottom: 1px solid #ddd;
+}
+
+div#table_box{
+    padding-right: 17px;
+}
+
+input#search_info{
+    padding-top: 4px ;
+    padding-bottom: 6px;
+    margin-right: 10px;
+    width: 40%;
+}

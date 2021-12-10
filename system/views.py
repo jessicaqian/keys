@@ -45,6 +45,20 @@ def free(request):
 
     return render(request, 'system/free.html',{'form':form_free})
 
+def template(request):
+    conn = sqlite3.connect('db.sqlite3')
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        pass
+
+    else:
+        sql = " SELECT * FROM template"
+        cursor.execute(sql)
+        form_template = cursor.fetchall()
+    conn.close()
+    return render(request, 'system/template.html',{'form':form_template})
+
 def config(request):
 
     if request.method == 'POST':

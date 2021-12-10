@@ -38,7 +38,6 @@ div#key_table_box{
     height: 400px;
     overflow-y: scroll;
     border-bottom: 1px solid #ddd;
-
 }
 
 td,th{
@@ -50,6 +49,16 @@ td{
     font-size: 13px;
 }
 
-div#key_table_head{
+div#key_table_head,div#key_table_action{
     padding-right: 17px;
+}
+
+label.action{
+    color: #337ab7;
+    font-weight: 700;
+}
+
+a.config{
+    font-size: 16px;
+    padding: 0px 5px;
 }
