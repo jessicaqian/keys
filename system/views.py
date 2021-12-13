@@ -4,6 +4,7 @@ import sqlite3
 import json
 from .forms import ConfigForm
 
+
 # Create your views here.
 
 
@@ -110,3 +111,15 @@ def action(request):
             form_configed = cursor.fetchall()
             conn.close()
             return render(request, 'system/configed.html', {'form': form_configed})
+
+def newtemp(request):
+    conn = sqlite3.connect('db.sqlite3')
+    cursor = conn.cursor()
+    if request.method == 'POST':
+        pass
+    else:
+        sql = " SELECT name FROM output_list "
+        cursor.execute(sql)
+        val = cursor.fetchall()
+
+        return render(request, 'system/newtemp.html',{'output_name':val})

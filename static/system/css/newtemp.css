@@ -1,7 +1,5 @@
 div#key_set{
     padding:0px 15px;
-    height: 500px;
-    overflow-y: auto;
 }
 
 input#search_info{
@@ -21,7 +19,7 @@ li#edit>a{
     color: #23527c;
 }
 
-li#dev_free > a{
+li#dev_template > a{
     color: #efb041;
     padding-left: 30px;
 }
@@ -30,7 +28,7 @@ table#key_table > thead > tr > th > span{
     font-weight: 200;
 }
 
-table#key_table{
+table#key_table,table#delete_action{
     margin-bottom: 0px;
 }
 

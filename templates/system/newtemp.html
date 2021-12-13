@@ -2,27 +2,29 @@
 
 {% load static %}
 
-{% block title %}按键设置{% endblock %}
+{% block title %}新建配置模板{% endblock %}
 
 {% block css %}
-<link href="{% static  "system/css/keyconfig.css" %}" rel="stylesheet">
+<link href="{% static  "system/css/newtemp.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<div class="row sparse"><label class="head">按键设置&nbsp&nbsp&nbsp&nbsp</label></div>
+<div class="row sparse"><label class="head">新建配置模板&nbsp&nbsp&nbsp&nbsp</label></div>
+
 <div class="row sparse_min">
-    <div class="col-md-6 ">
-        <label>输入:&nbsp&nbsp</label>{{ dict.name }}&nbsp&nbsp&nbsp&nbsp
-        <label>IP:&nbsp&nbsp</label>{{ dict.ip }}&nbsp&nbsp<label>按键设置表</label>
+    <div class="col-md-5 ">
+        <label>模板名称<span class="red">*</span>:&nbsp&nbsp</label>
+        <input placeholder="必填项" class="single_line" required=True id="id_name">
+
     </div>
-    <div class="col-md-6">
+    <div class="col-md-7">
             <input type="text" placeholder="按名称关键字搜索" id="search_info">
             <button class="btn btn-primary" id="search_button">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
     </div>
 
 </div>
-<div class="row" id="key_set">
+<div class="row sparse_min" id="key_set">
     <div id="key_table_head">
         <table class="table table-hover table-condensed table-striped" id="key_table">
             <colgroup>
@@ -32,18 +34,18 @@
             <thead>
                 <tr>
                     <th>输出名称</th>
-                    <th><span>{{ dict.key1 }}</span><br>预设1</th>
-                    <th><span>{{ dict.key2 }}</span><br>预设2</th>
-                    <th><span>{{ dict.key3 }}</span><br>预设3</th>
-                    <th><span>{{ dict.key4 }}</span><br>预设4</th>
-                    <th><span>{{ dict.key5 }}</span><br>预设5</th>
-                    <th><span>{{ dict.key6 }}</span><br>预设6</th>
-                    <th><span>{{ dict.key7 }}</span><br>预设7</th>
-                    <th><span>{{ dict.key8 }}</span><br>预设8</th>
-                    <th><span>{{ dict.key9 }}</span><br>预设9</th>
-                    <th><span>{{ dict.key10 }}</span><br>预设10</th>
-                    <th><span>{{ dict.key11 }}</span><br>预设11</th>
-                    <th><span>{{ dict.key12 }}</span><br>预设12</th>
+                    <th>预设1</th>
+                    <th>预设2</th>
+                    <th>预设3</th>
+                    <th>预设4</th>
+                    <th>预设5</th>
+                    <th>预设6</th>
+                    <th>预设7</th>
+                    <th>预设8</th>
+                    <th>预设9</th>
+                    <th>预设10</th>
+                    <th>预设11</th>
+                    <th>预设12</th>
                 </tr>
             </thead>
         </table>
@@ -76,7 +78,7 @@
         </table>
     </div>
     <div id="key_table_action">
-        <table class="table table-hover table-condensed" id="">
+        <table class="table table-hover table-condensed" id="delete_action">
             <colgroup>
                 <col style="width: 150px"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%">
                 <col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%">
@@ -152,6 +154,11 @@
         </table>
     </div>
 </div>
+<div class="col-md-2 col-md-offset-10">
+    <button class="btn btn-primary" >
+        <span class="glyphicon glyphicon-copy" aria-hidden="true"></span> 保存配置模板
+    </button>
+</div>
 
 
 {% endblock %}
@@ -160,24 +167,8 @@
 <script type="text/javascript">
     $('a#flow').attr('aria-expanded','true');
     $('div#collapseExample').attr('class','collapse in');
-    $('input#id_id').val('{{ id }}');
-    $('input#id_name').val('{{ name }}');
-    $('button#close').click(function () {
-        $('#myalter').attr('style','display:none')
-    });
-    function checkIP() {
-        obj = document.getElementById("id_ip").value;
-        //ip地址
-        var exp=/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
-        var reg = obj.match(exp);
-        if(reg==null) {
-            $('#myalter').attr('style','display:block')
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
+
+
 
 
 

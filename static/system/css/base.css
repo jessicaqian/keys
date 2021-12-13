@@ -58,3 +58,11 @@ span.red{
     color: red;
 }
 
+input.single_line{
+    border-top:0px;
+    border-left:0px;
+    border-right:0px ;
+    border-bottom:solid 1px #636b72;
+
+}
+

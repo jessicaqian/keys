@@ -9,6 +9,7 @@ urlpatterns = [
     path('free.html', views.free),
     path('config.html',views.config),
     path('template.html',views.template),
-    path('configedaction',views.action)
+    path('configedaction',views.action),
+    path('newtemp.html',views.newtemp)
 
 ]

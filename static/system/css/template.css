@@ -31,7 +31,7 @@ table#template_table{
 }
 
 div#template_table_box{
-    height: 400px;
+    height: 430px;
     overflow-y: scroll;
     border-bottom: 1px solid #ddd;
 }
