@@ -3,11 +3,10 @@ from django.shortcuts import render
 import sqlite3
 import json
 from .forms import ConfigForm
-
+from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 
 # Create your views here.
-
-
 
 def main(request):
 
@@ -46,20 +45,6 @@ def free(request):
 
     return render(request, 'system/free.html',{'form':form_free})
 
-def template(request):
-    conn = sqlite3.connect('db.sqlite3')
-    cursor = conn.cursor()
-
-    if request.method == 'POST':
-        pass
-
-    else:
-        sql = " SELECT * FROM template"
-        cursor.execute(sql)
-        form_template = cursor.fetchall()
-    conn.close()
-    return render(request, 'system/template.html',{'form':form_template})
-
 def config(request):
 
     if request.method == 'POST':
@@ -93,7 +78,7 @@ def config(request):
         name = request.GET.get('name', default='10000000')
     return render(request, 'system/config.html',{'name':name,'id':id,'form':form})
 
-def action(request):
+def conf_action(request):
     if request.method == 'GET':
         action = request.GET.get('action')
         id = request.GET.get('id')
@@ -106,20 +91,63 @@ def action(request):
             sql = " UPDATE input_select SET free = 1 WHERE dev_ID = '"+id+"'"
             cursor.execute(sql)
             conn.commit()
-            sql = " SELECT inputName,ip,description,inputID FROM keys_set"
-            cursor.execute(sql)
-            form_configed = cursor.fetchall()
             conn.close()
-            return render(request, 'system/configed.html', {'form': form_configed})
+            return HttpResponseRedirect("configed.html")
 
-def newtemp(request):
+def template(request):
     conn = sqlite3.connect('db.sqlite3')
     cursor = conn.cursor()
+
     if request.method == 'POST':
         pass
+
     else:
+        sql = " SELECT * FROM template"
+        cursor.execute(sql)
+        form_template = cursor.fetchall()
+    conn.close()
+    return render(request, 'system/template.html',{'form':form_template})
+
+def new_temp(request):
+    conn = sqlite3.connect('db.sqlite3')
+    cursor = conn.cursor()
+    if request.method == 'GET':
         sql = " SELECT name FROM output_list "
         cursor.execute(sql)
         val = cursor.fetchall()
+        conn.close()
 
         return render(request, 'system/newtemp.html',{'output_name':val})
+
+def save_temp(request):
+    if request.method == 'POST':
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        mes = request.POST['mes']
+        tem_set = json.loads(mes)
+        sql = "INSERT INTO template (name,key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12) values('" + tem_set['name']\
+              + "','" + json.dumps(tem_set['key1'], ensure_ascii=False) + "','" + json.dumps(tem_set['key2'], ensure_ascii=False) \
+              + "','" + json.dumps(tem_set['key3'], ensure_ascii=False) + "','" + json.dumps(tem_set['key4'], ensure_ascii=False) \
+              + "','"+json.dumps(tem_set['key5'], ensure_ascii=False)+"','"+json.dumps(tem_set['key6'], ensure_ascii=False)+"','"\
+              +json.dumps(tem_set['key7'], ensure_ascii=False)+"','"+json.dumps(tem_set['key8'], ensure_ascii=False)+"','"\
+              +json.dumps(tem_set['key9'], ensure_ascii=False)+"','"+json.dumps(tem_set['key10'], ensure_ascii=False)+"','"\
+              +json.dumps(tem_set['key11'], ensure_ascii=False)+"','"+json.dumps(tem_set['key12'], ensure_ascii=False)+"')"
+        cursor.execute(sql)
+        conn.commit()
+        conn.close()
+
+
+        return JsonResponse({'code': 1, 'msg': 'success'})
+
+def temp_action(request):
+    if request.method == 'GET':
+        action = request.GET.get('action')
+        name = request.GET.get('name')
+        if action == 'delete':
+            conn = sqlite3.connect('db.sqlite3')
+            cursor = conn.cursor()
+            sql = "DELETE FROM template WHERE name = '"+name+"';"
+            cursor.execute(sql)
+            conn.commit()
+            conn.close()
+            return HttpResponseRedirect("template.html")

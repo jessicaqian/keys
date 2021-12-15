@@ -11,6 +11,10 @@
 {% block content %}
 <div class="row sparse"><label class="head">新建配置模板&nbsp&nbsp&nbsp&nbsp</label></div>
 
+    {% csrf_token %}
+
+
+
 <div class="row sparse_min">
     <div class="col-md-5 ">
         <label>模板名称<span class="red">*</span>:&nbsp&nbsp</label>
@@ -58,20 +62,20 @@
             </colgroup>
             <tbody>
             {% for name in output_name %}
-                <tr id="id{{ forloop.counter }}">
-                    <td>{{ name.0 }}</td>
-                    <td><input name="key1" type="checkbox" value="" /></td>
-                    <td><input name="key2" type="checkbox" value="" /></td>
-                    <td><input name="key3" type="checkbox" value="" /></td>
-                    <td><input name="key4" type="checkbox" value="" /></td>
-                    <td><input name="key5" type="checkbox" value="" /></td>
-                    <td><input name="key6" type="checkbox" value="" /></td>
-                    <td><input name="key7" type="checkbox" value="" /></td>
-                    <td><input name="key8" type="checkbox" value="" /></td>
-                    <td><input name="key9" type="checkbox" value="" /></td>
-                    <td><input name="key10" type="checkbox" value="" /></td>
-                    <td><input name="key11" type="checkbox" value="" /></td>
-                    <td><input name="key12" type="checkbox" value="" /></td>
+                <tr id="id{{ forloop.counter }}" >
+                    <td id="name_{{ forloop.counter }}">{{ name.0 }}</td>
+                    <td><input name="key1" type="checkbox" value="{{ name.0 }}" /></td>
+                    <td><input name="key2" type="checkbox" value="{{ name.0 }}" /></td>
+                    <td><input name="key3" type="checkbox" value="{{ name.0 }}" /></td>
+                    <td><input name="key4" type="checkbox" value="{{ name.0 }}" /></td>
+                    <td><input name="key5" type="checkbox" value="{{ name.0 }}" /></td>
+                    <td><input name="key6" type="checkbox" value="{{ name.0 }}" /></td>
+                    <td><input name="key7" type="checkbox" value="{{ name.0 }}" /></td>
+                    <td><input name="key8" type="checkbox" value="{{ name.0 }}" /></td>
+                    <td><input name="key9" type="checkbox" value="{{ name.0 }}" /></td>
+                    <td><input name="key10" type="checkbox" value="{{ name.0 }}" /></td>
+                    <td><input name="key11" type="checkbox" value="{{ name.0 }}" /></td>
+                    <td><input name="key12" type="checkbox" value="{{ name.0 }}" /></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -87,62 +91,62 @@
                 <tr >
                     <td><label class="action" >清除此按键设置</label></td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key1">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key2">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key3">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key4">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key5">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key6">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key7">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key8">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key9">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key10">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key11">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn config" href="" >
+                        <a class="btn config" id="key12">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
@@ -155,18 +159,74 @@
     </div>
 </div>
 <div class="col-md-2 col-md-offset-10">
-    <button class="btn btn-primary" >
+    <button class="btn btn-primary" id="save">
         <span class="glyphicon glyphicon-copy" aria-hidden="true"></span> 保存配置模板
     </button>
 </div>
+
 
 
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
+
+    var set_dict = {
+        'name':'',
+        'key1':[],'key2':[],'key3':[],'key4':[],'key5':[],'key6':[],
+        'key7':[],'key8':[],'key9':[],'key10':[],'key11':[],'key12':[],
+
+    }
+
+    $('#search_button').click(function () {
+        var text = $('#search_info').val()
+        for(i = 1;i<={{output_name|length}};i++){
+            var file_name = $('#name_'+ i).text()
+            if (file_name.indexOf(text) == -1){
+                $('#id'+ i).attr('style','display:none')
+            }else {
+                var str = '<span style="background-color:#eec805">'+text+'</span>';
+                $('#name_'+ i).html($('#name_'+ i).text().replace(text,str));
+            }
+        }
+
+    })
+    $("#search_info").blur(function () {
+        var text = $(this).val()
+        if(text == ''){
+            for(i = 1;i<={{output_name|length}};i++){
+                $('#id'+ i).removeAttr('style')
+                $('#id_'+ i + '>span').removeAttr('style')
+            }
+        }
+    })
+
+
     $('a#flow').attr('aria-expanded','true');
     $('div#collapseExample').attr('class','collapse in');
+    $('a.config').click(function () {
+        var ele = $(this).attr('id')
+        $('input[name="'+ele+'"]').attr('checked',false)
+    })
+    $('button#save').click(function () {
+
+        for(i=1;i<13;i++){
+            var key = "key"+i
+            $('input[name="'+key+'"]:checked').each(function(){
+            set_dict[key].push($(this).val());//向数组中添加元素
+        });
+        }
+        set_dict['name'] = $('input#id_name').val()
+
+        var jsonStr = JSON.stringify(set_dict);
+        $.post("saveTemplate",{'mes':jsonStr,'csrfmiddlewaretoken': $("[name = 'csrfmiddlewaretoken']").val()}).done(function () {
+            window.location.href ='template.html'
+
+        }).fail(function () {
+
+        })
+
+    })
 
 
 

@@ -8,6 +8,20 @@
 <link href="{% static  "system/css/template.css" %}" rel="stylesheet">
 {% endblock %}
 
+{% block modal-content %}
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+    </div>
+    <div class="modal-body">
+        <p id="key1"></p><p id="key2"></p><p id="key3"></p><p id="key4"></p><p id="key5"></p><p id="key6"></p>
+        <p id="key7"></p><p id="key8"></p><p id="key9"></p><p id="key10"></p><p id="key11"></p><p id="key12"></p>
+
+
+    </div>
+{% endblock %}
+
+
 {% block content %}
 <div class="row sparse"><label class="head">配置模板管理&nbsp&nbsp&nbsp&nbsp</label></div>
 
@@ -53,8 +67,10 @@
                 <tr id="id{{ forloop.counter }}">
                     <td>{{ forloop.counter }}</td>
                     <td>{{form.0}}</td>
-                    <td class="download">
-                        <a class="btn config" href="/system/configedaction?id={{ form.3 }}&action=scan" >
+                    <td class="scan">
+                        <a class="btn config" type="button" data-toggle="modal" data-target="#myModal" id="scan" name="{{form.0}}" key1="{{ form.1 }}"
+                        key2="{{ form.2 }}" key3="{{ form.3 }}" key4="{{ form.4 }}" key5="{{ form.5 }}" key6="{{ form.6 }}" key7="{{ form.7 }}" key8="{{ form.8 }}"
+                        key9="{{ form.9 }}" key10="{{ form.10 }}" key11="{{ form.11 }}" key12="{{ form.12 }}">
                             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                         </a>
                     </td>
@@ -64,7 +80,7 @@
                         </a>
                     </td>
                     <td class="delete">
-                        <a class="btn config" href="/system/configedaction?id={{ form.3 }}&action=delete">
+                        <a class="btn config" href="/system/tempAction?name={{ form.0 }}&action=delete">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </td>
@@ -78,20 +94,10 @@
     </div>
 </div>
 
-
-    <div class="col-md-2 col-md-offset-9" id="newtemp">
-        <a class="btn btn-primary" href="newtemp.html">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新建配置模板</a>
-    </div>
-
-
-
-
-
-
-
-
-
+<div class="col-md-2 col-md-offset-9" id="newtemp">
+    <a class="btn btn-primary" href="newtemp.html">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新建配置模板</a>
+</div>
 
 {% endblock %}
 
@@ -99,6 +105,17 @@
 <script type="text/javascript">
     $('a#flow').attr('aria-expanded','true');
     $('div#collapseExample').attr('class','collapse in');
+    $('a#scan').click(function () {
+        var name =$(this).attr('name')
+        $('#myModalLabel').html('模板名称：'+name)
+        for(i=1;i<13;i++){
+            var key =$(this).attr('key'+i)
+            $('#key'+i).html('<label>预设'+i+'</label>:'+key)
+
+        }
+
+
+    })
 
 
 </script>
