@@ -2,24 +2,20 @@
 
 {% load static %}
 
-{% block title %}新建配置模板{% endblock %}
+{% block title %}编辑配置模板{% endblock %}
 
 {% block css %}
 <link href="{% static  "system/css/newtemp.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<div class="row sparse"><label class="head">新建配置模板&nbsp&nbsp&nbsp&nbsp</label></div>
+<div class="row sparse"><label class="head">编辑配置模板&nbsp&nbsp&nbsp&nbsp</label></div>
 
     {% csrf_token %}
 
-
-
 <div class="row sparse_min">
     <div class="col-md-5 ">
-        <label>模板名称<span class="red">*</span>:&nbsp&nbsp</label>
-        <input placeholder="必填项" class="single_line" required=True id="id_name">
-
+        <label>模板名称:&nbsp&nbsp</label>{{ name }}
     </div>
     <div class="col-md-7">
             <input type="text" placeholder="按名称关键字搜索" id="search_info">
@@ -171,12 +167,61 @@
 {% block js %}
 <script type="text/javascript">
 
+{% for key in key1 %}
+    $('input[name="key1"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
+{% for key in key2 %}
+    $('input[name="key2"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
+{% for key in key3 %}
+    $('input[name="key3"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
+{% for key in key4 %}
+    $('input[name="key4"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
+{% for key in key5 %}
+    $('input[name="key5"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
+{% for key in key6 %}
+    $('input[name="key6"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
+{% for key in key7 %}
+    $('input[name="key7"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
+{% for key in key8 %}
+    $('input[name="key8"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
+{% for key in key9 %}
+    $('input[name="key9"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
+{% for key in key10 %}
+    $('input[name="key10"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
+{% for key in key11 %}
+    $('input[name="key11"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
+{% for key in key12 %}
+    $('input[name="key12"][value="{{ key }}"]').attr("checked","checked")
+{% endfor %}
+
     var set_dict = {
-        'name':'',
+        'name':'{{ name }}',
         'key1':[],'key2':[],'key3':[],'key4':[],'key5':[],'key6':[],
         'key7':[],'key8':[],'key9':[],'key10':[],'key11':[],'key12':[],
 
     }
+
 
     $('#search_button').click(function () {
         var text = $('#search_info').val()
@@ -213,13 +258,13 @@
         for(i=1;i<13;i++){
             var key = "key"+i
             $('input[name="'+key+'"]:checked').each(function(){
-            set_dict[key].push($(this).val());//向数组中添加元素
-        });
+                set_dict[key].push($(this).val());//向数组中添加元素
+            });
         }
-        set_dict['name'] = $('input#id_name').val()
+
 
         var jsonStr = JSON.stringify(set_dict);
-        $.post("saveTemplate",{'mes':jsonStr,'csrfmiddlewaretoken': $("[name = 'csrfmiddlewaretoken']").val(),'status':'new'}).done(function () {
+        $.post("saveTemplate",{'mes':jsonStr,'csrfmiddlewaretoken': $("[name = 'csrfmiddlewaretoken']").val(),'status':'edit'}).done(function () {
             window.location.href ='template.html'
 
         }).fail(function () {
