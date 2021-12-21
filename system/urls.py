@@ -12,6 +12,8 @@ urlpatterns = [
     path('configedaction',views.conf_action),
     path('newtemp.html',views.new_temp),
     path('saveTemplate',views.save_temp),
-    path('tempAction',views.temp_action)
+    path('tempAction',views.temp_action),
+    path('loadtemp',views.loadtemp),
+    path('saveconf',views.saveconf)
 
 ]

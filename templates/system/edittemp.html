@@ -15,7 +15,8 @@
 
 <div class="row sparse_min">
     <div class="col-md-5 ">
-        <label>模板名称:&nbsp&nbsp</label>{{ name }}
+        <label>模板名称<span class="red">*</span>:&nbsp&nbsp</label>
+        <input class="single_line" required=True id="id_name" value="{{ name }}">
     </div>
     <div class="col-md-7">
             <input type="text" placeholder="按名称关键字搜索" id="search_info">
@@ -216,7 +217,7 @@
 {% endfor %}
 
     var set_dict = {
-        'name':'{{ name }}',
+        'name':'','old_name':'{{ name }}',
         'key1':[],'key2':[],'key3':[],'key4':[],'key5':[],'key6':[],
         'key7':[],'key8':[],'key9':[],'key10':[],'key11':[],'key12':[],
 
@@ -251,8 +252,9 @@
     $('div#collapseExample').attr('class','collapse in');
     $('a.config').click(function () {
         var ele = $(this).attr('id')
-        $('input[name="'+ele+'"]').attr('checked',false)
+        $('input[name="'+ele+'"]').prop('checked',false)
     })
+
     $('button#save').click(function () {
 
         for(i=1;i<13;i++){
@@ -261,9 +263,10 @@
                 set_dict[key].push($(this).val());//向数组中添加元素
             });
         }
-
-
+        var name = $('input#id_name').val()
+        set_dict['name'] = name
         var jsonStr = JSON.stringify(set_dict);
+
         $.post("saveTemplate",{'mes':jsonStr,'csrfmiddlewaretoken': $("[name = 'csrfmiddlewaretoken']").val(),'status':'edit'}).done(function () {
             window.location.href ='template.html'
 

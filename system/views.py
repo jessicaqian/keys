@@ -66,11 +66,14 @@ def config(request):
             sql = " SELECT name FROM output_list "
             cursor.execute(sql)
             val = cursor.fetchall()
+            sql = " SELECT name FROM template"
+            cursor.execute(sql)
+            form_template = cursor.fetchall()
             conn.close()
 
 
 
-        return render(request, 'system/keyconfig.html',{'dict':info_dict,'output_name':val})
+        return render(request, 'system/keyconfig.html',{'dict':info_dict,'output_name':val,'form_template':form_template})
 
     else:
         form = ConfigForm()
@@ -108,6 +111,31 @@ def template(request):
     conn.close()
     return render(request, 'system/template.html',{'form':form_template})
 
+def saveconf(request):
+    if request.method == 'POST':
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        mes = request.POST['mes']
+        status = request.POST['status']
+        key_set = json.loads(mes)
+        if status == 'new':
+            sql = "UPDATE keys_set SET key1='"+ json.dumps(key_set['key1'], ensure_ascii=False) + "',key2='"\
+                  + json.dumps(key_set['key1'], ensure_ascii=False) + "',key3='"+ json.dumps(key_set['key1'], ensure_ascii=False) \
+                  +"',key4='"+ json.dumps(key_set['key4'], ensure_ascii=False) +"',key5='"+ json.dumps(key_set['key5'], ensure_ascii=False)\
+                  +"',key6='"+ json.dumps(key_set['key6'], ensure_ascii=False) +"',key7='"+ json.dumps(key_set['key7'], ensure_ascii=False) \
+                  +"',key8='"+ json.dumps(key_set['key8'], ensure_ascii=False) +"',key9='"+ json.dumps(key_set['key9'], ensure_ascii=False) \
+                  +"',key10='"+ json.dumps(key_set['key10'], ensure_ascii=False) +"',key11='"+ json.dumps(key_set['key11'], ensure_ascii=False)\
+                  +"',key12='"+ json.dumps(key_set['key12'], ensure_ascii=False) +"' WHERE inputID ='"+key_set['id']+"'"
+            cursor.execute(sql)
+            conn.commit()
+            conn.close()
+    return JsonResponse({'code': 1, 'msg': 'success'})
+
+
+
+
+
+
 def new_temp(request):
     conn = sqlite3.connect('db.sqlite3')
     cursor = conn.cursor()
@@ -138,13 +166,22 @@ def save_temp(request):
             conn.commit()
             conn.close()
         elif status == 'edit':
-            sql = "UPDATE template SET key1='" + json.dumps(tem_set['key1'], ensure_ascii=False) + "',key2='"\
+            if tem_set['name'] == tem_set['old_name']:
+                sql = "UPDATE template SET key1='" + json.dumps(tem_set['key1'], ensure_ascii=False) + "',key2='"\
                   + json.dumps(tem_set['key2'], ensure_ascii=False) + "',key3='"+ json.dumps(tem_set['key3'], ensure_ascii=False)+"',key4='"\
                   + json.dumps(tem_set['key4'], ensure_ascii=False) +"',key5='"+ json.dumps(tem_set['key5'], ensure_ascii=False) +"',key6='"\
                   + json.dumps(tem_set['key6'], ensure_ascii=False) +"',key7='"+ json.dumps(tem_set['key7'], ensure_ascii=False) +"',key8='"\
                   + json.dumps(tem_set['key8'], ensure_ascii=False) +"',key9='"+ json.dumps(tem_set['key9'], ensure_ascii=False) +"',key10='"\
                   + json.dumps(tem_set['key10'], ensure_ascii=False) +"',key11='"+ json.dumps(tem_set['key11'], ensure_ascii=False) +"',key12='"\
                   + json.dumps(tem_set['key12'], ensure_ascii=False) +"' WHERE name='"+tem_set['name']+"'"
+            else:
+                sql = "UPDATE template SET name='"+tem_set['name']+"',key1='" + json.dumps(tem_set['key1'], ensure_ascii=False) + "',key2='"\
+                  + json.dumps(tem_set['key2'], ensure_ascii=False) + "',key3='"+ json.dumps(tem_set['key3'], ensure_ascii=False)+"',key4='"\
+                  + json.dumps(tem_set['key4'], ensure_ascii=False) +"',key5='"+ json.dumps(tem_set['key5'], ensure_ascii=False) +"',key6='"\
+                  + json.dumps(tem_set['key6'], ensure_ascii=False) +"',key7='"+ json.dumps(tem_set['key7'], ensure_ascii=False) +"',key8='"\
+                  + json.dumps(tem_set['key8'], ensure_ascii=False) +"',key9='"+ json.dumps(tem_set['key9'], ensure_ascii=False) +"',key10='"\
+                  + json.dumps(tem_set['key10'], ensure_ascii=False) +"',key11='"+ json.dumps(tem_set['key11'], ensure_ascii=False) +"',key12='"\
+                  + json.dumps(tem_set['key12'], ensure_ascii=False) +"' WHERE name='"+tem_set['old_name']+"'"
             cursor.execute(sql)
             conn.commit()
             conn.close()
@@ -189,3 +226,27 @@ def temp_action(request):
             return render(request, 'system/edittemp.html', {'name':temp_name,'key1':key1,'key2':key2,'key3':key3,
                                                             'key4':key4,'key5':key5,'key6':key6,'key7':key7,'key8':key8,'key9':key9,
                                                             'key10':key10,'key11':key11,'key12':key12,'output_name':form})
+
+def loadtemp(request):
+    if request.method == 'GET':
+        name = request.GET.get('name')
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        sql = " SELECT * FROM template WHERE name='"+name+"'"
+        cursor.execute(sql)
+        val = cursor.fetchone()
+        key1 = json.loads(val[1])
+        key2 = json.loads(val[2])
+        key3 = json.loads(val[3])
+        key4 = json.loads(val[4])
+        key5 = json.loads(val[5])
+        key6 = json.loads(val[6])
+        key7 = json.loads(val[7])
+        key8 = json.loads(val[8])
+        key9 = json.loads(val[9])
+        key10 = json.loads(val[10])
+        key11 = json.loads(val[11])
+        key12 = json.loads(val[12])
+        conn.close()
+        return JsonResponse({'key1':key1,'key2':key2,'key3':key3,'key4':key4,'key5':key5,'key6':key6,'key7':key7,
+                             'key8':key8,'key9':key9,'key10':key10,'key11':key11,'key12':key12})

@@ -8,7 +8,7 @@ input#search_info{
     padding-top: 4px ;
     padding-bottom: 6px;
     margin-right: 10px;
-    width: 40%;
+    width: 60%;
 }
 
 li#edit{
@@ -34,6 +34,10 @@ table#key_table{
     margin-bottom: 0px;
 }
 
+table#template_table{
+    margin-bottom: 0px;
+}
+
 div#key_table_box{
     height: 400px;
     overflow-y: scroll;
@@ -49,7 +53,7 @@ td{
     font-size: 13px;
 }
 
-div#key_table_head,div#key_table_action{
+div#key_table_head,div#key_table_action,div#table_box{
     padding-right: 17px;
 }
 
@@ -65,4 +69,10 @@ a.config{
 
 input#id_name{
     width: 250px;
+}
+
+div#template_table_box{
+    height: 350px;
+    overflow-y: scroll;
+    border-bottom: 1px solid #ddd;
 }
