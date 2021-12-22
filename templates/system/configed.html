@@ -8,6 +8,20 @@
 <link href="{% static  "system/css/configed.css" %}" rel="stylesheet">
 {% endblock %}
 
+{% block modal-content %}
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+    </div>
+    <div class="modal-body">
+        <p id="key1"></p><p id="key2"></p><p id="key3"></p><p id="key4"></p><p id="key5"></p><p id="key6"></p>
+        <p id="key7"></p><p id="key8"></p><p id="key9"></p><p id="key10"></p><p id="key11"></p><p id="key12"></p>
+
+
+    </div>
+{% endblock %}
+
+
 {% block content %}
 <div class="row sparse"><label class="head">管理已配置设备&nbsp&nbsp&nbsp&nbsp</label></div>
 
@@ -56,12 +70,12 @@
             <td>{{form.1}}</td>
             <td>{{form.2}}</td>
             <td class="download">
-                <a class="btn config" href="/system/configedaction?id={{ form.3 }}&action=scan" >
+                <a class="btn config"  id="info" type="button" data-toggle="modal" data-target="#myModal" name="{{ form.3 }}">
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                 </a>
             </td>
             <td class="download">
-                <a class="btn config" href="/system/configedaction?id={{ form.3 }}&action=edit">
+                <a class="btn config" href="/system/config.html?id={{ form.3 }}&status=edit">
                     <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
                 </a>
             </td>
@@ -90,6 +104,32 @@
 <script type="text/javascript">
     $('a#flow').attr('aria-expanded','true');
     $('div#collapseExample').attr('class','collapse in');
+    $('#info').click(function () {
+        var id = $(this).attr('name')
+        $.get("getinfo?id="+ id).done(function (info) {
+            $('#myModalLabel').html('设备信息：'+info.inputname)
+            $('#key1').html('<label>(预设1)'+info.keyname['1']+'</label>:'+info.key1)
+            $('#key2').html('<label>(预设2)'+info.keyname['2']+'</label>:'+info.key2)
+            $('#key3').html('<label>(预设3)'+info.keyname['3']+'</label>:'+info.key3)
+            $('#key4').html('<label>(预设4)'+info.keyname['4']+'</label>:'+info.key4)
+            $('#key5').html('<label>(预设5)'+info.keyname['5']+'</label>:'+info.key5)
+            $('#key6').html('<label>(预设6)'+info.keyname['6']+'</label>:'+info.key6)
+            $('#key7').html('<label>(预设7)'+info.keyname['7']+'</label>:'+info.key7)
+            $('#key8').html('<label>(预设8)'+info.keyname['8']+'</label>:'+info.key8)
+            $('#key9').html('<label>(预设9)'+info.keyname['9']+'</label>:'+info.key9)
+            $('#key10').html('<label>(预设10)'+info.keyname['10']+'</label>:'+info.key10)
+            $('#key11').html('<label>(预设11)'+info.keyname['11']+'</label>:'+info.key11)
+            $('#key12').html('<label>(预设12)'+info.keyname['12']+'</label>:'+info.key12)
+
+
+
+
+        }).fail(function () {
+
+        })
+
+    })
+
 
 
 </script>

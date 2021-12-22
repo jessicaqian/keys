@@ -84,6 +84,7 @@
             <label>预设12按键名称:&nbsp&nbsp</label>{{ form.key12 }}
         </div>
     </div>
+    <div style="display: none;">{{ form.status }}</div>
     <div class="row sparse">
         <div class="col-md-4 col-md-offset-8">
             <input type="submit" value="保存并进入按键配置" class="btn btn-primary">
@@ -103,6 +104,36 @@
     $('button#close').click(function () {
         $('#myalter').attr('style','display:none')
     });
+
+    if('{{ status }}'=='edit'){
+
+        $('li#edit').attr('style','border-color: #23527c;')
+        $('li#edit>a').attr('style','text-decoration: none;background-color: #eee;color: #23527c;')
+        $('li#dev_configed > a').attr('style','color: #efb041;padding-left: 30px;')
+
+
+
+        $('input#id_ip').val('{{ dict.ip }}')
+        $('input#id_description').val('{{ dict.description }}')
+        $('input#id_key1').val('{{ dict.key1 }}')
+        $('input#id_key2').val('{{ dict.key2 }}')
+        $('input#id_key3').val('{{ dict.key3 }}')
+        $('input#id_key4').val('{{ dict.key4 }}')
+        $('input#id_key5').val('{{ dict.key5 }}')
+        $('input#id_key6').val('{{ dict.key6 }}')
+        $('input#id_key7').val('{{ dict.key7 }}')
+        $('input#id_key8').val('{{ dict.key8 }}')
+        $('input#id_key9').val('{{ dict.key9 }}')
+        $('input#id_key10').val('{{ dict.key10 }}')
+        $('input#id_key11').val('{{ dict.key11 }}')
+        $('input#id_key12').val('{{ dict.key12 }}')
+        $('input#id_status').val('edit')
+    }else {
+        $('li#dev_free > a').attr('style','color: #efb041;padding-left: 30px;')
+        $('input#id_status').val('new')
+
+    }
+
     function checkIP() {
         obj = document.getElementById("id_ip").value;
         //ip地址

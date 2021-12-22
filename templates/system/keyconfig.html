@@ -227,6 +227,56 @@
         $('#myalter').attr('style','display:none')
     });
 
+    if('{{ dict.status }}'=='edit'){
+        {% for key in key1 %}
+            $('input[name="key1"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+
+        {% for key in key2 %}
+            $('input[name="key2"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+
+        {% for key in key3 %}
+            $('input[name="key3"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+
+        {% for key in key4 %}
+            $('input[name="key4"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+
+        {% for key in key5 %}
+            $('input[name="key5"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+
+        {% for key in key6 %}
+            $('input[name="key6"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+
+        {% for key in key7 %}
+            $('input[name="key7"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+
+        {% for key in key8 %}
+            $('input[name="key8"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+
+        {% for key in key9 %}
+            $('input[name="key9"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+
+        {% for key in key10 %}
+            $('input[name="key10"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+
+        {% for key in key11 %}
+            $('input[name="key11"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+
+        {% for key in key12 %}
+            $('input[name="key12"][value="{{ key }}"]').attr("checked","checked")
+        {% endfor %}
+    }
+
     var set_dict = {
         'id':'{{ dict.id }}',
         'key1':[],'key2':[],'key3':[],'key4':[],'key5':[],'key6':[],
@@ -343,7 +393,14 @@
         var jsonStr = JSON.stringify(set_dict);
 
         $.post("saveconf",{'mes':jsonStr,'csrfmiddlewaretoken': $("[name = 'csrfmiddlewaretoken']").val(),'status':'new'}).done(function () {
-            window.location.href ='free.html'
+            if('{{ dict.status }}'=='edit'){
+                window.location.href ='configed.html'
+
+            }
+            else {
+                window.location.href ='free.html'
+            }
+
 
 
         }).fail(function () {

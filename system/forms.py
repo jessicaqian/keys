@@ -17,4 +17,5 @@ class ConfigForm(forms.Form):
     key12 = forms.CharField(widget=forms.TextInput(attrs={'class':'single_line'}), required=False)
     id = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'true'}),required=False)
     name = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'true'}),required=False)
+    status = forms.CharField(widget=forms.TextInput(attrs={'class':'single_line'}), required=False)
 

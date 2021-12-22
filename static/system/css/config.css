@@ -8,10 +8,7 @@ li#edit>a{
     color: #23527c;
 }
 
-li#dev_free > a{
-    color: #efb041;
-    padding-left: 30px;
-}
+
 
 input#id_description,#id_key1,#id_key2,#id_key3, #id_key4,#id_key5,
 #id_key6,#id_key7,#id_key8, #id_key9,#id_key10,#id_key11,#id_key12{
