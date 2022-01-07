@@ -16,5 +16,7 @@ urlpatterns = [
     path('loadtemp',views.loadtemp),
     path('saveconf',views.saveconf),
     path('getinfo',views.getinfo),
-    path('getconfig',views.getconfig)
+    path('getconfig',views.getconfig),
+    path('configStatus',views.config_status),
+    path('forward',views.forward)
 ]

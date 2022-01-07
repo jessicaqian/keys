@@ -2,11 +2,15 @@
 from django.shortcuts import render
 import sqlite3
 import json
+import requests
 from .forms import ConfigForm
 from django.http import JsonResponse
 from django.http import HttpResponseRedirect
 
 # Create your views here.
+
+
+
 
 def main(request):
 
@@ -59,7 +63,7 @@ def config(request):
             status = info_dict['status']
             conn = sqlite3.connect('db.sqlite3')
             cursor = conn.cursor()
-            sql = " SELECT name FROM output_list "
+            sql = " SELECT name,id FROM output_list "
             cursor.execute(sql)
             output_name = cursor.fetchall()
             sql = " SELECT name FROM template"
@@ -157,11 +161,13 @@ def template(request):
 
 def saveconf(request):
     if request.method == 'POST':
+        print(request.POST)
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
         mes = request.POST['mes']
         status = request.POST['status']
         key_set = json.loads(mes)
+
         if status == 'new':
             sql = "UPDATE keys_set SET key1='"+ json.dumps(key_set['key1'], ensure_ascii=False) + "',key2='"\
                   + json.dumps(key_set['key1'], ensure_ascii=False) + "',key3='"+ json.dumps(key_set['key1'], ensure_ascii=False) \
@@ -169,7 +175,12 @@ def saveconf(request):
                   +"',key6='"+ json.dumps(key_set['key6'], ensure_ascii=False) +"',key7='"+ json.dumps(key_set['key7'], ensure_ascii=False) \
                   +"',key8='"+ json.dumps(key_set['key8'], ensure_ascii=False) +"',key9='"+ json.dumps(key_set['key9'], ensure_ascii=False) \
                   +"',key10='"+ json.dumps(key_set['key10'], ensure_ascii=False) +"',key11='"+ json.dumps(key_set['key11'], ensure_ascii=False)\
-                  +"',key12='"+ json.dumps(key_set['key12'], ensure_ascii=False) +"' WHERE inputID ='"+key_set['id']+"'"
+                  +"',key12='"+ json.dumps(key_set['key12'], ensure_ascii=False) +"',key1id='"+json.dumps(key_set['key1_id'])+"',key2id='"+json.dumps(key_set['key2_id'])\
+                  +"',key3id='"+json.dumps(key_set['key3_id'])+"',key4id='"+json.dumps(key_set['key4_id'])+"',key5id='"+json.dumps(key_set['key5_id'])\
+                  +"',key6id='"+json.dumps(key_set['key6_id'])+"',key7id='"+json.dumps(key_set['key7_id'])+"',key8id='"+json.dumps(key_set['key8_id'])\
+                  +"',key9id='"+json.dumps(key_set['key9_id'])+"',key10id='"+json.dumps(key_set['key10_id'])+"',key11id='"+json.dumps(key_set['key11_id'])\
+                  +"',key12id='"+json.dumps(key_set['key12_id'])+"' WHERE inputID ='"+key_set['id']+"'"
+
             cursor.execute(sql)
             conn.commit()
             conn.close()
@@ -193,6 +204,7 @@ def new_temp(request):
 
 def save_temp(request):
     if request.method == 'POST':
+
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
         mes = request.POST['mes']
@@ -322,4 +334,120 @@ def getinfo(request):
                              'key8':key8,'key9':key9,'key10':key10,'key11':key11,'key12':key12,'inputname':inputname})
 
 def getconfig(request):
-    return JsonResponse({"method":"registe","data":{"[preset0]":{"name":"指挥室0","channel_in":"0","channel_out_0":"1"}}})
+    if request.method == 'POST':
+        mes = json.loads(request.POST['MultiK'])
+        data = mes['data']
+        id = data['id']
+        data_ip = data['ip']
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        sql = " SELECT ip,keyName,key1_id,key2_id,key3_id,key4_id,key5_id,key6_id,key7_id" \
+              ",key8_id,key9_id,key10_id,key11_id,key12_id,inputName FROM keys_set WHERE inputID='" + id + "'"
+        cursor.execute(sql)
+        val = cursor.fetchone()
+        if val == None:
+            return JsonResponse({'method': 'registe failed', 'data': {'error_code': 404, 'error_reason': 'no id'}})
+        else:
+            ip = val[0]
+            if data_ip == ip:
+                keyname = json.loads(val[1])
+
+                return JsonResponse({"method": "registe success", "data": {
+                    "preset": [{
+                        "channel_in": id,
+                        "channel_out": json.loads(val[2]),
+                        "preset_name": keyname[0],
+                        "preset_num": 0
+                    }, {
+                        "channel_in": id,
+                        "channel_out": json.loads(val[3]),
+                        "preset_name": keyname[1],
+                        "preset_num": 1
+                    }, {
+                        "channel_in": id,
+                        "channel_out": json.loads(val[4]),
+                        "preset_name": keyname[2],
+                        "preset_num": 2
+                    }, {
+                        "channel_in": id,
+                        "channel_out": json.loads(val[5]),
+                        "preset_name": keyname[3],
+                        "preset_num": 3
+                    }, {
+                        "channel_in": id,
+                        "channel_out": json.loads(val[6]),
+                        "preset_name": keyname[4],
+                        "preset_num": 4
+                    }, {
+                        "channel_in": id,
+                        "channel_out": json.loads(val[7]),
+                        "preset_name": keyname[5],
+                        "preset_num": 5
+                    }, {
+                        "channel_in": id,
+                        "channel_out": json.loads(val[8]),
+                        "preset_name": keyname[6],
+                        "preset_num": 6
+                    }, {
+                        "channel_in": id,
+                        "channel_out": json.loads(val[9]),
+                        "preset_name": keyname[7],
+                        "preset_num": 7
+                    }, {
+                        "channel_in": id,
+                        "channel_out": json.loads(val[10]),
+                        "preset_name": keyname[8],
+                        "preset_num": 8
+                    }, {
+                        "channel_in": id,
+                        "channel_out": json.loads(val[11]),
+                        "preset_name": keyname[9],
+                        "preset_num": 9
+                    }, {
+                        "channel_in": id,
+                        "channel_out": json.loads(val[12]),
+                        "preset_name": keyname[10],
+                        "preset_num": 10
+                    }, {
+                        "channel_in": id,
+                        "channel_out": json.loads(val[13]),
+                        "preset_name": keyname[11],
+                        "preset_num": 11
+                    }]
+                }})
+            else:
+                return JsonResponse({'method':'registe failed','data':{'error_code' : 405,'error_reason': 'error ip'}})
+
+
+
+
+
+
+
+def config_status(request):
+    heartbeat()
+
+    return JsonResponse({'code': 1, 'msg': 'success'})
+
+def forward(request):
+
+    return JsonResponse({'code': 1, 'msg': 'success'})
+def heartbeat():
+    i = 0
+    while 1:
+        print(1)
+        post_data = {'method': 'heartbeat', 'data': 'ping'}
+        json_data = json.dumps(post_data)
+        try:
+            response = requests.post('http://192.168.149.130:8888/index.html', data=json_data)
+        except Exception as e:
+            i = i+1
+            print(i)
+            if i>=3:
+                return False
+        else:
+            i=0
+
+
+
+
