@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}用户账户管理{% endblock %}
+
+{% block css %}
+<link href="{% static  "system/css/usradmin.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block modal-content %}
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">更改用户信息</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <form method="post">
+        {% csrf_token %}
+            {{ error_msg }}
+            <div class="row sparse_min">
+                <div class="left">
+                {{ form.usrname.label_tag }}
+                {{ form.usrname}}
+                </div>
+            </div>
+            <div class="row sparse_min">
+                <div class="left">
+                {{ form.old_password.label_tag }}
+                {{ form.old_password}}
+                </div>
+            </div>
+            <div class="row sparse">
+                <div class="left">
+                {{ form.new_password.label_tag }}
+                {{ form.new_password}}
+                </div>
+            </div>
+                {{form.non_field_errors}}
+            <input type="submit" value="提&nbsp&nbsp交" id="submit" class="btn btn-primary">
+        </form>
+
+    </div>
+</div>
+
+
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="row sparse"><label class="head">用户账户管理&nbsp&nbsp&nbsp&nbsp</label></div>
+<div class="col-md-2">
+    <div id="usr_image"></div>
+</div>
+<div class="col-md-3">
+    <div class="row sparse">
+        <label>用户名:</label>&nbsp&nbsp&nbsp&nbsp{{ usrname }}
+    </div>
+    <div class="row sparse">
+        <button class="btn btn-primary" id="edit_usrinfo" type="button" data-toggle="modal" data-target="#myModal">
+            <span class="glyphicon glyphicon-qrcode" aria-hidden="true" ></span> 更改用户信息</button>
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+if({{ status }}){
+    $('#myModal').modal('show')
+}
+
+
+</script>
+{% endblock %}

@@ -18,5 +18,8 @@ urlpatterns = [
     path('getinfo',views.getinfo),
     path('getconfig',views.getconfig),
     path('configStatus',views.config_status),
-    path('forward',views.forward)
+    path('forward',views.forward),
+    path('usradmin.html',views.usr_admin),
+    path('reforward',views.re_forward)
+
 ]
