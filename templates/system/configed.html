@@ -70,7 +70,7 @@
             <td>{{form.1}}</td>
             <td>{{form.2}}</td>
             <td class="download">
-                <a class="btn config"  id="info" type="button" data-toggle="modal" data-target="#myModal" name="{{ form.3 }}">
+                <a class="btn config scan"  id="{{ form.3 }}" type="button" data-toggle="modal" data-target="#myModal" >
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                 </a>
             </td>
@@ -104,8 +104,8 @@
 <script type="text/javascript">
     $('a#flow').attr('aria-expanded','true');
     $('div#collapseExample').attr('class','collapse in');
-    $('#info').click(function () {
-        var id = $(this).attr('name')
+    $('a.scan').click(function () {
+        var id = $(this).attr('id')
         $.get("getinfo?id="+ id).done(function (info) {
             $('#myModalLabel').html('设备信息：'+info.inputname)
             $('#key1').html('<label>(预设1)'+info.keyname['1']+'</label>:'+info.key1)

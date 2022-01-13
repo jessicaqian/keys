@@ -2,8 +2,6 @@
 from django.shortcuts import render
 import sqlite3
 import json
-import requests
-import time
 import hashlib
 from .forms import ConfigForm
 from .forms import UsrForm
@@ -74,8 +72,15 @@ def config(request):
                             '5':info_dict['key5'],'6':info_dict['key6'],'7':info_dict['key7'],'8':info_dict['key8'],
                             '9':info_dict['key9'],'10':info_dict['key10'],'11':info_dict['key11'],'12':info_dict['key12']}
             if status == 'new':
+                str = [' ',' ']
+                data = json.dumps(str)
 
-                sql = "INSERT INTO keys_set (inputID,inputName,ip,description,keyName) values('"+info_dict['id']+"','"+info_dict['name']+"','"+info_dict['ip']+"','"+info_dict['description']+"','"+json.dumps(dict_keyname,ensure_ascii=False)+"')"
+                sql = "INSERT INTO keys_set (inputID,inputName,ip,description,keyName,status," \
+                      "key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12," \
+                      "key1id,key2id,key3id,key4id,key5id,key6id,key7id,key8id,key9id,key10id,key11id,key12id) values('"\
+                      +info_dict['id']+"','"+info_dict['name']+"','"+info_dict['ip']+"','"+info_dict['description']+"','"+json.dumps(dict_keyname,ensure_ascii=False)+"','unregiste'," \
+                      "'"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"" \
+                        "','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"')"
 
                 cursor.execute(sql)
                 conn.commit()
@@ -458,58 +463,52 @@ def config_status(request):
         mes = json.loads(request.POST['MultiK'])
         data = mes['data']
         id = data['id']
-        data_ip = data['ip']
-        # heartbeat(data_ip)
-
+        ip = data['ip']
     return JsonResponse({'code': 1, 'msg': 'success'})
 
-def forward(request):
+def get_config_status(request):
     if request.method == 'POST':
         mes = json.loads(request.POST['MultiK'])
         data = mes['data']
-        post_data = {'method': 'command', 'data': data}
-        json_data = json.dumps(post_data)
-        try:
-            response = requests.post('http://192.168.8.102:8080/index.html', data=json_data)
-        except Exception as e:
-            print('error')
-        else:
-            pass
+        id = data['id']
+        ip = data['ip']
     return JsonResponse({'code': 1, 'msg': 'success'})
 
-def re_forward(request):
-    if request.method == 'POST':
-        mes = json.loads(request.POST['MultiK'])
-        print(mes)
-        data = mes['data']
-        post_data = {'method': 'command', 'data': data}
-        json_data = json.dumps(post_data)
-        try:
-            response = requests.post('http://192.168.8.102:8888/index.html', data=json_data)
-        except Exception as e:
-            print('error')
-        else:
-            pass
-    return JsonResponse({'code': 1, 'msg': 'success'})
+# def forward(request):
+#     if request.method == 'POST':
+#         mes = json.loads(request.POST['MultiK'])
+#         data = mes['data']
+#         post_data = {'method': 'command', 'data': data}
+#         json_data = json.dumps(post_data)
+#         try:
+#             response = requests.post('http://192.168.8.102:8080/index.html', data=json_data)
+#         except Exception as e:
+#             print('error')
+#         else:
+#             pass
+#     return JsonResponse({'code': 1, 'msg': 'success'})
+#
+# def re_forward(request):
+#     if request.method == 'POST':
+#         mes = json.loads(request.POST['MultiK'])
+#         print(mes)
+#         data = mes['data']
+#         post_data = {'method': 'command', 'data': data}
+#         json_data = json.dumps(post_data)
+#         try:
+#             response = requests.post('http://192.168.8.102:8888/index.html', data=json_data)
+#         except Exception as e:
+#             print('error')
+#         else:
+#             pass
+#     return JsonResponse({'code': 1, 'msg': 'success'})
 
 
 
-def heartbeat(ip):
-    i = 0
-    while 1:
-        print(1)
-        post_data = {'method': 'heartbeat', 'data': 'ping'}
-        json_data = json.dumps(post_data)
-        try:
-            response = requests.post('http://'+ip+':8888/index.html', data=json_data)
-        except Exception as e:
-            i = i+1
-            print(i)
-            if i>=3:
-                return False
-        else:
-            i=0
-            time.sleep(5)
+
+
+
+
 
 
 
