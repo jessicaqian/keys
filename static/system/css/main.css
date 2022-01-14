@@ -12,7 +12,7 @@ div#sum{
     height: 140px;
     width: 140px;
     background-color: #337ab7;
-    margin: 30px auto 30px auto;
+    margin: 40px 0;
     border-radius: 8px;
     text-align: center;
 }
@@ -21,7 +21,7 @@ div#free{
     height: 140px;
     width: 140px;
     background-color: #f0ad4e;
-    margin: 30px auto 30px auto;
+    margin: 40px 0;
     border-radius: 8px;
     text-align: center;
 }
@@ -30,7 +30,7 @@ div#confed{
     height: 140px;
     width: 140px;
     background-color: #5cb85c;
-    margin: 30px auto 30px auto;
+    margin: 40px 0;
     border-radius: 8px;
     text-align: center;
 }

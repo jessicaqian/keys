@@ -600,14 +600,14 @@ model</ColNames>
       <Position>30</Position>
       <DataType>text|0s</DataType>
     </column>
-    <index id="141" parent="17" name="keys_set_inputID_uindex">
+    <index id="141" parent="17" name="sqlite_autoindex_keys_set_1">
+      <NameSurrogate>1</NameSurrogate>
       <ColNames>inputID</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="142" parent="17" name="sqlite_autoindex_keys_set_1">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>inputID</ColNames>
+    <index id="142" parent="17" name="keys_set_ip_uindex">
+      <ColNames>ip</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>

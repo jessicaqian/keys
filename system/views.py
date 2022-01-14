@@ -78,41 +78,48 @@ def config(request):
                 sql = "INSERT INTO keys_set (inputID,inputName,ip,description,keyName,status," \
                       "key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12," \
                       "key1id,key2id,key3id,key4id,key5id,key6id,key7id,key8id,key9id,key10id,key11id,key12id) values('"\
-                      +info_dict['id']+"','"+info_dict['name']+"','"+info_dict['ip']+"','"+info_dict['description']+"','"+json.dumps(dict_keyname,ensure_ascii=False)+"','unregiste'," \
+                      +info_dict['id']+"','"+info_dict['name']+"','"+info_dict['ip']+"','"+info_dict['description']+"','"+json.dumps(dict_keyname,ensure_ascii=False)+"','off'," \
                       "'"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"" \
                         "','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"','"+data+"')"
-
-                cursor.execute(sql)
-                conn.commit()
-                sql = " UPDATE input_select SET free = 0 WHERE dev_ID = '"+info_dict['id']+"'"
-                cursor.execute(sql)
-                conn.commit()
-                conn.close()
-                return render(request, 'system/keyconfig.html',
-                              {'dict': info_dict, 'output_name': output_name, 'form_template': form_template})
+                try:
+                    cursor.execute(sql)
+                except Exception as e:
+                    return render(request, 'system/config.html',{'name':info_dict['name'],'id':info_dict['id'],'form':form,'status':'new','alter':'error'})
+                else:
+                    conn.commit()
+                    sql = " UPDATE input_select SET free = 0 WHERE dev_ID = '"+info_dict['id']+"'"
+                    cursor.execute(sql)
+                    conn.commit()
+                    conn.close()
+                    return render(request, 'system/keyconfig.html',
+                                  {'dict': info_dict, 'output_name': output_name, 'form_template': form_template})
             elif status == 'edit':
                 sql = "UPDATE keys_set SET ip='"+info_dict['ip']+"',description='"+info_dict['description']+"',keyName='"+json.dumps(dict_keyname,ensure_ascii=False)+"' WHERE inputID='"+info_dict['id']+"'"
-                cursor.execute(sql)
-                conn.commit()
-                sql = "SELECT key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12 FROM keys_set WHERE inputID='"+info_dict['id']+"'"
-                cursor.execute(sql)
-                val = cursor.fetchone()
-                key1 = json.loads(val[0])
-                key2 = json.loads(val[1])
-                key3 = json.loads(val[2])
-                key4 = json.loads(val[3])
-                key5 = json.loads(val[4])
-                key6 = json.loads(val[5])
-                key7 = json.loads(val[6])
-                key8 = json.loads(val[7])
-                key9 = json.loads(val[8])
-                key10 = json.loads(val[9])
-                key11 = json.loads(val[10])
-                key12 = json.loads(val[11])
-                return render(request, 'system/keyconfig.html',
-                  {'dict': info_dict, 'output_name': output_name, 'form_template': form_template,'key1':key1,'key2':key2,'key3':key3,
-                                                            'key4':key4,'key5':key5,'key6':key6,'key7':key7,'key8':key8,'key9':key9,
-                                                            'key10':key10,'key11':key11,'key12':key12})
+                try:
+                    cursor.execute(sql)
+                except Exception as e:
+                    return render(request, 'system/config.html',{'name':info_dict['name'],'id':info_dict['id'],'form':form,'status':'edit','alter':'error'})
+                else:
+                    conn.commit()
+                    sql = "SELECT key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12 FROM keys_set WHERE inputID='"+info_dict['id']+"'"
+                    cursor.execute(sql)
+                    val = cursor.fetchone()
+                    key1 = json.loads(val[0])
+                    key2 = json.loads(val[1])
+                    key3 = json.loads(val[2])
+                    key4 = json.loads(val[3])
+                    key5 = json.loads(val[4])
+                    key6 = json.loads(val[5])
+                    key7 = json.loads(val[6])
+                    key8 = json.loads(val[7])
+                    key9 = json.loads(val[8])
+                    key10 = json.loads(val[9])
+                    key11 = json.loads(val[10])
+                    key12 = json.loads(val[11])
+                    return render(request, 'system/keyconfig.html',
+                      {'dict': info_dict, 'output_name': output_name, 'form_template': form_template,'key1':key1,'key2':key2,'key3':key3,
+                                                                'key4':key4,'key5':key5,'key6':key6,'key7':key7,'key8':key8,'key9':key9,
+                                                                'key10':key10,'key11':key11,'key12':key12})
     else:
         form = ConfigForm()
         id = request.GET.get('id', default='10000000')
@@ -463,7 +470,7 @@ def config_status(request):
         mes = json.loads(request.POST['MultiK'])
         data = mes['data']
         id = data['id']
-        ip = data['ip']
+
     return JsonResponse({'code': 1, 'msg': 'success'})
 
 def get_config_status(request):
@@ -474,34 +481,6 @@ def get_config_status(request):
         ip = data['ip']
     return JsonResponse({'code': 1, 'msg': 'success'})
 
-# def forward(request):
-#     if request.method == 'POST':
-#         mes = json.loads(request.POST['MultiK'])
-#         data = mes['data']
-#         post_data = {'method': 'command', 'data': data}
-#         json_data = json.dumps(post_data)
-#         try:
-#             response = requests.post('http://192.168.8.102:8080/index.html', data=json_data)
-#         except Exception as e:
-#             print('error')
-#         else:
-#             pass
-#     return JsonResponse({'code': 1, 'msg': 'success'})
-#
-# def re_forward(request):
-#     if request.method == 'POST':
-#         mes = json.loads(request.POST['MultiK'])
-#         print(mes)
-#         data = mes['data']
-#         post_data = {'method': 'command', 'data': data}
-#         json_data = json.dumps(post_data)
-#         try:
-#             response = requests.post('http://192.168.8.102:8888/index.html', data=json_data)
-#         except Exception as e:
-#             print('error')
-#         else:
-#             pass
-#     return JsonResponse({'code': 1, 'msg': 'success'})
 
 
 

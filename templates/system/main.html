@@ -11,28 +11,74 @@
 {% block content %}
     <div class="row"><label class="head">资产概况总览&nbsp&nbsp&nbsp&nbsp</label></div>
     <div class="row">
-        <div class="col-md-3 col-md-offset-1">
+        <div class="col-md-2">
             <div id="sum">
                 <label class="calc-title">多KEY资源池</label><br>
                 <label class="calc-num">48</label>
             </div>
-        </div>
-        <div class="col-md-3">
             <div id="confed">
                 <label class="calc-title">已配置多KEY数</label><br>
                 <label class="calc-num">{{ setnum }}</label>
             </div>
-        </div>
-        <div class="col-md-3">
             <div id="free">
                 <label class="calc-title">活跃多KEY数</label><br>
                 <label class="calc-num">48</label>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-9">
+            <div class="row sparse" id="head_bar">
+                <div class="col-md-3">
+                    <label>已配置多key设备列表</label>
 
+                </div>
+                <div class="col-md-7">
+                        <input type="text" placeholder="按名称关键字搜索" id="search_info">
+                        <button class="btn btn-primary" id="search_button">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+
+            <div id="table_box">
+                 <table class="table table-hover table-condensed table-striped" id="configed_table">
+                    <colgroup>
+                        <col style="width: 40px"><col style="width: 30%"><col style="width: 25%"><col style="width: 25%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>输入设备描述</th>
+                            <th>多key设备IP</th>
+                            <th>设备在线状态</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="configed_table_body">
+                <table class="table table-hover table-condensed table-striped" id="table_body">
+                    <colgroup>
+                        <col style="width: 40px"><col style="width: 30%"><col style="width: 25%"><col style="width: 25%">
+                    </colgroup>
+                <tbody>
+
+            {% for form in form %}
+                    <tr id="id{{ forloop.counter }}">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{form.0}}</td>
+                        <td>{{form.1}}</td>
+                        <td>{{form.2}}</td>
+
+                    </tr>
+            {% endfor %}
+
+                </tbody>
+                </table>
+
+            </div>
         </div>
+
     </div>
+
 
 
 {% endblock %}
