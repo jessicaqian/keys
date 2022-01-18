@@ -15,6 +15,10 @@ li.nav_bar{
     text-align: center;
 }
 
+li.nav_bar>a{
+    font-size: 16px;
+}
+
 li.nav_bar:hover{
     border-color: #23527c;
 }

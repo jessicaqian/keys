@@ -19,6 +19,8 @@ urlpatterns = [
     path('getconfig',views.getconfig),
     path('configStatus',views.config_status),
     path('usradmin.html',views.usr_admin),
-
+    path('checkClient',views.check_client),
+    path('connectStatus',views.connect_status),
+    path('serverStatus',views.server_status)
 
 ]

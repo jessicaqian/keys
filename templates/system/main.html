@@ -22,7 +22,7 @@
             </div>
             <div id="free">
                 <label class="calc-title">活跃多KEY数</label><br>
-                <label class="calc-num">48</label>
+                <label class="calc-num" id="alive"></label>
             </div>
         </div>
         <div class="col-md-9">
@@ -42,7 +42,7 @@
             <div id="table_box">
                  <table class="table table-hover table-condensed table-striped" id="configed_table">
                     <colgroup>
-                        <col style="width: 40px"><col style="width: 30%"><col style="width: 25%"><col style="width: 25%">
+                        <col style="width: 40px"><col /><col style="width: 25%"><col style="width: 25%">
                     </colgroup>
                     <thead>
                         <tr>
@@ -57,16 +57,20 @@
             <div id="configed_table_body">
                 <table class="table table-hover table-condensed table-striped" id="table_body">
                     <colgroup>
-                        <col style="width: 40px"><col style="width: 30%"><col style="width: 25%"><col style="width: 25%">
+                        <col style="width: 40px"><col /><col style="width: 25%"><col style="width: 25%">
                     </colgroup>
                 <tbody>
 
             {% for form in form %}
                     <tr id="id{{ forloop.counter }}">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{form.0}}</td>
                         <td>{{form.1}}</td>
                         <td>{{form.2}}</td>
+                        <td>
+                            <a class=" status" id="{{ forloop.counter }}" name="{{ form.3 }}">
+
+                            </a>
+                        </td>
 
                     </tr>
             {% endfor %}
@@ -85,6 +89,21 @@
 
 {% block js %}
  	<script type="text/javascript">
+    var aliveNo = 0
+    for (i=1;i<={{ form|length }};i++){
+
+        var status = $('a#'+i).attr('name')
+        if (status =='off'){
+            $('a#'+i).html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
+        }else {
+            $('a#'+i).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+            aliveNo++
+        }
+    }
+    $('label#alive').html(aliveNo)
+
+
+
 
 	</script>
 {% endblock %}

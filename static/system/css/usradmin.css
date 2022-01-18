@@ -31,3 +31,7 @@ ul.errorlist{
 	margin: 0px auto;
 	color: red;
 }
+
+div#example1{
+    height: 300px;
+}

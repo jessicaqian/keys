@@ -12,7 +12,7 @@ div#sum{
     height: 140px;
     width: 140px;
     background-color: #337ab7;
-    margin: 40px 0;
+    margin: 70px 0;
     border-radius: 8px;
     text-align: center;
 }
@@ -20,8 +20,8 @@ div#sum{
 div#free{
     height: 140px;
     width: 140px;
-    background-color: #f0ad4e;
-    margin: 40px 0;
+    background-color: #5cb85c;
+    margin: 70px 0;
     border-radius: 8px;
     text-align: center;
 }
@@ -29,8 +29,8 @@ div#free{
 div#confed{
     height: 140px;
     width: 140px;
-    background-color: #5cb85c;
-    margin: 40px 0;
+    background-color: #f0ad4e;
+    margin: 70px 0;
     border-radius: 8px;
     text-align: center;
 }
@@ -47,4 +47,51 @@ label.calc-num{
     color: white;
     font-weight: 500;
 
+}
+
+td,th{
+    text-align: center;
+
+}
+
+td{
+    font-size: 13px;
+}
+
+table#configed_table{
+    margin-bottom: 0;
+}
+
+div#configed_table_body{
+    height: 650px;
+    overflow-y: scroll;
+    border-bottom: 1px solid #ddd;
+}
+
+div#table_box{
+    padding-right: 17px;
+}
+
+span.glyphicon-remove-circle{
+    color: red;
+}
+
+span.glyphicon-ok-circle{
+    color: green;
+}
+
+a.status{
+    font-size: 18px;
+
+}
+
+table#table_body>tbody>tr>td{
+    vertical-align: middle;
+}
+
+input#search_info{
+    padding-top: 4px ;
+    padding-bottom: 6px;
+    margin-right: 10px;
+    width: 60%;
 }

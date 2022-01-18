@@ -33,7 +33,7 @@ table#key_table,table#delete_action{
 }
 
 div#key_table_box{
-    height: 400px;
+    height: 600px;
     overflow-y: scroll;
     border-bottom: 1px solid #ddd;
 }

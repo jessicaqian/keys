@@ -1,6 +1,6 @@
 div#key_set{
     padding:0px 15px;
-    height: 500px;
+    height: 700px;
     overflow-y: auto;
 }
 
@@ -39,7 +39,7 @@ table#template_table{
 }
 
 div#key_table_box{
-    height: 400px;
+    height: 590px;
     overflow-y: scroll;
     border-bottom: 1px solid #ddd;
 }
@@ -72,7 +72,7 @@ input#id_name{
 }
 
 div#template_table_box{
-    height: 350px;
+    height: 650px;
     overflow-y: scroll;
     border-bottom: 1px solid #ddd;
 }

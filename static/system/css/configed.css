@@ -57,7 +57,7 @@ div#table_box{
 }
 
 div#configed_table_body{
-    height: 480px;
+    height: 650px;
     overflow-y: scroll;
     border-bottom: 2px solid #ddd;
 }

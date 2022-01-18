@@ -7,8 +7,22 @@ from .forms import ConfigForm
 from .forms import UsrForm
 from django.http import JsonResponse
 from django.http import HttpResponseRedirect
+from django.http import FileResponse
+from django.utils.encoding import escape_uri_path
 
 # Create your views here.
+
+status_dict={}
+
+conn = sqlite3.connect('db.sqlite3')
+cursor = conn.cursor()
+sql = " SELECT inputID,inputName,ip,status FROM keys_set"
+cursor.execute(sql)
+array = cursor.fetchall()
+
+for i in array:
+    status_dict[i[2]]=i
+
 
 def main(request):
 
@@ -23,7 +37,7 @@ def main(request):
         num = cursor.fetchone()
         conn.close()
 
-        return render(request, 'system/main.html',{'setnum':num[0]})
+        return render(request, 'system/main.html',{'setnum':num[0],'form':status_dict.values()})
 
 def configed(request):
     conn = sqlite3.connect('db.sqlite3')
@@ -86,11 +100,13 @@ def config(request):
                 except Exception as e:
                     return render(request, 'system/config.html',{'name':info_dict['name'],'id':info_dict['id'],'form':form,'status':'new','alter':'error'})
                 else:
+
                     conn.commit()
                     sql = " UPDATE input_select SET free = 0 WHERE dev_ID = '"+info_dict['id']+"'"
                     cursor.execute(sql)
                     conn.commit()
                     conn.close()
+                    status_dict[info_dict['ip']] = (info_dict['id'],info_dict['name'],info_dict['ip'],'off')
                     return render(request, 'system/keyconfig.html',
                                   {'dict': info_dict, 'output_name': output_name, 'form_template': form_template})
             elif status == 'edit':
@@ -100,6 +116,8 @@ def config(request):
                 except Exception as e:
                     return render(request, 'system/config.html',{'name':info_dict['name'],'id':info_dict['id'],'form':form,'status':'edit','alter':'error'})
                 else:
+                    status_dict[info_dict['ip']]= (info_dict['id'],info_dict['name'],info_dict['ip'],'off')
+                    print(status_dict)
                     conn.commit()
                     sql = "SELECT key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12 FROM keys_set WHERE inputID='"+info_dict['id']+"'"
                     cursor.execute(sql)
@@ -147,6 +165,7 @@ def conf_action(request):
         action = request.GET.get('action')
         id = request.GET.get('id')
         if action == 'delete':
+            ip = request.GET.get('ip')
             conn = sqlite3.connect('db.sqlite3')
             cursor = conn.cursor()
             sql = "DELETE FROM keys_set WHERE inputID = '"+id+"';"
@@ -156,6 +175,7 @@ def conf_action(request):
             cursor.execute(sql)
             conn.commit()
             conn.close()
+            del status_dict[ip]
             return HttpResponseRedirect("configed.html")
 
 def template(request):
@@ -480,6 +500,16 @@ def get_config_status(request):
         id = data['id']
         ip = data['ip']
     return JsonResponse({'code': 1, 'msg': 'success'})
+
+def check_client(request):
+    pass
+
+def connect_status(request):
+    pass
+
+def server_status(request):
+    pass
+
 
 
 
