@@ -62,6 +62,7 @@
             <span class="glyphicon glyphicon-qrcode" aria-hidden="true" ></span> 更改用户信息</button>
     </div>
 </div>
+{#    <button id="on">上线</button><button id="off">下线</button>#}
 
 
 
@@ -77,6 +78,36 @@
 if({{ status }}){
     $('#myModal').modal('show')
 }
+
+$('button#on').click(function () {
+    data = JSON.stringify({
+  method  : 'client connect',
+  data    :
+  {
+    ip : "192.168.2.98"
+  }
+
+})
+    $.post('connectStatus',{'MultiK':data}).done(function () {
+
+    })
+
+})
+
+$('button#off').click(function () {
+    data = JSON.stringify({
+  method  : 'client disconnect',
+  data    :
+  {
+    ip : "192.168.2.98"
+  }
+
+})
+    $.post('connectStatus',{'MultiK':data}).done(function () {
+
+    })
+
+})
 
 
 </script>

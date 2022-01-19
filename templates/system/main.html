@@ -65,7 +65,7 @@
                     <tr id="id{{ forloop.counter }}">
                         <td>{{ forloop.counter }}</td>
                         <td>{{form.1}}</td>
-                        <td>{{form.2}}</td>
+                        <td id="ip{{ forloop.counter }}">{{form.2}}</td>
                         <td>
                             <a class=" status" id="{{ forloop.counter }}" name="{{ form.3 }}">
 
@@ -90,6 +90,11 @@
 {% block js %}
  	<script type="text/javascript">
     var aliveNo = 0
+    let list = []
+    {% for form in form %}
+        list.push(['{{form.0}}','{{form.1}}','{{form.2}}','{{form.3}}'])
+    {% endfor %}
+
     for (i=1;i<={{ form|length }};i++){
 
         var status = $('a#'+i).attr('name')
@@ -101,6 +106,49 @@
         }
     }
     $('label#alive').html(aliveNo)
+
+    function getStatus(){
+        $.get('getStatus').done(function (info) {
+            if(info.statusform.length==list.length){
+
+                for(i=0;i<list.length;i++){
+
+                    if(info.statusform[i][0]==list[i][0]){
+                        if(info.statusform[i][2]==list[i][2]){
+
+                        }else{
+                            $('td#ip'+(i+1)).html(info.statusform[i][2])
+                            list[i][2]=info.statusform[i][2]
+                        }
+                        if(info.statusform[i][3]==list[i][3]){
+
+                        }else{
+                            if(info.statusform[i][3]=='on'){
+                                $('a#'+(i+1)).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+                                aliveNo++
+
+                            }else{
+                                $('a#'+(i+1)).html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
+                                aliveNo--
+                            }
+                            list[i][3]=info.statusform[i][3]
+                        }
+                        $('label#alive').html(aliveNo)
+                    }else {
+                        window.location.href='main.html'
+                    }
+                }
+            }else{
+                window.location.href='main.html'
+            }
+
+
+
+        }).fail(function () {
+
+        })
+    }
+    setInterval(getStatus,2000)
 
 
 

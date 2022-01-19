@@ -21,6 +21,7 @@ urlpatterns = [
     path('usradmin.html',views.usr_admin),
     path('checkClient',views.check_client),
     path('connectStatus',views.connect_status),
-    path('serverStatus',views.server_status)
+    path('serverStatus',views.server_status),
+    path('getStatus',views.get_status)
 
 ]

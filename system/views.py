@@ -7,8 +7,6 @@ from .forms import ConfigForm
 from .forms import UsrForm
 from django.http import JsonResponse
 from django.http import HttpResponseRedirect
-from django.http import FileResponse
-from django.utils.encoding import escape_uri_path
 
 # Create your views here.
 
@@ -20,8 +18,11 @@ sql = " SELECT inputID,inputName,ip,status FROM keys_set"
 cursor.execute(sql)
 array = cursor.fetchall()
 
+
 for i in array:
-    status_dict[i[2]]=i
+    i=list(i)
+    status_dict[i[0]]=i
+
 
 
 def main(request):
@@ -37,7 +38,7 @@ def main(request):
         num = cursor.fetchone()
         conn.close()
 
-        return render(request, 'system/main.html',{'setnum':num[0],'form':status_dict.values()})
+        return render(request, 'system/main.html',{'setnum':num[0],'form':list(status_dict.values())})
 
 def configed(request):
     conn = sqlite3.connect('db.sqlite3')
@@ -98,6 +99,7 @@ def config(request):
                 try:
                     cursor.execute(sql)
                 except Exception as e:
+                    conn.close()
                     return render(request, 'system/config.html',{'name':info_dict['name'],'id':info_dict['id'],'form':form,'status':'new','alter':'error'})
                 else:
 
@@ -106,18 +108,24 @@ def config(request):
                     cursor.execute(sql)
                     conn.commit()
                     conn.close()
-                    status_dict[info_dict['ip']] = (info_dict['id'],info_dict['name'],info_dict['ip'],'off')
+                    status_dict[info_dict['id']] = [info_dict['id'],info_dict['name'],info_dict['ip'],'off']
                     return render(request, 'system/keyconfig.html',
                                   {'dict': info_dict, 'output_name': output_name, 'form_template': form_template})
             elif status == 'edit':
+                sql = "SELECT ip FROM keys_set WHERE inputID='"+info_dict['id']+"'"
+                cursor.execute(sql)
+                ip_val = cursor.fetchone()
                 sql = "UPDATE keys_set SET ip='"+info_dict['ip']+"',description='"+info_dict['description']+"',keyName='"+json.dumps(dict_keyname,ensure_ascii=False)+"' WHERE inputID='"+info_dict['id']+"'"
                 try:
                     cursor.execute(sql)
                 except Exception as e:
+                    conn.close()
                     return render(request, 'system/config.html',{'name':info_dict['name'],'id':info_dict['id'],'form':form,'status':'edit','alter':'error'})
                 else:
-                    status_dict[info_dict['ip']]= (info_dict['id'],info_dict['name'],info_dict['ip'],'off')
                     print(status_dict)
+                    status_dict[info_dict['id']]= [info_dict['id'],info_dict['name'],info_dict['ip'],'off']
+
+
                     conn.commit()
                     sql = "SELECT key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12 FROM keys_set WHERE inputID='"+info_dict['id']+"'"
                     cursor.execute(sql)
@@ -134,6 +142,7 @@ def config(request):
                     key10 = json.loads(val[9])
                     key11 = json.loads(val[10])
                     key12 = json.loads(val[11])
+                    conn.close()
                     return render(request, 'system/keyconfig.html',
                       {'dict': info_dict, 'output_name': output_name, 'form_template': form_template,'key1':key1,'key2':key2,'key3':key3,
                                                                 'key4':key4,'key5':key5,'key6':key6,'key7':key7,'key8':key8,'key9':key9,
@@ -158,6 +167,7 @@ def config(request):
                         'key4':val_dict['4'],'key5':val_dict['5'],'key6':val_dict['6'],'key7':val_dict['7'],'key8':val_dict['8'],
                         'key9':val_dict['9'],'key10':val_dict['10'],'key11':val_dict['11'],'key12':val_dict['12']}
             form = ConfigForm()
+            conn.close()
             return render(request, 'system/config.html', {'name':val[1],'id':val[0],'form': form,'dict':key_dict,'status':'edit'})
 
 def conf_action(request):
@@ -175,7 +185,7 @@ def conf_action(request):
             cursor.execute(sql)
             conn.commit()
             conn.close()
-            del status_dict[ip]
+            del status_dict[id]
             return HttpResponseRedirect("configed.html")
 
 def template(request):
@@ -502,13 +512,58 @@ def get_config_status(request):
     return JsonResponse({'code': 1, 'msg': 'success'})
 
 def check_client(request):
-    pass
+    if request.method == 'POST':
+        mes = json.loads(request.POST['MultiK'])
+        data = mes['data']
+        ip = data['ip']
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        sql = " SELECT inputID FROM keys_set WHERE ip='"+ip+"'"
+        cursor.execute(sql)
+        val = cursor.fetchone()
+        print(val)
+        conn.close()
+        if val == None:
+            return JsonResponse({'method': 'client query result', 'data': {'right':'false', 'id':'none','ip':ip}})
+        else:
+            return JsonResponse({'method': 'client query result', 'data': {'right':'true', 'id':val[0],'ip':ip}})
 
 def connect_status(request):
-    pass
+    if request.method == 'POST':
+        mes = json.loads(request.POST['MultiK'])
+        data = mes['data']
+        method = mes['method']
+        ip = data['ip']
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        sql = " SELECT inputID FROM keys_set WHERE ip='" + ip + "'"
+        cursor.execute(sql)
+        val = cursor.fetchone()
+        if val == None:
+            return JsonResponse({'method': 'client query result', 'data': {'right':'false', 'id':'none','ip':ip}})
+        else:
+            id = val[0]
+            conn.close()
+            if method == 'client connect':
+                status_val = status_dict[id]
+                status_val[3] = 'on'
+                status_dict[id] = status_val
+            elif method == 'client disconnect':
+                status_val = status_dict[id]
+                status_val[3] = 'off'
+                status_dict[id] = status_val
+            else:
+                return JsonResponse({'code': 1, 'msg': 'error'})
+    return JsonResponse({'code': 1, 'msg': 'success'})
 
 def server_status(request):
     pass
+
+def get_status(request):
+    val = list(status_dict.values())
+
+    return JsonResponse({'statusform':val})
+
 
 
 
