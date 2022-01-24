@@ -524,9 +524,9 @@ def check_client(request):
         print(val)
         conn.close()
         if val == None:
-            return JsonResponse({'method': 'client query result', 'data': {'right':'false', 'id':'none','ip':ip}})
+            return JsonResponse({'method': 'client query result', 'data': {'right':False, 'id':'none','ip':ip}})
         else:
-            return JsonResponse({'method': 'client query result', 'data': {'right':'true', 'id':val[0],'ip':ip}})
+            return JsonResponse({'method': 'client query result', 'data': {'right':True, 'id':val[0],'ip':ip}})
 
 def connect_status(request):
     if request.method == 'POST':
@@ -557,7 +557,9 @@ def connect_status(request):
     return JsonResponse({'code': 1, 'msg': 'success'})
 
 def server_status(request):
-    pass
+    print('0k')
+    return JsonResponse({'code': 1, 'msg': 'success'})
+
 
 def get_status(request):
     val = list(status_dict.values())

@@ -64,7 +64,7 @@
             {% for form in form %}
                     <tr id="id{{ forloop.counter }}">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{form.1}}</td>
+                        <td id="name_{{ forloop.counter }}">{{form.1}}</td>
                         <td id="ip{{ forloop.counter }}">{{form.2}}</td>
                         <td>
                             <a class=" status" id="{{ forloop.counter }}" name="{{ form.3 }}">
@@ -106,6 +106,32 @@
         }
     }
     $('label#alive').html(aliveNo)
+
+    $('#search_button').click(function () {
+        var text = $('#search_info').val()
+        for(i = 1;i<={{form|length}};i++){
+            var file_name = $('#name_'+ i).text()
+            {#file_name=file_name.replace(".html","");#}
+            if (file_name.indexOf(text) == -1){
+                $('#id'+ i).attr('style','display:none')
+            }else {
+                var str = '<span style="background-color:#eec805">'+text+'</span>';
+                $('#name_'+ i).html($('#name_'+ i).text().replace(text,str));
+            }
+        }
+
+    })
+    $("#search_info").blur(function () {
+        var text = $(this).val()
+        if(text == ''){
+            for(i = 1;i<={{form|length}};i++){
+                $('#id'+ i).removeAttr('style')
+                $('#id_'+ i + '>span').removeAttr('style')
+            }
+        }
+    })
+
+
 
     function getStatus(){
         $.get('getStatus').done(function (info) {
