@@ -97,3 +97,10 @@ input#submit:hover{
 input#submit{
 	margin-top: 30px;
 }
+
+div.logo{
+	height: 100px;
+	background:url("../img/logo.png") fixed top left no-repeat;
+	background-size: 20%;
+
+}
