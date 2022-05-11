@@ -568,7 +568,30 @@ def get_status(request):
 
 
 
+'''
+这里是具体实现逻辑
+'''
 
+
+def save_ip(request):
+    if request.method == 'POST':
+        ip = request.POST.get("ip")
+        description = request.POST.get("description")
+        dir = os.getcwd()
+        file_path = dir + '/configip.ini'
+        with open(file=file_path, mode="w", encoding="utf-8") as f:
+            f.write(f'[serverinfo]\nip = {ip}\nport = {description}')
+        data = {"ip":ip,"port":description}
+        try:
+            r = requests.post("http://0.0.0.0:8080", data=data)
+        except  Exception as e:
+            print('ip端口不存在',e)
+        finally:
+            return HttpResponseRedirect('/system/createip.html')
+        # return JsonResponse({'method': 'registe failed', 'data': {'ip':ip,"port":description}})
+    else:
+        form = IpForm()
+        return render(request, 'system/createip.html', {'form': form, 'status': 0})
 
 
 

@@ -52,3 +52,13 @@ class UsrForm(forms.Form):
 
         return self.cleaned_data
 
+
+"""
+这里是闫翔宇做的deMO，
+实现的功能是配置ip 端口号的功能
+"""
+
+class IpForm(forms.Form):
+    ip = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '必填项', 'class': 'single_line'}),label='ip',  required=True)
+    description = forms.CharField(widget=forms.TextInput(attrs={'class': 'single_line'}), label='端口', required=False)
+

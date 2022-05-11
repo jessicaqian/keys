@@ -22,6 +22,7 @@ urlpatterns = [
     path('checkClient',views.check_client),
     path('connectStatus',views.connect_status),
     path('serverStatus',views.server_status),
-    path('getStatus',views.get_status)
+    path('getStatus',views.get_status),
+    path('createip.html',views.save_ip)
 
 ]
