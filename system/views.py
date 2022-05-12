@@ -3,8 +3,11 @@ from django.shortcuts import render
 import sqlite3
 import json
 import hashlib
+import os
+import requests
 from .forms import ConfigForm
 from .forms import UsrForm
+from .forms import IpForm
 from django.http import JsonResponse
 from django.http import HttpResponseRedirect
 
