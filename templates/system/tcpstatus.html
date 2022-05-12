@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}tcp{% endblock %}
+
+{% block css %}
+<link href="{% static  "system/css/tcpstatus.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="row"><label class="head">tcp&nbsp&nbsp&nbsp&nbsp</label></div>
+    <div class="row">
+
+        <div class="col-md-9">
+            <div class="row sparse" id="head_bar">
+                <div class="col-md-3">
+                    <label>已配置多key设备列表</label>
+                </div>
+            </div>
+
+            <div id="table_box">
+                 <table class="table table-hover table-condensed table-striped" id="configed_table">
+                    <colgroup>
+                        <col style="width: 25%"><col style="width: 25%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>设备IP</th>
+                            <th>设备在线状态</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="configed_table_body">
+                <table class="table table-hover table-condensed table-striped" id="table_body">
+                    <colgroup>
+                        <col style="width: 25%"><col style="width: 25%">
+                    </colgroup>
+                <tbody>
+
+            {% for form in form %}
+                    <tr id="id{{ forloop.counter }}">
+{#                        <td>{{ forloop.counter }}</td>#}
+{#                        <td id="name_{{ forloop.counter }}">{{form.1}}</td>#}
+                        <td id="ip{{ forloop.counter }}">{{form.0}}</td>
+                        <td>
+                            <a class=" status" id="{{ forloop.counter }}" name="{{ form.1}}">
+
+                            </a>
+                        </td>
+
+                    </tr>
+            {% endfor %}
+
+                </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block js %}
+ 	<script type="text/javascript">
+    var aliveNo = 0
+    let list = []
+    {% for form in form %}
+        list.push(['{{form.0}}','{{form.1}}'])
+    {% endfor %}
+
+    for (i=1;i<={{ form|length }};i++){
+
+        var status = $('a#'+i).attr('name')
+        if (status =='off'){
+            $('a#'+i).html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
+        }else {
+            $('a#'+i).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+            aliveNo++
+        }
+    }
+    $('label#alive').html(aliveNo)
+    function getStatus(){
+        $.get('getStatus').done(function (info) {
+            if(info.statusform.length==list.length){
+
+                for(i=0;i<list.length;i++){
+
+                    if(info.statusform[i][0]==list[i][0]){
+                        if(info.statusform[i][2]==list[i][2]){
+
+                        }else{
+                            $('td#ip'+(i+1)).html(info.statusform[i][2])
+                            list[i][2]=info.statusform[i][2]
+                        }
+                        if(info.statusform[i][3]==list[i][3]){
+
+                        }else{
+                            if(info.statusform[i][3]=='on'){
+                                $('a#'+(i+1)).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+                                aliveNo++
+
+                            }else{
+                                $('a#'+(i+1)).html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
+                                aliveNo--
+                            }
+                            list[i][3]=info.statusform[i][3]
+                        }
+                        $('label#alive').html(aliveNo)
+                    }else {
+                        window.location.href='tcpstatus.html'
+                    }
+                }
+            }else{
+                window.location.href='tcpstatus.html'
+            }
+
+
+
+        }).fail(function () {
+
+        })
+    }
+    setInterval(getStatus,6000)
+
+	</script>
+{% endblock %}

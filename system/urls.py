@@ -23,6 +23,7 @@ urlpatterns = [
     path('connectStatus',views.connect_status),
     path('serverStatus',views.server_status),
     path('getStatus',views.get_status),
-    path('createip.html',views.save_ip)
+    path('createip.html',views.save_ip),
+    path('tcpstatus.html',views.tcpstatus)
 
 ]

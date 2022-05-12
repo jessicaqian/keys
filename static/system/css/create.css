@@ -1,0 +1,37 @@
+li#ip{
+    border-color: #23527c;
+}
+
+li#ip>a{
+    text-decoration: none;
+    background-color: #eee;
+    color: #23527c;
+}
+
+div#usr_image{
+    height: 120px;
+    width: 120px;
+    background-image:url(../image/usr.png);
+    background-size: cover;
+}
+
+input#id_usrname,input#id_old_password,input#id_new_password{
+    width: 80%;
+}
+
+input#submit{
+    float: right;
+    margin-right: -80px;
+}
+
+ul.errorlist{
+	list-style-type: none;
+    width: 160px;
+	padding: 0px;
+	margin: 0px auto;
+	color: red;
+}
+
+div#example1{
+    height: 300px;
+}

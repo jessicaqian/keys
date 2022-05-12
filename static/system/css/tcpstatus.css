@@ -1,0 +1,97 @@
+li#tcp{
+    border-color: #23527c;
+}
+
+li#tcp>a{
+    text-decoration: none;
+    background-color: #eee;
+    color: #23527c;
+}
+
+div#sum{
+    height: 140px;
+    width: 140px;
+    background-color: #337ab7;
+    margin: 70px 0;
+    border-radius: 8px;
+    text-align: center;
+}
+
+div#free{
+    height: 140px;
+    width: 140px;
+    background-color: #5cb85c;
+    margin: 70px 0;
+    border-radius: 8px;
+    text-align: center;
+}
+
+div#confed{
+    height: 140px;
+    width: 140px;
+    background-color: #f0ad4e;
+    margin: 70px 0;
+    border-radius: 8px;
+    text-align: center;
+}
+
+label.calc-title{
+    font-size: 18px;
+    color: white;
+    margin: 20px 0px 10px 0px;
+    font-weight: 500;
+}
+
+label.calc-num{
+    font-size: 50px;
+    color: white;
+    font-weight: 500;
+
+}
+
+td,th{
+    text-align: center;
+
+}
+
+td{
+    font-size: 13px;
+}
+
+table#configed_table{
+    margin-bottom: 0;
+}
+
+div#configed_table_body{
+    height: 650px;
+    overflow-y: scroll;
+    border-bottom: 1px solid #ddd;
+}
+
+div#table_box{
+    padding-right: 17px;
+}
+
+span.glyphicon-remove-circle{
+    color: red;
+}
+
+span.glyphicon-ok-circle{
+    color: green;
+}
+
+a.status{
+    font-size: 18px;
+
+}
+
+table#table_body>tbody>tr>td{
+    vertical-align: middle;
+}
+
+input#search_info{
+    padding-top: 4px ;
+    padding-bottom: 6px;
+    margin-right: 10px;
+    width: 60%;
+}

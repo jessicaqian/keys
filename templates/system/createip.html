@@ -4,9 +4,9 @@
 
 {% block title %}ip 管理{% endblock %}
 
-{#{% block css %}#}
-{#<link href="{% static  "system/css/create.css" %}" rel="stylesheet">#}
-{#{% endblock %}#}
+{% block css %}
+<link href="{% static  "system/css/create.css" %}" rel="stylesheet">
+{% endblock %}
 
 {% block modal-content %}
     <div class="modal-header">
@@ -50,9 +50,6 @@
 
 {% block content %}
 <div class="row sparse"><label class="head">服务器ip配置&nbsp&nbsp&nbsp&nbsp</label></div>
-<div class="col-md-2">
-    <div id="usr_image"></div>
-</div>
 <div class="col-md-3">
     <div class="row sparse">
         <button class="btn btn-primary" id="edit_usrinfo" type="button" data-toggle="modal" data-target="#myModal">

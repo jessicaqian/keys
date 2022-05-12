@@ -601,11 +601,43 @@ def save_ip(request):
 
 
 
-def tcpstatus(requset):
-    if requset.method == 'POST':
-        pass
+def tcpstatus(request):
+    if request.method == 'POST':
+        mes = json.loads(request.POST.get('Multik'))
+        data = mes["data"]
+        ip = data['ip']
+        method =data['method']
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        if method == 'client connect':
+            sql = "Delete from tcp_statu where id = 1"
+            cursor.execute(sql)
+            sql = f"INSERT INTO tcp_statu(ip,status,id) values ({ip},'on','1')"
+            cursor.execute(sql)
+            conn.commit()
+            return  JsonResponse({'code': 1, 'msg': 'success'})
+        elif method == 'client disconnect':
+            sql = "Delete from tcp_statu where id = 1"
+            cursor.execute(sql)
+            sql = f"INSERT INTO tcp_statu(ip,status,id) values ({ip},'off','1')"
+            cursor.execute(sql)
+            conn.commit()
+            return JsonResponse({'code': 1, 'msg': 'success'})
+        else:
+            return render(request,'system/tcpstatus.html')
+
     else:
-        return render(requset,'system/tcpstatus.html')
+        json_dict ={}
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        sql = " SELECT ip,status FROM tcp_statu"
+        cursor.execute(sql)
+        array = cursor.fetchall()
+        conn.close()
+        for i in array:
+            i = list(i)
+            json_dict[i[0]] = i
+        return render(request,'system/tcpstatus.html',{"form":list(json_dict.values())})
 
 
 
