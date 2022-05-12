@@ -571,9 +571,10 @@ def get_status(request):
 
 
 
-'''
-这里是具体实现逻辑
-'''
+"""
+创建人：yxy
+时间：2022.5.12
+"""
 
 
 def save_ip(request):
@@ -584,9 +585,11 @@ def save_ip(request):
         file_path = dir + '/configip.ini'
         with open(file=file_path, mode="w", encoding="utf-8") as f:
             f.write(f'[serverinfo]\nip = {ip}\nport = {description}')
-        data = {"ip":ip,"port":description}
+        data = {"method": "update server configure", "data" : {"ip":ip,"port":description}}
+        json_data =json.dumps(data)
+        print(json_data)
         try:
-            r = requests.post("http://0.0.0.0:8080", data=data)
+            r = requests.post("http://0.0.0.0:8080", data=json_data)
         except  Exception as e:
             print('ip端口不存在',e)
         finally:
@@ -598,7 +601,11 @@ def save_ip(request):
 
 
 
-
+def tcpstatus(requset):
+    if requset.method == 'POST':
+        pass
+    else:
+        return render(requset,'system/tcpstatus.html')
 
 
 
