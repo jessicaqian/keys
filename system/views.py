@@ -648,21 +648,29 @@ def tcpstatus(request):
         sql = " SELECT ip,status FROM tcp_statu"
         cursor.execute(sql)
         array = cursor.fetchall()
-        conn.close()
+        # conn.close()
         for i in array:
             i = list(i)
             json_dict[i[0]] = i
         data={"method":"keeplive","data":"ping"}
         json_data = json.dumps(data)
-        print(json_dict)
+        # print(json_dict)
         val = list(json_dict.values())
 
         try:
             r = requests.post("http://0.0.0.0:8080", data=json_data)
+            sql = f"UPDATE tcp_statu SET status = 'on' where id = 1"
+            cursor.execute(sql)
+            conn.commit()
+            conn.close()
             return JsonResponse({"tcpstatus":val})
 
         except  Exception as e:
             print('ip端口不存在', e)
+            sql = f"UPDATE tcp_statu SET status = 'off' where id = 1"
+            cursor.execute(sql)
+            conn.commit()
+            conn.close()
             return JsonResponse({"tcpstatus": val})
         finally:
             return JsonResponse({"tcpstatus": val})
