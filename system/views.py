@@ -1,10 +1,10 @@
 # coding=utf-8
+import os
+import requests
 from django.shortcuts import render
 import sqlite3
 import json
 import hashlib
-import os
-import requests
 from .forms import ConfigForm
 from .forms import UsrForm
 from .forms import IpForm
@@ -40,6 +40,7 @@ def main(request):
         cursor.execute(sql)
         num = cursor.fetchone()
         conn.close()
+        print(list(status_dict.values()))
 
         return render(request, 'system/main.html',{'setnum':num[0],'form':list(status_dict.values())})
 
@@ -566,28 +567,31 @@ def server_status(request):
 
 def get_status(request):
     val = list(status_dict.values())
-
     return JsonResponse({'statusform':val})
 
-
-
-"""
-创建人：yxy
-时间：2022.5.12
-"""
-
-
+'''
+这里是具体实现逻辑
+'''
 def save_ip(request):
     if request.method == 'POST':
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
         ip = request.POST.get("ip")
-        description = request.POST.get("description")
+        ipstr =str(ip)
+
+        port = request.POST.get("description")
+        sql = "Delete from tcp_statu where id = 1"
+        cursor.execute(sql)
+        sql = "INSERT INTO tcp_statu(ip,id) values ('{}',{})".format(ipstr,1)
+        cursor.execute(sql)
+        conn.commit()
         dir = os.getcwd()
         file_path = dir + '/configip.ini'
         with open(file=file_path, mode="w", encoding="utf-8") as f:
-            f.write(f'[serverinfo]\nip = {ip}\nport = {description}')
-        data = {"method": "update server configure", "data" : {"ip":ip,"port":description}}
+            f.write(f'[serverinfo]\nip = {ip}\nport = {port}')
+
+        data = {"method": "update server configure", "data" : {"ip":ip,"port":port}}
         json_data =json.dumps(data)
-        print(json_data)
         try:
             r = requests.post("http://0.0.0.0:8080", data=json_data)
         except  Exception as e:
@@ -597,35 +601,46 @@ def save_ip(request):
         # return JsonResponse({'method': 'registe failed', 'data': {'ip':ip,"port":description}})
     else:
         form = IpForm()
-        return render(request, 'system/createip.html', {'form': form, 'status': 0})
+        json_dict = {}
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        sql = " SELECT ip,status FROM tcp_statu"
+        cursor.execute(sql)
+        array = cursor.fetchall()
+        conn.close()
+        for i in array:
+            i = list(i)
+            json_dict[i[0]] = i
+        return render(request, 'system/createip.html', {'form': form,'tcpstatus':list(json_dict.values()),'status': 0})
 
 
 
 def tcpstatus(request):
-    if request.method == 'POST':
-        mes = json.loads(request.POST.get('Multik'))
-        data = mes["data"]
-        ip = data['ip']
-        method =data['method']
-        conn = sqlite3.connect('db.sqlite3')
-        cursor = conn.cursor()
-        if method == 'client connect':
-            sql = "Delete from tcp_statu where id = 1"
-            cursor.execute(sql)
-            sql = f"INSERT INTO tcp_statu(ip,status,id) values ({ip},'on','1')"
-            cursor.execute(sql)
-            conn.commit()
-            return  JsonResponse({'code': 1, 'msg': 'success'})
-        elif method == 'client disconnect':
-            sql = "Delete from tcp_statu where id = 1"
-            cursor.execute(sql)
-            sql = f"INSERT INTO tcp_statu(ip,status,id) values ({ip},'off','1')"
-            cursor.execute(sql)
-            conn.commit()
-            return JsonResponse({'code': 1, 'msg': 'success'})
-        else:
-            return render(request,'system/tcpstatus.html')
-
+    # if request.method == 'POST':
+    #     mes = json.loads(request.POST.get('Multik'))
+    #     data = mes["data"]
+    #     ip = data['ip']
+    #     method =data['method']
+    #     conn = sqlite3.connect('db.sqlite3')
+    #     cursor = conn.cursor()
+    #     if method == 'client connect':
+    #         sql = "Delete from tcp_statu where id = 1"
+    #         cursor.execute(sql)
+    #         sql = f"INSERT INTO tcp_statu(ip,status,id) values ({ip},'on','1')"
+    #         cursor.execute(sql)
+    #         conn.commit()
+    #         return  JsonResponse({'code': 1, 'msg': 'success'})
+    #     elif method == 'client disconnect':
+    #         sql = "Delete from tcp_statu where id = 1"
+    #         cursor.execute(sql)
+    #         sql = f"INSERT INTO tcp_statu(ip,status,id) values ({ip},'off','1')"
+    #         cursor.execute(sql)
+    #         conn.commit()
+    #         return JsonResponse({'code': 1, 'msg': 'success'})
+    #     else:
+    #         return render(request,'system/tcpstatus.html')
+    if request.method =="POST":
+        pass
     else:
         json_dict ={}
         conn = sqlite3.connect('db.sqlite3')
@@ -637,7 +652,44 @@ def tcpstatus(request):
         for i in array:
             i = list(i)
             json_dict[i[0]] = i
-        return render(request,'system/tcpstatus.html',{"form":list(json_dict.values())})
+        data={"method":"keeplive","data":"ping"}
+        json_data = json.dumps(data)
+        print(json_dict)
+        val = list(json_dict.values())
+
+        try:
+            r = requests.post("http://0.0.0.0:8080", data=json_data)
+            return JsonResponse({"tcpstatus":val})
+
+        except  Exception as e:
+            print('ip端口不存在', e)
+            return JsonResponse({"tcpstatus": val})
+        finally:
+            return JsonResponse({"tcpstatus": val})
+            # return render(request,'system/createip.html',{'statusform':form})
+
+def devices(request):
+    if request.method =="POST":
+        pass
+    else:
+        json_data = []
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        sql = " SELECT inputID,inputName,ip,status FROM keys_set"
+        cursor.execute(sql)
+        array = cursor.fetchall()
+
+        for i in array:
+            json_data.append({
+                "id":i[0],
+                "name":i[1],
+                "ip":i[2],
+                "status":i[3]
+            })
+        return JsonResponse({"data":json_data,"code":0})
+
+
+
 
 
 

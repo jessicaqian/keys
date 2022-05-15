@@ -24,6 +24,6 @@ urlpatterns = [
     path('serverStatus',views.server_status),
     path('getStatus',views.get_status),
     path('createip.html',views.save_ip),
-    path('tcpstatus.html',views.tcpstatus)
-
+    path('tcpStatus',views.tcpstatus),
+    path('devices',views.devices)
 ]
