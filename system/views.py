@@ -561,8 +561,49 @@ def connect_status(request):
     return JsonResponse({'code': 1, 'msg': 'success'})
 
 def server_status(request):
-    print('0k')
-    return JsonResponse({'code': 1, 'msg': 'success'})
+    # print('0k')
+    # return JsonResponse({'code': 1, 'msg': 'success'})
+    conn = sqlite3.connect('db.sqlite3')
+    cursor = conn.cursor()
+    data_json = {}
+    if request.method == 'POST':
+        mes = json.loads(request.POST['MultiK'])
+        data = mes['data']
+        method = mes['method']
+        ip = data['ip']
+        # print(mes)
+
+        if method == 'server connect':
+            sql = "Delete from tcp_statu where id = 1"
+            cursor.execute(sql)
+            sql = "INSERT INTO tcp_statu(ip,id,status) values ('{}',{},'{}')".format(ip, 1,'on')
+            cursor.execute(sql)
+            conn.commit()
+            conn.close()
+            # print('ok')
+            return JsonResponse({'code': 1, 'msg': 'success'})
+        if method =="server disconnect":
+            sql = "Delete from tcp_statu where id = 1"
+            cursor.execute(sql)
+            sql = "INSERT INTO tcp_statu(ip,id,status) values ('{}',{},'{}')".format(ip, 1, 'off')
+            cursor.execute(sql)
+            conn.commit()
+            conn.close()
+            # print('on')
+            return JsonResponse({'code': 1, 'msg': 'success'})
+        else:
+            return JsonResponse({'code': 1, 'msg': 'error'})
+    else:
+        sql = " SELECT ip,status FROM tcp_statu WHERE id=1"
+        cursor.execute(sql)
+        array = cursor.fetchall()
+
+        for i in array:
+            i = list(i)
+            data_json[i[0]] = i
+        return JsonResponse({"tcpstatus": list(data_json.values())})
+
+
 
 
 def get_status(request):
@@ -574,17 +615,15 @@ def get_status(request):
 '''
 def save_ip(request):
     if request.method == 'POST':
-        conn = sqlite3.connect('db.sqlite3')
-        cursor = conn.cursor()
+        # conn = sqlite3.connect('db.sqlite3')
+        # cursor = conn.cursor()
         ip = request.POST.get("ip")
-        ipstr =str(ip)
-
         port = request.POST.get("description")
-        sql = "Delete from tcp_statu where id = 1"
-        cursor.execute(sql)
-        sql = "INSERT INTO tcp_statu(ip,id) values ('{}',{})".format(ipstr,1)
-        cursor.execute(sql)
-        conn.commit()
+        # sql = "Delete from tcp_statu where id = 1"
+        # cursor.execute(sql)
+        # sql = "INSERT INTO tcp_statu(ip,id) values ('{}',{})".format(ipstr,1)
+        # cursor.execute(sql)
+        # conn.commit()
         dir = os.getcwd()
         file_path = dir + '/configip.ini'
         with open(file=file_path, mode="w", encoding="utf-8") as f:

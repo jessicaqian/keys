@@ -4,9 +4,9 @@
 
 {% block title %}可视化管理平台{% endblock %}
 
-{#{% block css %}#}
-{#<link href="{% static  "system/css/create.css" %}" rel="stylesheet">#}
-{#{% endblock %}#}
+{% block css %}
+<link href="{% static  "system/css/create.css" %}" rel="stylesheet">
+{% endblock %}
 
 {% block modal-content %}
     <div class="modal-header">
@@ -116,7 +116,7 @@ if({{ status }}){
 var aliveNo = 0
     let list = []
     {% for tcpstatus in tcpstatus %}
-        list.push(['{{tcpstatus.0}}','{{tcpstatus.1}}','{{tcpstatus.2}}','{{tcpstatus.3}}'])
+        list.push(['{{tcpstatus.0}}','{{tcpstatus.1}}','{{tcpstatus.3}}','{{tcpstatus.4}}'])
     {% endfor %}
 
     for (i=1;i<={{ form|length }};i++){
@@ -132,21 +132,9 @@ var aliveNo = 0
     $('label#alive').html(aliveNo)
 
     function getStatus(){
-        $.get('tcpStatus').done(function (info) {
+        $.get('serverStatus').done(function (info) {
             if(info.tcpstatus.length==list.length){
-
                 for(i=0;i<list.length;i++){
-
-                    if(info.tcpstatus[i][0]==list[i][0]){
-                        if(info.tcpstatus[i][2]==list[i][2]){
-
-                        }else{
-                            $('td#ip'+(i+1)).html(info.tcpstatus[i][2])
-                            list[i][2]=info.tcpstatus[i][2]
-                        }
-                        if(info.tcpstatus[i][3]==list[i][3]){
-
-                        }else{
                             if(info.tcpstatus[i][1]=='on'){
                                 $('a#'+(i+1)).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
                                 aliveNo++
@@ -156,11 +144,9 @@ var aliveNo = 0
                                 aliveNo--
                             }
                             list[i][1]=info.tcpstatus[i][1]
-                        }
+
                         $('label#alive').html(aliveNo)
-                    }else {
-                        window.location.href='createip.html'
-                    }
+
                 }
             }else{
                 window.location.href='createip.html'
@@ -172,7 +158,7 @@ var aliveNo = 0
 
         })
     }
-    setInterval(getStatus,2000)
+    setInterval(getStatus,3000)
 
 
 </script>
