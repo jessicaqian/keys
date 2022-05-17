@@ -49,17 +49,9 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row sparse"><label class="head">服务器ip配置&nbsp&nbsp&nbsp&nbsp</label></div>
-    <div class = "row">
-    <div class="col-md-3">
-        <div class="row sparse">
-            <button class="btn btn-primary" id="edit_usrinfo" type="button" data-toggle="modal" data-target="#myModal">
-                <span aria-hidden="true" ></span> 更改服务器ip</button>
-        </div>
-    </div>
-    </div>
 
-    <div class="row sparse"><label class="head">tcp&nbsp&nbsp&nbsp&nbsp</label></div>
+
+    <div class="row sparse"><label class="head">管理平台状态&nbsp&nbsp&nbsp&nbsp</label></div>
     <div class="row">
      <div class="col-md-9">
             <div id="table_box">
@@ -69,8 +61,8 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th>设备IP</th>
-                            <th>设备在线状态</th>
+                            <th>管理平台ip</th>
+                            <th>管理平台连接状态</th>
                         </tr>
                     </thead>
                 </table>
@@ -103,7 +95,16 @@
     </div>
 
     </div>
-
+    <div class="row sparse"><label class="head">管理平台配置&nbsp&nbsp&nbsp&nbsp</label>
+    <div class = "row">
+    <div class="col-md-3">
+        <div class="row sparse">
+            <button class="btn btn-primary" id="edit_usrinfo" type="button" data-toggle="modal" data-target="#myModal">
+                <span aria-hidden="true" ></span> 更改管理平台</button>
+        </div>
+    </div>
+    </div>
+</div>
 
 {% endblock %}
 
