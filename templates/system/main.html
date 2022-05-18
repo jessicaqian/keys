@@ -83,7 +83,16 @@
 
     </div>
 
+    <div class="row">
+        <div class="col-md-2 col-md-offset-10">
+            <label id="tcpstatus">转发状态&nbsp&nbsp:&nbsp&nbsp</label>
+            <a class=" status" id="tcp_a" >
 
+            </a>
+
+        </div>
+
+    </div>
 
 {% endblock %}
 
@@ -176,7 +185,21 @@
     }
     setInterval(getStatus,2000)
 
+    function getTcpstatus(){
+        $.get('tcpStatus').done(function (info) {
+            if (info.tcpstatus[0][1]=='on'){
+                $('a#tcp_a').html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+            }
+            else {
+                $('a#tcp_a').html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
 
+            }
+
+        }).fail(function () {
+
+        })
+    }
+    setInterval(getTcpstatus,10000)
 
 
 	</script>
