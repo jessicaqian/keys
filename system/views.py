@@ -6,6 +6,8 @@ import sqlite3
 import json
 import hashlib
 import STPython
+
+from multikeys import settings
 from .forms import ConfigForm
 from .forms import UsrForm
 from .forms import IpForm
@@ -17,7 +19,10 @@ from django.http import HttpResponseRedirect
 status_dict={}
 
 # conn = sqlite3.connect('db.sqlite3')
-conn =STPython.connect('SYSDBA','szoscar55')
+database = settings.DATABASES
+# conn = sqlite3.connect('db.sqlite3')
+conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                        dsn=database['default']['DSN'])
 cursor = conn.cursor()
 sql = " SELECT inputID,inputName,ip,status FROM keys_set"
 cursor.execute(sql)
@@ -37,7 +42,8 @@ def main(request):
 
     else:
         # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect('SYSDBA', 'szoscar55')
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT count(*) FROM keys_set"
         cursor.execute(sql)
@@ -49,7 +55,8 @@ def main(request):
 
 def configed(request):
     # conn = sqlite3.connect('db.sqlite3')
-    conn = STPython.connect('SYSDBA', 'szoscar55')
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                            dsn=database['default']['DSN'])
     cursor = conn.cursor()
     if request.method == 'POST':
         pass
@@ -63,7 +70,8 @@ def configed(request):
 
 def free(request):
     # conn = sqlite3.connect('db.sqlite3')
-    conn=STPython.connect('SYSDBA','szoscar55')
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                            dsn=database['default']['DSN'])
     cursor = conn.cursor()
 
     if request.method == 'POST':
@@ -78,7 +86,8 @@ def free(request):
     return render(request, 'system/free.html',{'form':form_free})
 
 def config(request):
-    conn = STPython.connect('SYSDBA', 'szoscar55')
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                            dsn=database['default']['DSN'])
     if request.method == 'POST':
         form = ConfigForm(request.POST)
         if form.is_valid():
@@ -188,7 +197,8 @@ def conf_action(request):
         if action == 'delete':
             ip = request.GET.get('ip')
             # conn = sqlite3.connect('db.sqlite3')
-            conn = STPython.connect('SYSDBA', 'szoscar55')
+            conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                    dsn=database['default']['DSN'])
             cursor = conn.cursor()
             sql = "DELETE FROM keys_set WHERE inputID = '"+id+"';"
             cursor.execute(sql)
@@ -202,7 +212,8 @@ def conf_action(request):
 
 def template(request):
     # conn = sqlite3.connect('db.sqlite3')
-    conn = STPython.connect('SYSDBA','szoscar55')
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                            dsn=database['default']['DSN'])
     cursor = conn.cursor()
 
     if request.method == 'POST':
@@ -219,7 +230,8 @@ def saveconf(request):
     if request.method == 'POST':
         print(request.POST)
         # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect('SYSDBA', 'szoscar55')
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                dsn=database['default']['DSN'])
         cursor = conn.cursor()
         mes = request.POST['mes']
         status = request.POST['status']
@@ -245,7 +257,8 @@ def saveconf(request):
 
 def new_temp(request):
     # conn = sqlite3.connect('db.sqlite3')
-    conn=STPython.connect('SYSDBA','szoscar55')
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                            dsn=database['default']['DSN'])
     cursor = conn.cursor()
     if request.method == 'GET':
         sql = " SELECT name FROM output_list "
@@ -259,7 +272,8 @@ def save_temp(request):
     if request.method == 'POST':
 
         # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect('SYSDBA', 'szoscar55')
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                dsn=database['default']['DSN'])
         cursor = conn.cursor()
         mes = request.POST['mes']
         status = request.POST['status']
@@ -299,7 +313,8 @@ def save_temp(request):
         return JsonResponse({'code': 1, 'msg': 'success'})
 
 def temp_action(request):
-    conn = STPython.connect('SYSDBA', 'szoscar55')
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                            dsn=database['default']['DSN'])
     cursor = conn.cursor()
     if request.method == 'GET':
         action = request.GET.get('action')
@@ -341,7 +356,8 @@ def loadtemp(request):
     if request.method == 'GET':
         name = request.GET.get('name')
         # conn = sqlite3.connect('db.sqlite3')
-        conn =STPython.connect('SYSDBA','szoscar55')
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT * FROM template WHERE name='"+name+"'"
         cursor.execute(sql)
@@ -366,7 +382,8 @@ def getinfo(request):
     if request.method == 'GET':
         id = request.GET.get('id')
         # conn = sqlite3.connect('db.sqlite3')
-        conn=STPython.connect('SYSDBA','szoscar55')
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT keyName,key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12,inputName FROM keys_set WHERE inputID='"+id+"'"
         cursor.execute(sql)
@@ -393,7 +410,8 @@ def getinfo(request):
 def usr_admin(request):
     # conn = sqlite3.connect('db.sqlite3')
     # cursor = conn.cursor()
-    conn = STPython.connect('SYSDBA', 'szoscar55')
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                            dsn=database['default']['DSN'])
     cursor = conn.cursor()
     sql = " SELECT * FROM usradmin "
     cursor.execute(sql)
@@ -441,7 +459,8 @@ def getconfig(request):
         id = data['id']
         data_ip = data['ip']
         # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect('SYSDBA', 'szoscar55')
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT ip,keyName,key1id,key2id,key3id,key4id,key5id,key6id,key7id" \
               ",key8id,key9id,key10id,key11id,key12id,inputName FROM keys_set WHERE inputID='" + id + "'"
@@ -543,7 +562,8 @@ def check_client(request):
         data = mes['data']
         ip = data['ip']
         # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect('SYSDBA', 'szoscar55')
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT inputID FROM keys_set WHERE ip='"+ip+"'"
         cursor.execute(sql)
@@ -562,7 +582,8 @@ def connect_status(request):
         method = mes['method']
         ip = data['ip']
         # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect('SYSDBA', 'szoscar55')
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT inputID FROM keys_set WHERE ip='" + ip + "'"
         cursor.execute(sql)
@@ -588,7 +609,8 @@ def server_status(request):
     # print('0k')
     # return JsonResponse({'code': 1, 'msg': 'success'})
     # conn = sqlite3.connect('db.sqlite3')
-    conn = STPython.connect('SYSDBA', 'szoscar55')
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                            dsn=database['default']['DSN'])
     cursor = conn.cursor()
     data_json = {}
     if request.method == 'POST':
@@ -667,7 +689,8 @@ def save_ip(request):
         form = IpForm()
         json_dict = {}
         # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect('SYSDBA',"szoscar55")
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT ip,status FROM tcp_status"
         cursor.execute(sql)
@@ -686,7 +709,8 @@ def tcpstatus(request):
     else:
         json_dict ={}
         # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect('SYSDBA', "szoscar55")
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                dsn=database['default']['DSN'])
         cursor = conn.cursor()
         data={"method":"keeplive","data":"ping"}
         json_data = json.dumps(data)
@@ -729,7 +753,8 @@ def devices(request):
     else:
         json_data = []
         # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect('SYSDBA','szoscar55')
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                                dsn=database['default']['DSN'])
         cursor = conn.cursor()
 
         sql = " SELECT inputID,inputName,ip FROM keys_set"

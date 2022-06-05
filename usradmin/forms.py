@@ -2,6 +2,7 @@ from django import forms
 import hashlib
 import sqlite3
 import STPython
+from multikeys import settings
 
 class NameForm(forms.Form):
     usrname = forms.CharField(label='用户名', max_length=100)
@@ -14,10 +15,11 @@ class NameForm(forms.Form):
         password=self.cleaned_data['password']
         m = password + "{{sdtzzq}}"
         pw = hashlib.md5(m.encode())
+        database = settings.DATABASES
 
 
         # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect('SYSDBA','szoscar55')
+        conn = STPython.connect(user=database['default']['NAME'],password=database['default']['PASSWD'],dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT username,passwd FROM usradmin"
         cursor.execute(sql)
