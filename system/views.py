@@ -747,29 +747,6 @@ def tcpstatus(request):
             return JsonResponse({"tcpstatus": val})
 
 
-def devices(request):
-    if request.method =="POST":
-        pass
-    else:
-        json_data = []
-        # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
-                                dsn=database['default']['DSN'])
-        cursor = conn.cursor()
-
-        sql = " SELECT inputID,inputName,ip FROM keys_set"
-        cursor.execute(sql)
-        array = cursor.fetchall()
-
-        for i in array:
-            json_data.append({
-                "id":i[0],
-                "name":i[1],
-                "ip":i[2],
-                "status":i[3]
-            })
-        return JsonResponse({"data":json_data,"code":0})
-
 
 
 
