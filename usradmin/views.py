@@ -37,7 +37,7 @@ def devices(request):
         array = cursor.fetchall()
         for i in array:
             json_data.append({
-                "id":i[0],
+                "id":str(i[0]),
                 "name":i[1],
                 "description":i[2],
                 "ip":i[3],
@@ -61,7 +61,7 @@ def snmp_key(request):
         array = cursor.fetchall()
         for i in array:
             json_data.append({
-                "id":i[0],
+                "id":str(i[0]),
                 "name":i[1],
                 "description":i[2],
                 "status":i[4]+'line'
