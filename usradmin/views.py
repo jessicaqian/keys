@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from .forms import NameForm
 import STPython
 from multikeys import settings
@@ -43,7 +43,7 @@ def devices(request):
                 "ip":i[3],
                 "status":i[4]+'line'
             })
-        return HttpResponse(json.dumps(json_data))
+        return JsonResponse({"data":json_data})
 
 def snmp_key(request):
     if request.method =="POST":
@@ -64,6 +64,7 @@ def snmp_key(request):
                 "id":str(i[0]),
                 "name":i[1],
                 "description":i[2],
+                "ip": i[3],
                 "status":i[4]+'line'
             })
-        return HttpResponse(json.dumps(json_data))
+        return JsonResponse({"data":json_data})
