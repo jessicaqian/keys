@@ -104,6 +104,11 @@ def main():
     # conn.commit()
     # cur.execute('drop table  keys_set ')
     # conn.commit()
+    """
+           web_status
+    """
+    cur.execute('create table web_status (id integer PRIMARY KEY AUTO_INCREMENT,ip text ,status text,port text)')
+    conn.commit()
 
 if __name__ == '__main__':
     main()

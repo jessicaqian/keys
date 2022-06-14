@@ -604,7 +604,7 @@ def connect_status(request):
             else:
                 return JsonResponse({'code': 1, 'msg': 'error'})
     return JsonResponse({'code': 1, 'msg': 'success'})
-
+# 需要该
 def server_status(request):
     # print('0k')
     # return JsonResponse({'code': 1, 'msg': 'success'})
@@ -621,18 +621,18 @@ def server_status(request):
         # print(mes)
 
         if method == 'server connect':
-            sql = "Delete from tcp_status where id = 1"
+            sql = "Delete from web_status where id = 1"
             cursor.execute(sql)
-            sql = "INSERT INTO tcp_status(ip,id,status) values ('{}',{},'{}')".format(ip, 1,'on')
+            sql = "INSERT INTO web_status(ip,id,status) values ('{}',{},'{}')".format(ip, 1,'on')
             cursor.execute(sql)
             conn.commit()
             conn.close()
             # print('ok')
             return JsonResponse({'code': 1, 'msg': 'success'})
         if method =="server disconnect":
-            sql = "Delete from tcp_status where id = 1"
+            sql = "Delete from web_status where id = 1"
             cursor.execute(sql)
-            sql = "INSERT INTO tcp_status(ip,id,status) values ('{}',{},'{}')".format(ip, 1, 'off')
+            sql = "INSERT INTO web_status(ip,id,status) values ('{}',{},'{}')".format(ip, 1, 'off')
             cursor.execute(sql)
             conn.commit()
             conn.close()
@@ -661,16 +661,19 @@ def get_status(request):
 这里是具体实现逻辑
 '''
 def save_ip(request):
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                            dsn=database['default']['DSN'])
+    cursor = conn.cursor()
     if request.method == 'POST':
         # conn = sqlite3.connect('db.sqlite3')
         # cursor = conn.cursor()
         ip = request.POST.get("ip")
         port = request.POST.get("description")
-        # sql = "Delete from tcp_statu where id = 1"
-        # cursor.execute(sql)
-        # sql = "INSERT INTO tcp_statu(ip,id) values ('{}',{})".format(ipstr,1)
-        # cursor.execute(sql)
-        # conn.commit()
+        sql = "Delete from web_status where id = 1"
+        cursor.execute(sql)
+        sql = "INSERT INTO web_status(ip,port) values ('{}',{})".format(ip,port)
+        cursor.execute(sql)
+        conn.commit()
         dir = os.getcwd()
         file_path = dir + '/configip.ini'
         with open(file=file_path, mode="w", encoding="utf-8") as f:
@@ -692,7 +695,7 @@ def save_ip(request):
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
                                 dsn=database['default']['DSN'])
         cursor = conn.cursor()
-        sql = " SELECT ip,status FROM tcp_status"
+        sql = " SELECT ip,status FROM web_status"
         cursor.execute(sql)
         array = cursor.fetchall()
         conn.close()
