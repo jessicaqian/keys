@@ -568,7 +568,6 @@ def check_client(request):
         sql = " SELECT inputID FROM keys_set WHERE ip='"+ip+"'"
         cursor.execute(sql)
         val = cursor.fetchone()
-        print(val)
         conn.close()
         if val == None:
             return JsonResponse({'method': 'client query result', 'data': {'right':False, 'id':'none','ip':ip}})
@@ -641,7 +640,7 @@ def server_status(request):
         else:
             return JsonResponse({'code': 1, 'msg': 'error'})
     else:
-        sql = " SELECT ip,status FROM tcp_status WHERE id=1"
+        sql = " SELECT ip,status FROM web_status WHERE id=1"
         cursor.execute(sql)
         array = cursor.fetchall()
 
@@ -712,41 +711,31 @@ def tcpstatus(request):
     else:
         json_dict ={}
         # conn = sqlite3.connect('db.sqlite3')
-        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
-                                dsn=database['default']['DSN'])
-        cursor = conn.cursor()
+        # conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+        #                         dsn=database['default']['DSN'])
+        # cursor = conn.cursor()
         data={"method":"keeplive","data":"ping"}
         json_data = json.dumps(data)
-
-        try:
-            r = requests.post("http://0.0.0.0:8080", data=json_data)
-            sql = "UPDATE tcp_status SET status ='on' where id=1"
-            cursor.execute(sql)
-            conn.commit()
-            sql = " SELECT ip,status FROM tcp_status"
-            cursor.execute(sql)
-            array = cursor.fetchall()
-            for i in array:
-                i = list(i)
-                json_dict[i[0]] = i
-            conn.close()
-            val = list(json_dict.values())
-            print(val)
+        val =[]
+        r = requests.post("http://0.0.0.0:8080", data=json_data)
+        if r.status_code==200:
+            # sql = "UPDATE tcp_status SET status ='on' where id=1"
+            # cursor.execute(sql)
+            # conn.commit()
+            # sql = " SELECT ip,status FROM tcp_status"
+            # cursor.execute(sql)
+            # array = cursor.fetchall()
+            # for i in array:
+            #     i = list(i)
+            #     json_dict[i[0]] = i
+            # conn.close()
+            # val = list(json_dict.values())
+            # print(val)
+            val.append('on')
             return JsonResponse({"tcpstatus":val})
-        except  Exception as e:
-            print('ip端口不存在', e)
-            sql = "UPDATE tcp_status SET status = 'off' where id = 1"
-            cursor.execute(sql)
-            conn.commit()
-            sql = " SELECT ip,status FROM tcp_status"
-            cursor.execute(sql)
-            array = cursor.fetchall()
-            for i in array:
-                i = list(i)
-                json_dict[i[0]] = i
-            conn.close()
-            val = list(json_dict.values())
-            print(val)
+        else:
+            print('ip端口不存在')
+            val.append('off')
             return JsonResponse({"tcpstatus": val})
 
 

@@ -187,7 +187,7 @@
 
     function getTcpstatus(){
         $.get('tcpStatus').done(function (info) {
-            if (info.tcpstatus[0][1]=='on'){
+            if (info.tcpstatus[0]=='on'){
                 $('a#tcp_a').html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
             }
             else {
