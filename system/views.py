@@ -1,5 +1,6 @@
 # coding=utf-8
 import os
+import re
 import requests
 from django.shortcuts import render
 import sqlite3
@@ -49,7 +50,6 @@ def main(request):
         cursor.execute(sql)
         num = cursor.fetchone()
         conn.close()
-        print(list(status_dict.values()))
 
         return render(request, 'system/main.html',{'setnum':num[0],'form':list(status_dict.values())})
 
@@ -161,7 +161,7 @@ def config(request):
                     key10 = json.loads(val[9])
                     key11 = json.loads(val[10])
                     key12 = json.loads(val[11])
-                    conn.close()
+                    conn.close()                        
                     return render(request, 'system/keyconfig.html',
                       {'dict': info_dict, 'output_name': output_name, 'form_template': form_template,'key1':key1,'key2':key2,'key3':key3,
                                                                 'key4':key4,'key5':key5,'key6':key6,'key7':key7,'key8':key8,'key9':key9,
@@ -207,8 +207,15 @@ def conf_action(request):
             cursor.execute(sql)
             conn.commit()
             conn.close()
-            del status_dict[id]
-            return HttpResponseRedirect("configed.html")
+            data = {"method": "update","data":{}}
+            try:
+                json_data =json.dumps(data)
+                r=requests.post('http://'+ip+':8888',data=json_data)
+            except Exception as e:
+                print(e)
+            finally:
+                del status_dict[str(id)]
+                return HttpResponseRedirect("configed.html")
 
 def template(request):
     # conn = sqlite3.connect('db.sqlite3')
@@ -227,6 +234,7 @@ def template(request):
     return render(request, 'system/template.html',{'form':form_template})
 
 def saveconf(request):
+    # 这里可能有问题
     if request.method == 'POST':
         print(request.POST)
         # conn = sqlite3.connect('db.sqlite3')
@@ -252,8 +260,19 @@ def saveconf(request):
 
             cursor.execute(sql)
             conn.commit()
+            sqlip ="SELECT ip FROM keys_set where inputID='"+key_set['id']+"'"
+            cursor.execute(sqlip)
+            ip = cursor.fetchone()
             conn.close()
-    return JsonResponse({'code': 1, 'msg': 'success'})
+            data = {"method": "update", "data": {}}
+            try:
+                json_data = json.dumps(data)
+                r = requests.post('http://'+ip[0]+':8888', data=json_data)
+                print(r)
+            except Exception as e:
+                print(e)
+
+            return JsonResponse({'code': 1, 'msg': 'success'})
 
 def new_temp(request):
     # conn = sqlite3.connect('db.sqlite3')
@@ -472,70 +491,74 @@ def getconfig(request):
             ip = val[0]
             if data_ip == ip:
                 keyname = json.loads(val[1])
-
-                return JsonResponse({"method": "registe success", "data": {
-                    "preset": [{
-                        "channel_in": id,
-                        "channel_out": json.loads(val[2]),
-                        "preset_name": keyname['1'],
-                        "preset_num": "0"
-                    }, {
-                        "channel_in": id,
-                        "channel_out": json.loads(val[3]),
-                        "preset_name": keyname['2'],
-                        "preset_num": "1"
-                    }, {
-                        "channel_in": id,
-                        "channel_out": json.loads(val[4]),
-                        "preset_name": keyname['3'],
-                        "preset_num": "2"
-                    }, {
-                        "channel_in": id,
-                        "channel_out": json.loads(val[5]),
-                        "preset_name": keyname['4'],
-                        "preset_num": "3"
-                    }, {
-                        "channel_in": id,
-                        "channel_out": json.loads(val[6]),
-                        "preset_name": keyname['5'],
-                        "preset_num": "4"
-                    }, {
-                        "channel_in": id,
-                        "channel_out": json.loads(val[7]),
-                        "preset_name": keyname['6'],
-                        "preset_num": "5"
-                    }, {
-                        "channel_in": id,
-                        "channel_out": json.loads(val[8]),
-                        "preset_name": keyname['7'],
-                        "preset_num": "6"
-                    }, {
-                        "channel_in": id,
-                        "channel_out": json.loads(val[9]),
-                        "preset_name": keyname['8'],
-                        "preset_num": "7"
-                    }, {
-                        "channel_in": id,
-                        "channel_out": json.loads(val[10]),
-                        "preset_name": keyname['9'],
-                        "preset_num": "8"
-                    }, {
-                        "channel_in": id,
-                        "channel_out": json.loads(val[11]),
-                        "preset_name": keyname['10'],
-                        "preset_num": "9"
-                    }, {
-                        "channel_in": id,
-                        "channel_out": json.loads(val[12]),
-                        "preset_name": keyname['11'],
-                        "preset_num": "10"
-                    }, {
-                        "channel_in": id,
-                        "channel_out": json.loads(val[13]),
-                        "preset_name": keyname['12'],
-                        "preset_num": "11"
-                    }]
-                }})
+                m=re.search(r'[0-9]',i[2])
+                if m is None:
+                    print('ces')
+                    return JsonResponse({"method":"registe success"})
+                else:
+                     return JsonResponse({"method": "registe success", "data": {
+                            "preset": [{
+                            "channel_in": id,
+                            "channel_out": json.loads(val[2]),
+                            "preset_name": keyname['1'],
+                            "preset_num": "0"
+                        }, {
+                            "channel_in": id,
+                            "channel_out": json.loads(val[3]),
+                            "preset_name": keyname['2'],
+                            "preset_num": "1"
+                        }, {
+                            "channel_in": id,
+                            "channel_out": json.loads(val[4]),
+                            "preset_name": keyname['3'],
+                            "preset_num": "2"
+                        }, {
+                            "channel_in": id,
+                            "channel_out": json.loads(val[5]),
+                            "preset_name": keyname['4'],
+                            "preset_num": "3"
+                        }, {
+                            "channel_in": id,
+                            "channel_out": json.loads(val[6]),
+                            "preset_name": keyname['5'],
+                            "preset_num": "4"
+                        }, {
+                            "channel_in": id,
+                            "channel_out": json.loads(val[7]),
+                            "preset_name": keyname['6'],
+                            "preset_num": "5"
+                        }, {
+                            "channel_in": id,
+                            "channel_out": json.loads(val[8]),
+                            "preset_name": keyname['7'],
+                            "preset_num": "6"
+                        }, {
+                            "channel_in": id,
+                            "channel_out": json.loads(val[9]),
+                            "preset_name": keyname['8'],
+                            "preset_num": "7"
+                        }, {
+                            "channel_in": id,
+                            "channel_out": json.loads(val[10]),
+                            "preset_name": keyname['9'],
+                            "preset_num": "8"
+                        }, {
+                            "channel_in": id,
+                            "channel_out": json.loads(val[11]),
+                            "preset_name": keyname['10'],
+                            "preset_num": "9"
+                        }, {
+                            "channel_in": id,
+                            "channel_out": json.loads(val[12]),
+                            "preset_name": keyname['11'],
+                            "preset_num": "10"
+                       }, {
+                            "channel_in": id,
+                            "channel_out": json.loads(val[13]),
+                            "preset_name": keyname['12'],
+                            "preset_num": "11"
+                        }]
+                    }})
             else:
                 return JsonResponse({'method':'registe failed','data':{'error_code' : 405,'error_reason': 'error ip'}})
 
@@ -593,13 +616,15 @@ def connect_status(request):
             id = val[0]
             conn.close()
             if method == 'client connect':
-                status_val = status_dict[id]
+                print(status_dict)
+                status_val = status_dict[str(id)]
                 status_val[3] = 'on'
-                status_dict[id] = status_val
+                status_dict[str(id)] = status_val
             elif method == 'client disconnect':
-                status_val = status_dict[id]
+                print(status_dict)
+                status_val = status_dict[str(id)]
                 status_val[3] = 'off'
-                status_dict[id] = status_val
+                status_dict[str(id)] = status_val
             else:
                 return JsonResponse({'code': 1, 'msg': 'error'})
     return JsonResponse({'code': 1, 'msg': 'success'})
@@ -670,7 +695,7 @@ def save_ip(request):
         port = request.POST.get("description")
         sql = "Delete from web_status where id = 1"
         cursor.execute(sql)
-        sql = "INSERT INTO web_status(ip,port) values ('{}',{})".format(ip,port)
+        sql = "INSERT INTO web_status(id,ip,port) values ({},'{}',{})".format(1,ip,port)
         cursor.execute(sql)
         conn.commit()
         dir = os.getcwd()
@@ -717,6 +742,7 @@ def tcpstatus(request):
         data={"method":"keeplive","data":"ping"}
         json_data = json.dumps(data)
         val =[]
+        
         r = requests.post("http://0.0.0.0:8080", data=json_data)
         if r.status_code==200:
             # sql = "UPDATE tcp_status SET status ='on' where id=1"

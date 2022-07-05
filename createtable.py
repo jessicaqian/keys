@@ -64,8 +64,8 @@ def main():
     """
        tcp_status
     """
-    cur.execute('create table tcp_status (id integer PRIMARY KEY AUTO_INCREMENT,ip text ,status text)')
-    conn.commit()
+    # cur.execute('create table tcp_status (id integer PRIMARY KEY AUTO_INCREMENT,ip text ,status text)')
+    # conn.commit()
     # #
     # cur.execute('INSERT INTO tcp_status (ip,status) values (:1,:2)',('192.1.1.1','off'))
     # conn.commit()
@@ -95,7 +95,7 @@ def main():
     """
       keys
     """
-    sql = "create table keys_set (id integer PRIMARY KEY AUTO_INCREMENT,inputID integer ,inputName text,ip text,description text,keyName varchar (200),key1 varchar (200),key2 varchar(200),key3 varchar(200),key4 varchar(200),key5 varchar(200),key6 varchar(200),key7 varchar(200),key8 varchar(200),key9 varchar(200),key10 varchar(200),key11 varchar(200),key12 varchar(200),key1id varchar (200),key2id varchar(200),key3id varchar(200),key4id varchar(200),key5id varchar(200),key6id varchar(200),key7id varchar(200),key8id varchar(200),key9id varchar(200),key10id varchar(200),key11id varchar(200),key12id varchar(200),status text)"
+    sql = "create table keys_set (id integer PRIMARY KEY AUTO_INCREMENT,inputID text ,inputName text,ip text,description text,keyName varchar (200),key1 varchar (200),key2 varchar(200),key3 varchar(200),key4 varchar(200),key5 varchar(200),key6 varchar(200),key7 varchar(200),key8 varchar(200),key9 varchar(200),key10 varchar(200),key11 varchar(200),key12 varchar(200),key1id varchar (200),key2id varchar(200),key3id varchar(200),key4id varchar(200),key5id varchar(200),key6id varchar(200),key7id varchar(200),key8id varchar(200),key9id varchar(200),key10id varchar(200),key11id varchar(200),key12id varchar(200),status text)"
     cur.execute(sql)
     conn.commit()
 
