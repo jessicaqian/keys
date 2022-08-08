@@ -25,5 +25,8 @@ urlpatterns = [
     path('getStatus',views.get_status),
     path('createip.html',views.save_ip),
     path('tcpStatus',views.tcpstatus),
+    path('devices', views.devices),
+    path('snmp_key', views.snmp_key)
+
 
 ]
