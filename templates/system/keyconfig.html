@@ -15,69 +15,68 @@
     </div>
     <div class="modal-body">
         <div class="row">
-    <div class="col-md-10 col-md-offset-1">
-        <div id="table_box" >
-             <table class="table table-hover table-condensed table-striped" id="template_table">
-                <colgroup>
-                    <col /><col style="width: 70px">
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>模板名称</th>
-
-                        <th>加载模板</th>
-                    </tr>
-                </thead>
-            </table>
+            <div class="col-md-10 col-md-offset-1">
+                <div id="table_box">
+                     <table class="table table-hover table-condensed table-striped" id="template_table">
+                        <colgroup>
+                            <col /><col style="width: 70px">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>模板名称</th>
+                                <th>加载模板</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div id="template_table_box">
+                    <table class="table table-hover table-condensed table-striped" id="template_table_body">
+                        <colgroup>
+                            <col /><col style="width: 70px">
+                        </colgroup>
+                        <tbody>
+                        {% for form in form_template %}
+                                <tr id="id{{ forloop.counter }}">
+                                    <td id="name_{{ forloop.counter }}">{{form.0}}</td>
+                                    <td class="delete">
+                                        <a class="btn config load" name="{{form.0}}">
+                                            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div id="template_table_box" >
-            <table class="table table-hover table-condensed table-striped" id="template_table_body">
-                <colgroup>
-                    <col /><col style="width: 70px">
-                </colgroup>
-            <tbody>
-
-        {% for form in form_template %}
-                <tr id="id{{ forloop.counter }}">
-
-                    <td id="name_{{ forloop.counter }}">{{form.0}}</td>
-                    <td class="delete">
-                        <a class="btn config load" name="{{form.0}}">
-                            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                </tr>
-        {% endfor %}
-
-            </tbody>
-            </table>
-
-        </div>
-    </div>
-</div>
-
-
     </div>
 {% endblock %}
 
 {% block content %}
-    {% csrf_token %}
+{% csrf_token %}
 <div class="row sparse"><label class="head">按键设置&nbsp&nbsp&nbsp&nbsp</label></div>
 <div class="row sparse_min">
-    <div class="col-md-5 ">
+    <div class="col-md-4">
         <label>输入:&nbsp&nbsp</label>{{ dict.name }}&nbsp&nbsp&nbsp&nbsp
-        <label>IP:&nbsp&nbsp</label>{{ dict.ip }}&nbsp&nbsp<label>按键设置表</label>
+        <label>IP:&nbsp&nbsp</label>{{ dict.ip }}&nbsp&nbsp
     </div>
     <div class="col-md-5">
-            <input type="text" placeholder="按名称关键字搜索" id="search_info">
-            <button class="btn btn-primary" id="search_button">
-            <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
+        <input type="text" placeholder="按名称关键字搜索" id="search_info">
+        <button class="btn btn-primary" id="search_button">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索
+        </button>
     </div>
-    <div class="col-md-2">
-            <button class="btn btn-primary" id="load" type="button" data-toggle="modal" data-target="#myModal">
-            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> 加载模板</button>
+    <div class="col-md-1">
+        <button class="btn btn-primary" id="load" type="button" data-toggle="modal" data-target="#myModal">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> 加载模板
+        </button>
     </div>
-
+    <div class="col-md-1">
+        <button class="btn btn-primary" id="save">
+            <span class="glyphicon glyphicon-copy" aria-hidden="true"></span> 保存配置
+        </button>
+    </div>
 </div>
 <div class="row" id="key_set">
     <div id="key_table_head">
@@ -89,18 +88,9 @@
             <thead>
                 <tr>
                     <th>输出名称</th>
-                    <th><span>{{ dict.key1 }}</span><br>预设1</th>
-                    <th><span>{{ dict.key2 }}</span><br>预设2</th>
-                    <th><span>{{ dict.key3 }}</span><br>预设3</th>
-                    <th><span>{{ dict.key4 }}</span><br>预设4</th>
-                    <th><span>{{ dict.key5 }}</span><br>预设5</th>
-                    <th><span>{{ dict.key6 }}</span><br>预设6</th>
-                    <th><span>{{ dict.key7 }}</span><br>预设7</th>
-                    <th><span>{{ dict.key8 }}</span><br>预设8</th>
-                    <th><span>{{ dict.key9 }}</span><br>预设9</th>
-                    <th><span>{{ dict.key10 }}</span><br>预设10</th>
-                    <th><span>{{ dict.key11 }}</span><br>预设11</th>
-                    <th><span>{{ dict.key12 }}</span><br>预设12</th>
+                    {% for keyname in key_name_list %}
+                        <th><br><input type="text" id="key_name_{{ forloop.counter }}" value="{{ keyname }}" style="width: 100%; border: none; text-align: center" ></span><br></th>
+                    {% endfor %}
                 </tr>
             </thead>
         </table>
@@ -113,20 +103,11 @@
             </colgroup>
             <tbody>
             {% for name in output_name %}
-                <tr id="id{{ forloop.counter }}">
-                    <td>{{ name.0 }}</td>
-                    <td><input name="key1" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
-                    <td><input name="key2" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
-                    <td><input name="key3" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
-                    <td><input name="key4" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
-                    <td><input name="key5" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
-                    <td><input name="key6" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
-                    <td><input name="key7" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
-                    <td><input name="key8" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
-                    <td><input name="key9" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
-                    <td><input name="key10" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
-                    <td><input name="key11" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
-                    <td><input name="key12" type="checkbox" class="{{ name.1 }}" value="{{ name.0 }}" /></td>
+                <tr id="output_{{ forloop.counter }}">
+                    <td id="output_name_{{ forloop.counter }}">{{ name.0 }}</td>
+                    {% for num in key_list %}
+                        <td><input id="config_{{ name.1 }}_{{ num }}" type="checkbox" value="{{ name.0 }}" onchange="clickCheckbox($(this), $(this).prop('checked'))" /></td>
+                    {% endfor %}
                 </tr>
             {% endfor %}
             </tbody>
@@ -139,154 +120,198 @@
                 <col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%">
             </colgroup>
             <tbody>
-                <tr >
-                    <td><label class="action" >清除此按键设置</label></td>
-                    <td>
-                        <a class="btn config" id="key1" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key2" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key3" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key4" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key5" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key6" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key7" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key8" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key9" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key10" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key11" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key12" >
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-
+                <tr>
+                    <td><label class="action" style="color: #0f0f0f" >清除此按键设置</label></td>
+                    {% for num in key_list %}
+                        <td><a class="btn config" id="delete_{{ num }}" onclick="clickDelete($(this))"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
+                    {% endfor %}
                 </tr>
-
-
             </tbody>
         </table>
     </div>
 </div>
-<div class="col-md-2 col-md-offset-10">
-    <button class="btn btn-primary" id="save">
-        <span class="glyphicon glyphicon-copy" aria-hidden="true"></span> 保存设备配置
-    </button>
-</div>
-
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
+    var name_set = {"1": "", "2": "", "3": "", "4": "", "5": "", "6": "",
+                    "7": "", "8": "", "9": "", "10": "", "11": "", "12": "", };
+    var set_dict = {'id':'{{ dict.id }}', 'key_name': name_set,
+                    'key1':[],'key2':[],'key3':[],'key4':[],'key5':[],'key6':[],'key7':[],'key8':[],'key9':[],'key10':[],'key11':[],'key12':[],
+                    'key1_id':[],'key2_id':[],'key3_id':[],'key4_id':[],'key5_id':[],'key6_id':[],'key7_id':[],'key8_id':[],'key9_id':[],'key10_id':[],'key11_id':[],'key12_id':[]};
+
+    //load config
+    if('{{ dict.status }}'=='edit'){
+        {% for key in key1 %}
+            $('input[id^="config_"][id$="_1"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+        {% for key in key2 %}
+            $('input[id^="config_"][id$="_2"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+        {% for key in key3 %}
+            $('input[id^="config_"][id$="_3"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+        {% for key in key4 %}
+            $('input[id^="config_"][id$="_4"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+        {% for key in key5 %}
+            $('input[id^="config_"][id$="_5"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+        {% for key in key6 %}
+            $('input[id^="config_"][id$="_6"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+        {% for key in key7 %}
+            $('input[id^="config_"][id$="_7"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+        {% for key in key8 %}
+            $('input[id^="config_"][id$="_8"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+        {% for key in key9 %}
+            $('input[id^="config_"][id$="_9"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+        {% for key in key10 %}
+            $('input[id^="config_"][id$="_10"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+        {% for key in key11 %}
+            $('input[id^="config_"][id$="_11"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+        {% for key in key12 %}
+            $('input[id^="config_"][id$="_12"][value="{{ key }}"]').attr("checked","checked");
+        {% endfor %}
+    }
+
     $('a#flow').attr('aria-expanded','true');
+
     $('div#collapseExample').attr('class','collapse in');
+
     $('input#id_id').val('{{ id }}');
+
     $('input#id_name').val('{{ name }}');
+
     $('button#close').click(function () {
         $('#myalter').attr('style','display:none')
     });
 
-    if('{{ dict.status }}'=='edit'){
-        {% for key in key1 %}
-            $('input[name="key1"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
+    $('a.config').click(function () {
+        var ele = $(this).attr('id');
+        $('input[name="'+ele+'"]').prop('checked',false)
+    })
 
-        {% for key in key2 %}
-            $('input[name="key2"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
+    $('a.load').click(function () {
+        var val = $(this).attr('name');
+        $.get('loadtemp?name='+val).done(function (message) {
+            $('input[id^="config_"]').prop("checked", false);
+            for(i=0;i<12;i++) {
+                $('input#key_name_' + (i+1)).val(message.key_name_list[i])
+            }
+            for(i=0;i<message.key1.length;i++){
+                var test = $('input[id^="config_"][id$="_1"][value="'+ message.key1[i] +'"]')
+                $('input[id^="config_"][id$="_1"][value="'+ message.key1[i] +'"]').prop("checked", true);
+            }
+            for(i=0;i<message.key2.length;i++){
+                $('input[id^="config_"][id$="_2"][value="'+ message.key2[i] +'"]').prop("checked", true);
+            }
+            for(i=0;i<message.key3.length;i++){
+                $('input[id^="config_"][id$="_3"][value="'+ message.key3[i] +'"]').prop("checked", true);
+            }
+            for(i=0;i<message.key4.length;i++){
+                $('input[id^="config_"][id$="_4"][value="'+ message.key4[i] +'"]').prop("checked", true);
+            }
+            for(i=0;i<message.key5.length;i++){
+                $('input[id^="config_"][id$="_5"][value="'+ message.key5[i] +'"]').prop("checked", true);
+            }
+            for(i=0;i<message.key6.length;i++){
+                $('input[id^="config_"][id$="_6"][value="'+ message.key6[i] +'"]').prop("checked", true);
+            }
+            for(i=0;i<message.key7.length;i++){
+                $('input[id^="config_"][id$="_7"][value="'+ message.key7[i] +'"]').prop("checked", true);
+            }
+            for(i=0;i<message.key8.length;i++){
+                $('input[id^="config_"][id$="_8"][value="'+ message.key8[i] +'"]').prop("checked", true);
+            }
+            for(i=0;i<message.key9.length;i++){
+                $('input[id^="config_"][id$="_9"][value="'+ message.key9[i] +'"]').prop("checked", true);
+            }
+            for(i=0;i<message.key10.length;i++){
+                $('input[id^="config_"][id$="_10"][value="'+ message.key10[i] +'"]').prop("checked", true);
+            }
+            for(i=0;i<message.key11.length;i++){
+                $('input[id^="config_"][id$="_11"][value="'+ message.key11[i] +'"]').prop("checked", true);
+            }
+            for(i=0;i<message.key12.length;i++){
+                $('input[id^="config_"][id$="_12"][value="'+ message.key12[i] +'"]').prop("checked", true);
+            }
+        }).fail(function () {
+        })
+    });
 
-        {% for key in key3 %}
-            $('input[name="key3"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
+    $('#search_button').click(function () {
+        var text = $('#search_info').val();
+        for(i = 1; i<={{ output_name|length }}; i++){
+            var name = $("#output_name_"+ i).text();
+            if (name.indexOf(text) === -1){
+                $('#output_'+ i).attr('style', 'display:none')
+            } else {
+                var str = '<span style="background-color:#eec805">'+text+'</span>';
+                $('#output_name_'+ i).html($('#output_name_'+ i).text().replace(text, str));
+            }
+        }
+    });
 
-        {% for key in key4 %}
-            $('input[name="key4"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
+    $("#search_info").blur(function () {
+        var text = $(this).val();
+        if(text === '') {
+            console.log('asda')
+            for(i=1;i<={{output_name|length}};i++){
+                $('#output_' + i).removeAttr('style');
+                //$('#output_'+ i + '>span').removeAttr('style')
+            }
+        }
+    });
 
-        {% for key in key5 %}
-            $('input[name="key5"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
+    $('button#save').click(function () {
+        for(i=1; i<13; i++){
+            set_dict["key_name"][i] = $("input#key_name_" + i).val();
+            $("input[id^='config_']:checked").each(function(){
+                if($(this)[0].id.split('_')[2] === i.toString()) {
+                    set_dict["key"+i].push($(this).val());
+                    set_dict["key"+i+"_id"].push($(this)[0].id.split('_')[1]);
+                }
+            });
+        }
+        var jsonStr = JSON.stringify(set_dict);
+        $.post("saveconf",{'mes':jsonStr,'csrfmiddlewaretoken': $("[name = 'csrfmiddlewaretoken']").val(),'status':'new'}).done(function () {
+            if('{{ dict.status }}'=='edit'){
+                window.location.href ='configed.html'
+            } else {
+                window.location.href ='free.html'
+            }
+        }).fail(function () {
+        })
+    });
 
-        {% for key in key6 %}
-            $('input[name="key6"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
-
-        {% for key in key7 %}
-            $('input[name="key7"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
-
-        {% for key in key8 %}
-            $('input[name="key8"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
-
-        {% for key in key9 %}
-            $('input[name="key9"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
-
-        {% for key in key10 %}
-            $('input[name="key10"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
-
-        {% for key in key11 %}
-            $('input[name="key11"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
-
-        {% for key in key12 %}
-            $('input[name="key12"][value="{{ key }}"]').attr("checked","checked")
-        {% endfor %}
+    function clickCheckbox(checkbox, checked) {
+        var id = checkbox[0].id;
+        /*这里由于传递进来的checked时序问题,下面赋值是反过来的*/
+        if(checked) {
+            $('input#' + id).prop('checked', true);
+        } else {
+            $('input#' + id).prop('checked', false);
+        }
+        var split_list = id.split('_');
+        var id_prefix = split_list[0] + '_' + split_list[1] + '_';
+        for (i=1; i<13 ; i++) {
+            var num = i.toString();
+            if(num !== split_list[2]) {
+                $('input#' + id_prefix + num).prop('checked', false);
+            }
+        }
     }
 
-    var set_dict = {
-        'id':'{{ dict.id }}',
-        'key1':[],'key2':[],'key3':[],'key4':[],'key5':[],'key6':[],
-        'key7':[],'key8':[],'key9':[],'key10':[],'key11':[],'key12':[],
-        'key1_id':[],'key2_id':[],'key3_id':[],'key4_id':[],'key5_id':[],'key6_id':[],
-        'key7_id':[],'key8_id':[],'key9_id':[],'key10_id':[],'key11_id':[],'key12_id':[],
+    function clickDelete(button) {
+        var id = button[0].id.split('_')[1];
+        $('input[id^="config_"][id$="_' + id + '"]').prop("checked", false);
     }
-
-
-
 
     function checkIP() {
         obj = document.getElementById("id_ip").value;
@@ -301,118 +326,5 @@
             return true;
         }
     }
-
-    $('a.config').click(function () {
-        var ele = $(this).attr('id')
-        $('input[name="'+ele+'"]').prop('checked',false)
-    })
-
-
-    $('a.load').click(function () {
-
-
-        var val = $(this).attr('name')
-        $.get('loadtemp?name='+val).done(function (message) {
-
-            $('input:checked').prop("checked",false)
-
-
-
-            for(i=0;i<message.key1.length;i++){
-                var in_name =message.key1[i]
-                $('input[name="key1"][value="'+in_name+'"]').prop("checked",true)
-            }
-
-            for(i=0;i<message.key2.length;i++){
-                var in_name =message.key2[i]
-                $('input[name="key2"][value="'+in_name+'"]').prop("checked",true)
-            }
-
-            for(i=0;i<message.key3.length;i++){
-                var in_name =message.key3[i]
-                $('input[name="key3"][value="'+in_name+'"]').prop("checked",true)
-            }
-
-            for(i=0;i<message.key4.length;i++){
-                var in_name =message.key4[i]
-                $('input[name="key4"][value="'+in_name+'"]').prop("checked",true)
-            }
-
-            for(i=0;i<message.key5.length;i++){
-                var in_name =message.key5[i]
-                $('input[name="key5"][value="'+in_name+'"]').prop("checked",true)
-            }
-
-            for(i=0;i<message.key6.length;i++){
-                var in_name =message.key6[i]
-                $('input[name="key6"][value="'+in_name+'"]').prop("checked",true)
-            }
-
-            for(i=0;i<message.key7.length;i++){
-                var in_name =message.key7[i]
-                $('input[name="key7"][value="'+in_name+'"]').prop("checked",true)
-            }
-
-            for(i=0;i<message.key8.length;i++){
-                var in_name =message.key8[i]
-                $('input[name="key8"][value="'+in_name+'"]').prop("checked",true)
-            }
-
-            for(i=0;i<message.key9.length;i++){
-                var in_name =message.key9[i]
-                $('input[name="key9"][value="'+in_name+'"]').prop("checked",true)
-            }
-
-            for(i=0;i<message.key10.length;i++){
-                var in_name =message.key10[i]
-                $('input[name="key10"][value="'+in_name+'"]').prop("checked",true)
-            }
-
-            for(i=0;i<message.key11.length;i++){
-                var in_name =message.key11[i]
-                $('input[name="key11"][value="'+in_name+'"]').prop("checked",true)
-            }
-
-            for(i=0;i<message.key12.length;i++){
-                var in_name =message.key12[i]
-                $('input[name="key12"][value="'+in_name+'"]').prop("checked",true)
-            }
-        }).fail(function () {
-
-        })
-    })
-
-    $('button#save').click(function () {
-
-        for(i=1;i<13;i++){
-            var key = "key"+i
-            var keyId = "key"+i+"_id"
-            $('input[name="'+key+'"]:checked').each(function(){
-                set_dict[key].push($(this).val());//向数组中添加元素
-                set_dict[keyId].push($(this).attr('class'));//向数组中添加元素
-            });
-        }
-
-        var jsonStr = JSON.stringify(set_dict);
-
-        $.post("saveconf",{'mes':jsonStr,'csrfmiddlewaretoken': $("[name = 'csrfmiddlewaretoken']").val(),'status':'new'}).done(function () {
-            if('{{ dict.status }}'=='edit'){
-                window.location.href ='configed.html'
-
-            }
-            else {
-                window.location.href ='free.html'
-            }
-
-
-
-        }).fail(function () {
-
-        })
-
-    })
-
-
-
 </script>
 {% endblock %}

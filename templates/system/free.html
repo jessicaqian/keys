@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}未配置设备{% endblock %}
+{% block title %}新增设备配置{% endblock %}
 
 {% block css %}
 <link href="{% static  "system/css/free.css" %}" rel="stylesheet">
@@ -10,31 +10,28 @@
 
 {% block content %}
     <div class="row sparse"><label class="head">新增设备配置&nbsp&nbsp&nbsp&nbsp</label></div>
-<div class="row sparse" id="search_bar">
-    <div class="col-md-2 col-md-offset-1">
-        <label>可用输入接口列表</label>
-
-    </div>
-    <div class="col-md-6">
+    <div class="row sparse" id="search_bar">
+        <div class="col-md-3">
+            <label>可用多按键设备列表</label>
+        </div>
+        <div class="col-md-7">
             <input type="text" placeholder="按名称关键字搜索" id="search_info">
             <button class="btn btn-primary" id="search_button">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
+        </div>
+        <div class="col-md-3"></div>
     </div>
-    <div class="col-md-3"></div>
-</div>
-
-    <div class="col-md-9 col-md-offset-1">
+    <div class="col-md-12">
         <div id="table_box">
             <table class="table table-hover table-condensed table-striped" id="free_table">
-                        <colgroup>
-                            <col style="width: 40px"><col style="width: 70%"><col style="width: 100px">
-                        </colgroup>
+                <colgroup>
+                    <col style="width: 40px"><col style="width: 70%"><col style="width: 100px">
+                </colgroup>
                 <thead>
                     <tr>
-                        <th>#</th>
-
+                        <th>序号</th>
                         <th>名称</th>
-                        <th class="download">绑定配置多KEY</th>
+                        <th class="download">绑定多按键设备</th>
                     </tr>
                 </thead>
             </table>
@@ -48,35 +45,24 @@
                 {% for form in form %}
                     <tr id="id{{ forloop.counter }}">
                         <td>{{ forloop.counter }}</td>
-
-
-
                         <td id="name_{{ forloop.counter }}">{{ form.1 }}</td>
                         <td class="download">
                             <a class="btn config" href="/system/config.html?id={{ form.0 }}&name={{ form.1 }}&status=new">
                                 <span class="glyphicon glyphicon-import" aria-hidden="true" ></span>
                             </a>
                         </td>
-
                     </tr>
-
                 {% endfor %}
                 </tbody>
             </table>
         </div>
-
-
     </div>
-
-
-
 
 
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
-
     $('a#flow').attr('aria-expanded','true');
     $('div#collapseExample').attr('class','collapse in');
     $('#search_button').click(function () {
@@ -91,7 +77,6 @@
                 $('#name_'+ i).html($('#name_'+ i).text().replace(text,str));
             }
         }
-
     })
     $("#search_info").blur(function () {
         var text = $(this).val()

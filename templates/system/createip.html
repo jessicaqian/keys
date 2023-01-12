@@ -15,53 +15,48 @@
     </div>
     <div class="modal-body">
         <div class="row">
-    <div class="col-md-6 col-md-offset-3">
-        <form method="post">
-        {% csrf_token %}
-            {{ error_msg }}
-            <div class="row sparse_min">
-                <div class="left">
-                {{ form.ip.label_tag }}
-                {{ form.ip}}
-                </div>
+            <div class="col-md-6 col-md-offset-3">
+                <form method="post">
+                {% csrf_token %}
+                    {{ error_msg }}
+                    <div class="row sparse_min">
+                        <div class="left">
+                        {{ form.ip.label_tag }}
+                        {{ form.ip}}
+                        </div>
+                    </div>
+                    <div class="row sparse_min">
+                        <div class="left">
+                        {{ form.description.label_tag }}
+                        {{ form.description}}
+                        </div>
+                    </div>
+                    <div class="row sparse">
+                        <div class="left">
+                        {{ form.new_password.label_tag }}
+                        {{ form.new_password}}
+                        </div>
+                    </div>
+                        {{form.non_field_errors}}
+                    <input type="submit" value="提&nbsp&nbsp交" id="submit" class="btn btn-primary">
+                </form>
             </div>
-            <div class="row sparse_min">
-                <div class="left">
-                {{ form.description.label_tag }}
-                {{ form.description}}
-                </div>
-            </div>
-            <div class="row sparse">
-                <div class="left">
-                {{ form.new_password.label_tag }}
-                {{ form.new_password}}
-                </div>
-            </div>
-                {{form.non_field_errors}}
-            <input type="submit" value="提&nbsp&nbsp交" id="submit" class="btn btn-primary">
-        </form>
-
-    </div>
-</div>
-
-
+        </div>
     </div>
 {% endblock %}
 
 {% block content %}
-
-
     <div class="row sparse"><label class="head">管理平台状态&nbsp&nbsp&nbsp&nbsp</label></div>
     <div class="row">
-     <div class="col-md-9">
+        <div class="col-md-9">
             <div id="table_box">
-                 <table class="table table-hover table-condensed table-striped" id="configed_table">
+                <table class="table table-hover table-condensed table-striped" id="configed_table">
                     <colgroup>
                         <col style="width: 25%"><col style="width: 25%">
                     </colgroup>
                     <thead>
                         <tr>
-                            <th>管理平台ip</th>
+                            <th>管理平台地址</th>
                             <th>管理平台连接状态</th>
                         </tr>
                     </thead>
@@ -72,95 +67,75 @@
                     <colgroup>
                         <col style="width: 25%"><col style="width: 25%">
                     </colgroup>
-                <tbody>
-
-            {% for tcpstatus in tcpstatus %}
-                    <tr id="id{{ forloop.counter }}">
-                        <td id="ip{{ forloop.counter }}">{{tcpstatus.0}}</td>
-                        <td>
-                            <a class=" status" id="{{ forloop.counter }}" name="{{ tcpstatus.1}}">
-
-                            </a>
-                        </td>
-
-                    </tr>
-            {% endfor %}
-
-                </tbody>
+                    <tbody>
+                    {% for tcpstatus in tcpstatus %}
+                        <tr id="id{{ forloop.counter }}">
+                            <td id="ip{{ forloop.counter }}">{{tcpstatus.0}}</td>
+                            <td>
+                                <a class=" status" id="{{ forloop.counter }}" name="{{ tcpstatus.1}}"></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
                 </table>
-
             </div>
         </div>
-
     </div>
-
+    <div class="row sparse">
+        <button class="btn btn-primary" id="edit_usrinfo" type="button" data-toggle="modal" data-target="#myModal">
+            <span aria-hidden="true" ></span> 编辑管理平台配置</button>
     </div>
-    <div class="row sparse"><label class="head">管理平台配置&nbsp&nbsp&nbsp&nbsp</label>
-    <div class = "row">
-    <div class="col-md-3">
-        <div class="row sparse">
-            <button class="btn btn-primary" id="edit_usrinfo" type="button" data-toggle="modal" data-target="#myModal">
-                <span aria-hidden="true" ></span> 更改管理平台</button>
-        </div>
-    </div>
-    </div>
-</div>
-
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
 
-if({{ status }}){
-    $('#myModal').modal('show')
-}
-var aliveNo = 0
-    let list = []
+    if({{ status }}){
+        $('#myModal').modal('show')
+    }
+
+    var aliveNo = 0;
+    let list = [];
     {% for tcpstatus in tcpstatus %}
-        list.push(['{{tcpstatus.0}}','{{tcpstatus.1}}','{{tcpstatus.3}}','{{tcpstatus.4}}'])
+        list.push(['{{tcpstatus.0}}','{{tcpstatus.1}}','{{tcpstatus.3}}','{{tcpstatus.4}}']);
     {% endfor %}
 
     for (i=1;i<={{ form|length }};i++){
-
-        var status = $('a#'+i).attr('name')
+        var status = $('a#'+i).attr('name');
         if (status =='off'){
             $('a#'+i).html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
         }else {
-            $('a#'+i).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+            $('a#'+i).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>');
             aliveNo++
         }
     }
-    $('label#alive').html(aliveNo)
+
+    $('label#alive').html(aliveNo);
 
     function getStatus(){
         $.get('serverStatus').done(function (info) {
-            if(info.tcpstatus.length==list.length){
+            if(info.tcpstatus.length === list.length){
                 for(i=0;i<list.length;i++){
-                            if(info.tcpstatus[i][1]=='on'){
-                                $('a#'+(i+1)).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
-                                aliveNo++
-
-                            }else{
-                                $('a#'+(i+1)).html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
-                                aliveNo--
-                            }
-                            list[i][1]=info.tcpstatus[i][1]
-
-                        $('label#alive').html(aliveNo)
-
+                    if(info.tcpstatus[i][1]=='on') {
+                        $('a#'+(i+1)).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>');
+                        aliveNo++
+                    } else {
+                        $('a#'+(i+1)).html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>');
+                        aliveNo--
+                    }
+                    list[i][1]=info.tcpstatus[i][1]
+                    $('label#alive').html(aliveNo)
                 }
-            }else{
+            } else {
                 window.location.href='createip.html'
             }
-
-
-
         }).fail(function () {
 
         })
     }
-    setInterval(getStatus,3000)
 
+    getStatus();
+    setInterval(getStatus,3000)
 
 </script>
 {% endblock %}

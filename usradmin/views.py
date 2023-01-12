@@ -1,8 +1,6 @@
-import json
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from .forms import NameForm
-import STPython
 from multikeys import settings
 database = settings.DATABASES
 # Create your views here.
@@ -19,6 +17,3 @@ def login(request):
     else:
         form = NameForm()
     return render(request, 'usradmin/login.html', {'form': form})
-
-
-

@@ -15,7 +15,7 @@ div#usr_image{
     background-size: cover;
 }
 
-input#id_usrname,input#id_old_password,input#id_new_password{
+input#id_usrname,input#id_old_password,input#id_new_password,input#id_new_password_confirm{
     width: 80%;
 }
 

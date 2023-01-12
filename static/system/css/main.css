@@ -9,7 +9,7 @@ li#main>a{
 }
 
 div#sum{
-    height: 140px;
+    height: 100px;
     width: 140px;
     background-color: #337ab7;
     margin: 70px 0;
@@ -18,7 +18,7 @@ div#sum{
 }
 
 div#free{
-    height: 140px;
+    height: 100px;
     width: 140px;
     background-color: #5cb85c;
     margin: 70px 0;
@@ -27,7 +27,7 @@ div#free{
 }
 
 div#confed{
-    height: 140px;
+    height: 100px;
     width: 140px;
     background-color: #f0ad4e;
     margin: 70px 0;
@@ -46,7 +46,6 @@ label.calc-num{
     font-size: 50px;
     color: white;
     font-weight: 500;
-
 }
 
 td,th{

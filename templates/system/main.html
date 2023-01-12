@@ -5,203 +5,223 @@
 {% block title %}资产概况总览{% endblock %}
 
 {% block css %}
-<link href="{% static  "system/css/main.css" %}" rel="stylesheet">
+    <link href="{% static  "system/css/main.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-    <div class="row"><label class="head">资产概况总览&nbsp&nbsp&nbsp&nbsp</label></div>
     <div class="row">
         <div class="col-md-2">
-            <div id="sum">
-                <label class="calc-title">多KEY资源池</label><br>
-                <label class="calc-num">48</label>
+            <label class="head" style="margin-left: 0">资产概况&nbsp&nbsp&nbsp&nbsp</label>
+            <div id="confed" style="margin: 2px 2px 2px 2px; height: 100px">
+                <label class="calc-title">已配置设备数</label><br>
+                <label class="calc-num" style="font-size: 25px">{{ setnum }}</label>
             </div>
-            <div id="confed">
-                <label class="calc-title">已配置多KEY数</label><br>
-                <label class="calc-num">{{ setnum }}</label>
+            <div id="free" style="margin: 2px 2px 2px 2px; height: 100px">
+                <label class="calc-title">活跃设备数</label><br>
+                <label class="calc-num" id="alive" style="font-size: 25px"></label>
             </div>
-            <div id="free">
-                <label class="calc-title">活跃多KEY数</label><br>
-                <label class="calc-num" id="alive"></label>
+            <label class="head" style="margin-left: 0">服务状态&nbsp&nbsp&nbsp&nbsp</label>
+            <div id="sum" style="margin: 2px 2px 2px 2px; height: 100px">
+                <label class="calc-title">CPU利用率</label><br>
+                <label class="calc-num" id="cpu" style="font-size: 20px"></label>
+            </div>
+            <div id="sum" style="margin: 2px 2px 2px 2px; height: 100px">
+                <label class="calc-title">内存利用率</label><br>
+                <label class="calc-num" id="mem" style="font-size: 20px"></label>
+            </div>
+            <div class="col-md-24">
+                <label id="plattcpstatus">管理平台连接状态&nbsp&nbsp:&nbsp&nbsp</label>
+                <a class="status" id="plattcp_a"></a>
+            </div>
+            <div class="col-md-24">
+                <label id="tcpstatus">转发状态&nbsp&nbsp:&nbsp&nbsp</label>
+                <a class="status" id="tcp_a"></a>
             </div>
         </div>
         <div class="col-md-9">
             <div class="row sparse" id="head_bar">
                 <div class="col-md-3">
-                    <label>已配置多key设备列表</label>
-
+                    <label>已配置多按键设备列表</label>
                 </div>
                 <div class="col-md-7">
-                        <input type="text" placeholder="按名称关键字搜索" id="search_info">
-                        <button class="btn btn-primary" id="search_button">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
+                    <input type="text" placeholder="按输入设备描述关键字搜索" id="search_info">
+                    <button class="btn btn-primary" id="search_button">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索
+                    </button>
                 </div>
-                <div class="col-md-3"></div>
             </div>
-
             <div id="table_box">
-                 <table class="table table-hover table-condensed table-striped" id="configed_table">
+                <table class="table table-hover table-condensed table-striped" id="configed_table">
                     <colgroup>
-                        <col style="width: 40px"><col /><col style="width: 25%"><col style="width: 25%">
+                        <col style="width: 40px">
+                        <col/>
+                        <col style="width: 25%">
+                        <col style="width: 25%">
                     </colgroup>
                     <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>输入设备描述</th>
-                            <th>多key设备IP</th>
-                            <th>设备在线状态</th>
-                        </tr>
+                    <tr>
+                        <th>序号</th>
+                        <th>输入设备描述</th>
+                        <th>多按键设备IP</th>
+                        <th>设备在线状态</th>
+                    </tr>
                     </thead>
                 </table>
             </div>
             <div id="configed_table_body">
                 <table class="table table-hover table-condensed table-striped" id="table_body">
                     <colgroup>
-                        <col style="width: 40px"><col /><col style="width: 25%"><col style="width: 25%">
+                        <col style="width: 40px">
+                        <col/>
+                        <col style="width: 25%">
+                        <col style="width: 25%">
                     </colgroup>
-                <tbody>
-
-            {% for form in form %}
-                    <tr id="id{{ forloop.counter }}">
-                        <td>{{ forloop.counter }}</td>
-                        <td id="name_{{ forloop.counter }}">{{form.1}}</td>
-                        <td id="ip{{ forloop.counter }}">{{form.2}}</td>
-                        <td>
-                            <a class=" status" id="{{ forloop.counter }}" name="{{ form.3 }}">
-
-                            </a>
-                        </td>
-
-                    </tr>
-            {% endfor %}
-
-                </tbody>
+                    <tbody>
+                    {% for form in form %}
+                        <tr id="id{{ forloop.counter }}">
+                            <td>{{ forloop.counter }}</td>
+                            <td id="name_{{ forloop.counter }}">{{ form.1 }}</td>
+                            <td id="ip{{ forloop.counter }}">{{ form.2 }}</td>
+                            <td><a class=" status" id="{{ forloop.counter }}" name="{{ form.3 }}"></a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
                 </table>
-
             </div>
         </div>
-
-    </div>
-
-    <div class="row">
-        <div class="col-md-2 col-md-offset-10">
-            <label id="tcpstatus">转发状态&nbsp&nbsp:&nbsp&nbsp</label>
-            <a class=" status" id="tcp_a" >
-
-            </a>
-
-        </div>
-
     </div>
 
 {% endblock %}
 
 {% block js %}
- 	<script type="text/javascript">
-    var aliveNo = 0
-    let list = []
-    {% for form in form %}
-        list.push(['{{form.0}}','{{form.1}}','{{form.2}}','{{form.3}}'])
-    {% endfor %}
+    <script type="text/javascript">
+        var aliveNo = 0;
+        let list = [];
+        {% for form in form %}
+            list.push(['{{form.0}}', '{{form.1}}', '{{form.2}}', '{{form.3}}'])
+        {% endfor %}
 
-    for (i=1;i<={{ form|length }};i++){
-
-        var status = $('a#'+i).attr('name')
-        if (status =='off'){
-            $('a#'+i).html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
-        }else {
-            $('a#'+i).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
-            aliveNo++
-        }
-    }
-    $('label#alive').html(aliveNo)
-
-    $('#search_button').click(function () {
-        var text = $('#search_info').val()
-        for(i = 1;i<={{form|length}};i++){
-            var file_name = $('#name_'+ i).text()
-            {#file_name=file_name.replace(".html","");#}
-            if (file_name.indexOf(text) == -1){
-                $('#id'+ i).attr('style','display:none')
-            }else {
-                var str = '<span style="background-color:#eec805">'+text+'</span>';
-                $('#name_'+ i).html($('#name_'+ i).text().replace(text,str));
+        for (i = 1; i <={{ form|length }}; i++) {
+            var status = $('a#' + i).attr('name')
+            if (status == 'off') {
+                $('a#' + i).html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
+            } else {
+                $('a#' + i).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+                aliveNo++
             }
         }
 
-    })
-    $("#search_info").blur(function () {
-        var text = $(this).val()
-        if(text == ''){
-            for(i = 1;i<={{form|length}};i++){
-                $('#id'+ i).removeAttr('style')
-                $('#id_'+ i + '>span').removeAttr('style')
+        $('label#alive').html(aliveNo)
+
+        $('#search_button').click(function () {
+            var text = $('#search_info').val()
+            for (i = 1; i <={{form|length}}; i++) {
+                var file_name = $('#name_' + i).text()
+                {#file_name=file_name.replace(".html","");#}
+                if (file_name.indexOf(text) == -1) {
+                    $('#id' + i).attr('style', 'display:none')
+                } else {
+                    var str = '<span style="background-color:#eec805">' + text + '</span>';
+                    $('#name_' + i).html($('#name_' + i).text().replace(text, str));
+                }
             }
+
+        })
+
+        $("#search_info").blur(function () {
+            var text = $(this).val()
+            if (text == '') {
+                for (i = 1; i <={{form|length}}; i++) {
+                    $('#id' + i).removeAttr('style')
+                    $('#id_' + i + '>span').removeAttr('style')
+                }
+            }
+        });
+
+        getServerUsage();
+        getTcpstatus();
+        getPlatTcpstatus();
+
+        // 轮询服务器负载
+        function getServerUsage() {
+            $.get('getServerUsage').done(function (info) {
+                $('#cpu').html(info.serverInfo.cpu_usage);
+                $('#mem').html(info.serverInfo.mem_usage);
+            }).fail(function () {
+                $('#cpu').html('--');
+                $('#mem').html('--/--');
+            })
         }
-    })
 
+        setInterval(getServerUsage, 3000);
 
-
-    function getStatus(){
-        $.get('getStatus').done(function (info) {
-            if(info.statusform.length==list.length){
-
-                for(i=0;i<list.length;i++){
-
-                    if(info.statusform[i][0]==list[i][0]){
-                        if(info.statusform[i][2]==list[i][2]){
-
-                        }else{
-                            $('td#ip'+(i+1)).html(info.statusform[i][2])
-                            list[i][2]=info.statusform[i][2]
-                        }
-                        if(info.statusform[i][3]==list[i][3]){
-
-                        }else{
-                            if(info.statusform[i][3]=='on'){
-                                $('a#'+(i+1)).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
-                                aliveNo++
-
-                            }else{
-                                $('a#'+(i+1)).html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
-                                aliveNo--
+        // 轮询资产状况
+        function getStatus() {
+            $.get('getStatus').done(function (info) {
+                if (info.statusform.length == list.length) {
+                    for (i = 0; i < list.length; i++) {
+                        if (info.statusform[i][0] == list[i][0]) {
+                            if (info.statusform[i][2] == list[i][2]) {
+                            } else {
+                                $('td#ip' + (i + 1)).html(info.statusform[i][2])
+                                list[i][2] = info.statusform[i][2]
                             }
-                            list[i][3]=info.statusform[i][3]
+                            if (info.statusform[i][3] == list[i][3]) {
+                            } else {
+                                if (info.statusform[i][3] == 'on') {
+                                    $('a#' + (i + 1)).html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+                                    aliveNo++
+                                } else {
+                                    $('a#' + (i + 1)).html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
+                                    aliveNo--
+                                }
+                                list[i][3] = info.statusform[i][3]
+                            }
+                            $('label#alive').html(aliveNo)
+                        } else {
+                            window.location.href = 'main.html'
                         }
-                        $('label#alive').html(aliveNo)
-                    }else {
-                        window.location.href='main.html'
+                    }
+                } else {
+                    window.location.href = 'main.html'
+                }
+            }).fail(function () {
+            })
+        }
+
+        setInterval(getStatus, 2000);
+
+        // 轮询转发状态
+        function getTcpstatus() {
+            $.get('tcpStatus').done(function (info) {
+                if (info.tcpstatus[0] === 'on') {
+                    $('a#tcp_a').html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+                } else {
+                    $('a#tcp_a').html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
+                }
+            }).fail(function () {
+                $('a#tcp_a').html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+            })
+        }
+
+        setInterval(getTcpstatus, 10000);
+
+        // 轮询管理平台连接状态
+        function getPlatTcpstatus() {
+            $.get('serverStatus').done(function (info) {
+                for(i=0; i<info.tcpstatus.length; i++) {
+                    if(info.tcpstatus[i][1]==='on') {
+                        $('a#plattcp_a').html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+                    } else {
+                        $('a#plattcp_a').html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
                     }
                 }
-            }else{
-                window.location.href='main.html'
-            }
+            }).fail(function () {
+                $('a#plattcp_a').html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
+            })
+        }
 
+        setInterval(getPlatTcpstatus, 10000);
 
-
-        }).fail(function () {
-
-        })
-    }
-    setInterval(getStatus,2000)
-
-    function getTcpstatus(){
-        $.get('tcpStatus').done(function (info) {
-            if (info.tcpstatus[0]=='on'){
-                $('a#tcp_a').html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
-            }
-            else {
-                $('a#tcp_a').html('<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>')
-
-            }
-
-        }).fail(function () {
-
-        })
-    }
-    getTcpstatus()
-    setInterval(getTcpstatus,10000)
-
-
-	</script>
+    </script>
 {% endblock %}

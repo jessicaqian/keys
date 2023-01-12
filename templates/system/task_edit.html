@@ -1,0 +1,328 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}任务模板编辑{% endblock %}
+
+{% block css %}
+<link href="{% static "system/css/task.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block modal-content %}
+    <div class="modal-header">
+        <button type="button" class="close" id="modal_close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+    </div>
+    <div class="modal-body" id="detail_body">
+        <table class="table table-hover table-condensed table-striped">
+            <colgroup>
+                <col style="width: 10%"><col style="width: 20%"><col style="width: 70%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>按键名称</th>
+                    <th>按键配置</th>
+                </tr>
+            </thead>
+        </table>
+        <table class="table table-hover table-condensed table-striped">
+            <colgroup>
+                <col style="width: 10%"><col style="width: 20%"><col style="width: 70%">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td id="key_name_1"></td>
+                    <td id="key_config_1"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td id="key_name_2"></td>
+                    <td id="key_config_2"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td id="key_name_3"></td>
+                    <td id="key_config_3"></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td id="key_name_4"></td>
+                    <td id="key_config_4"></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td id="key_name_5"></td>
+                    <td id="key_config_5"></td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td id="key_name_6"></td>
+                    <td id="key_config_6"></td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td id="key_name_7"></td>
+                    <td id="key_config_7"></td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td id="key_name_8"></td>
+                    <td id="key_config_8"></td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td id="key_name_9"></td>
+                    <td id="key_config_9"></td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td id="key_name_10"></td>
+                    <td id="key_config_10"></td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td id="key_name_11"></td>
+                    <td id="key_config_11"></td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td id="key_name_12"></td>
+                    <td id="key_config_12"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-body" id="edit_body">
+        <div id="edit_input_id" style="display: none"></div>
+        <table class="table table-hover table-condensed table-striped">
+            <colgroup>
+                <col style="width: 40px"><col style="width: 50%"><col style="width: 70px">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>模板名称</th>
+                    <th>应用</th>
+                </tr>
+            </thead>
+        </table>
+        <table class="table table-hover table-condensed table-striped">
+            <colgroup>
+                <col style="width: 40px"><col style="width: 50%"><col style="width: 70px">
+            </colgroup>
+            <tbody>
+            {% for temp in temp_list %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ temp.0 }}</td>
+                    <td><a class="btn config" type="button" id="deploy_temp_{{ temp.0 }}" onclick="chooseTemp($(this))">
+                        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="row sparse"><label class="head">任务模板编辑&nbsp&nbsp&nbsp&nbsp</label></div>
+<div class="row sparse" id="head_bar">
+    <div class="col-md-4">
+        <label>任务名称<span class="red">*</span>:&nbsp&nbsp</label>
+        <input placeholder="必填项" class="single_line" style="width: 200px" required=True id="task_name">
+    </div>
+    <div class="col-md-6">
+        <input type="text" placeholder="按输入设备名称关键字搜索" id="search_info">
+        <button class="btn btn-primary" id="search_button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
+    </div>
+    <div class="col-md-2">
+        <a class="btn btn-primary" onclick="submit()"><span class="glyphicon glyphicon-save" aria-hidden="true"></span>保存任务模板</a>
+    </div>
+</div>
+<div class="row sparse_min">
+    <div class="col-md-12">
+        <div id="table_box" >
+             <table class="table table-hover table-condensed table-striped" id="task_table">
+                <colgroup>
+                    <col style="width: 40px"><col style="width: 30%"><col style="width: 30%"><col style="width: 70px"><col style="width: 70px">
+                    <col style="width: 70px">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>输入设备名称</th>
+                        <th>配置模板名称</th>
+                        <th>查看配置模板</th>
+                        <th>更改配置模板</th>
+                        <th>删除配置模板</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="task_table_box" >
+            <table class="table table-hover table-condensed table-striped" id="task_table_body">
+                <colgroup>
+                    <col style="width: 40px"><col style="width: 30%"><col style="width: 30%"><col style="width: 70px"><col style="width: 70px">
+                    <col style="width: 70px">
+                </colgroup>
+            <tbody>
+            {% for input in input_list %}
+                <tr id="id_{{ input.1 }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td id="input_{{ input.1 }}">{{input.2}}</td>
+                    <td id="temp_{{ input.1 }}"></td>
+                    <!-- 查看 -->
+                    <td class="scan">
+                        <a class="btn config" type="button" data-toggle="modal" data-target="#myModal" id="detail_{{ input.1 }}" onclick="openDetail({{ input.1 }})">
+                           <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                    <!-- 编辑 -->
+                    <td class="edit">
+                        <a class="btn config" type="button" data-toggle="modal" data-target="#myModal" id="edit_{{ input.1 }}" onclick="openEdit({{ input.1 }})">
+                           <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                    <!-- 删除 -->
+                    <td class="delete">
+                        <a class="btn config" type="button" id="delete_{{ input.1 }}" onclick="openDelete({{ input.1 }})">
+                           <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    var action = 'new';    //默认是新建任务
+    var task_name = '';
+    var task_config = {};
+    active();
+
+    function active() {
+        {% for input in input_list %}
+            task_config['{{ input.1 }}'] = '';
+        {% endfor %}
+        if('{{ action }}' === 'edit') {
+            action = 'edit';
+            task_name = '{{ task.0 }}';
+            $('#task_name').val('{{ task.0 }}');
+            {% for info in task.1 %}
+                $('#temp_{{ info.0 }}').html('{{ info.1 }}');
+                if(task_config['{{ info.0 }}'] !== undefined) {
+                    task_config['{{ info.0 }}'] = '{{ info.1 }}';
+                }
+            {% endfor %}
+        }
+    }
+
+    $('a#flow').attr('aria-expanded','true');
+
+    $('div#collapseExample').attr('class','collapse in');
+
+    $('#search_button').click(function () {
+        var text = $('#search_info').val();
+        for(var input in task_config) {
+            var str = $('#input_' + input).html();
+            if(str.indexOf(text) === -1) {
+                $('#id_'+ input).attr('style','display:none')
+            } else {
+                var new_str = '<span style="background-color:#eec805">'+text+'</span>';
+                $('#input_'+ input).html($('#input_'+ input).text().replace(text, new_str));
+            }
+        }
+    });
+
+    $("#search_info").blur(function () {
+        var text = $(this).val();
+        if(text === ''){
+            for(i = 1;i<={{form|length}};i++){
+                $('#id'+ i).removeAttr('style')
+                $('#id_'+ i + '>span').removeAttr('style')
+            }
+            for(var input in task_config) {
+                $('#id_'+ input).removeAttr('style')
+                $('#id_'+ input + '>span').removeAttr('style')
+            }
+        }
+    });
+
+    function openDetail(id) {
+        $('#detail_body').removeAttr('style','display:none');
+        $('#edit_body').attr('style','display:none');
+        $('#myModalLabel').html('配置模板详情');
+        $.get("getTempDetail", {'name': task_config[id]}).done(function (data) {
+            data = data.temp;
+            if(data === null) {
+                for(var i=0;i<13;i++) {
+                    $('#key_config_' + i).html('');
+                    $('#key_name_' + i).html('');
+                }
+            } else {
+                $('#myModalLabel').html('配置模板详情 ' + data[0]);
+                var key_config = JSON.parse(data[13]);
+                for(var i=0;i<13;i++) {
+                    $('#key_config_' + i).html(data[i]);
+                    $('#key_name_' + i).html(key_config[i]);
+                }
+            }
+        }).fail(function (data) {
+            alert("获取数据失败")
+        });
+    }
+
+    function openEdit(input) {
+        $('#edit_body').removeAttr('style','display:none');
+        $('#detail_body').attr('style','display:none');
+        $('#myModalLabel').html('选择输入设备的配置模板');
+        $('#edit_input_id').val(input);
+    }
+
+    function openDelete(input) {
+        $('#temp_' + input).html('');
+        var key = input.toString();
+        if(task_config[key] !== ''){
+            task_config[key] = '';
+        }
+    }
+
+    function chooseTemp(temp) {
+        var input_id = $('#edit_input_id').val();
+        var temp_name = temp[0].id.split('_')[2];
+        $('#temp_' + input_id).html(temp_name);
+        var key = input_id.toString();
+        task_config[key] = temp_name;
+        $('#modal_close').click();
+    }
+    
+    function submit() {
+        var name = $('#task_name').val();
+        if(name === '') {
+            alert("请输入任务名称");
+            return;
+        }
+        var jsonStr = JSON.stringify(task_config);
+        $.post("saveTask",{'mes':jsonStr, 'csrfmiddlewaretoken': $("[name = 'csrfmiddlewaretoken']").val(), 'name': name, 'old_name': task_name, 'status': action}).done(function (data) {
+            if(data.code && data.code === 1) {
+                window.location.href ='task.html'
+            } else if(data.code && data.code === 2) {
+                alert(data.msg);
+            } else {
+                alert("保存失败");
+            }
+        }).fail(function () {
+            alert("保存失败")
+        })
+    }
+
+</script>
+{% endblock %}

@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}已配置设备{% endblock %}
+{% block title %}管理已配置设备{% endblock %}
 
 {% block css %}
 <link href="{% static  "system/css/configed.css" %}" rel="stylesheet">
@@ -16,22 +16,18 @@
     <div class="modal-body">
         <p id="key1"></p><p id="key2"></p><p id="key3"></p><p id="key4"></p><p id="key5"></p><p id="key6"></p>
         <p id="key7"></p><p id="key8"></p><p id="key9"></p><p id="key10"></p><p id="key11"></p><p id="key12"></p>
-
-
     </div>
 {% endblock %}
 
 
 {% block content %}
 <div class="row sparse"><label class="head">管理已配置设备&nbsp&nbsp&nbsp&nbsp</label></div>
-
 <div class="row sparse" id="head_bar">
     <div class="col-md-3">
-        <label>已配置多key设备列表</label>
-
+        <label>已配置多按键设备列表</label>
     </div>
     <div class="col-md-7">
-            <input type="text" placeholder="按名称关键字搜索" id="search_info">
+            <input type="text" placeholder="按输入设备描述关键字搜索" id="search_info">
             <button class="btn btn-primary" id="search_button">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
     </div>
@@ -41,14 +37,15 @@
 <div id="table_box">
      <table class="table table-hover table-condensed table-striped" id="configed_table">
         <colgroup>
-            <col style="width: 40px"><col style="width: 30%"><col style="width: 15%"><col style="width: 25%"><col style="width: 70px"><col style="width: 70px"><col style="width: 70px">
+            <col style="width: 40px"><col style="width: 40px"><col style="width: 30%"><col style="width: 15%"><col style="width: 25%"><col style="width: 70px"><col style="width: 70px"><col style="width: 70px">
         </colgroup>
         <thead>
             <tr>
-                <th>#</th>
+                <th>序号</th>
+                <th>输入设备ID</th>
                 <th>输入设备描述</th>
-                <th>多key设备IP</th>
-                <th>多key设备描述</th>
+                <th>多按键设备IP</th>
+                <th>多按键设备描述</th>
                 <th>查看信息</th>
                 <th>编辑</th>
                 <th>删除</th>
@@ -59,100 +56,89 @@
 <div id="configed_table_body">
     <table class="table table-hover table-condensed table-striped" id="table_body">
         <colgroup>
-            <col style="width: 40px"><col style="width: 30%"><col style="width: 15%"><col style="width: 25%"><col style="width: 70px"><col style="width: 70px"><col style="width: 70px">
+            <col style="width: 40px"><col style="width: 40px"><col style="width: 30%"><col style="width: 15%"><col style="width: 25%"><col style="width: 70px"><col style="width: 70px"><col style="width: 70px">
         </colgroup>
     <tbody>
-
-{% for form in form %}
+    {% for form in form %}
         <tr id="id{{ forloop.counter }}">
             <td>{{ forloop.counter }}</td>
-            <td  id="name_{{ forloop.counter }}">{{form.0}}</td>
-            <td>{{form.1}}</td>
-            <td>{{form.2}}</td>
+            <td>{{ form.3 }}</td>
+            <td id="name_{{ forloop.counter }}">{{ form.0 }}</td>
+            <td>{{ form.1 }}</td>
+            <td>{{ form.2 }}</td>
+            <!-- 查看信息 -->
             <td class="download">
-                <a class="btn config scan"  id="{{ form.3 }}" type="button" data-toggle="modal" data-target="#myModal" >
+                <a class="btn config scan" id="{{ form.3 }}" type="button" data-toggle="modal" data-target="#myModal" >
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                 </a>
             </td>
+            <!-- 编辑 -->
             <td class="download">
                 <a class="btn config" href="/system/config.html?id={{ form.3 }}&status=edit">
-                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                 </a>
             </td>
+            <!-- 删除 -->
             <td class="delete">
-                <a class="btn config" href="/system/configedaction?id={{ form.3 }}&action=delete&ip={{ form.1 }}">
+                <a class="btn config" href="/system/configedaction?id={{ form.3 }}&action=delete&ip={{ form.1 }}" onclick="return confirm('是否确认删除该配置');">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </a>
             </td>
         </tr>
-{% endfor %}
-
+    {% endfor %}
     </tbody>
     </table>
-
 </div>
-
-
-
-
-
-
-
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
     $('a#flow').attr('aria-expanded','true');
+
     $('div#collapseExample').attr('class','collapse in');
+
     $('a.scan').click(function () {
-        var id = $(this).attr('id')
+        var id = $(this).attr('id');
         $.get("getinfo?id="+ id).done(function (info) {
-            $('#myModalLabel').html('设备信息：'+info.inputname)
-            $('#key1').html('<label>(预设1)'+info.keyname['1']+'</label>:'+info.key1)
-            $('#key2').html('<label>(预设2)'+info.keyname['2']+'</label>:'+info.key2)
-            $('#key3').html('<label>(预设3)'+info.keyname['3']+'</label>:'+info.key3)
-            $('#key4').html('<label>(预设4)'+info.keyname['4']+'</label>:'+info.key4)
-            $('#key5').html('<label>(预设5)'+info.keyname['5']+'</label>:'+info.key5)
-            $('#key6').html('<label>(预设6)'+info.keyname['6']+'</label>:'+info.key6)
-            $('#key7').html('<label>(预设7)'+info.keyname['7']+'</label>:'+info.key7)
-            $('#key8').html('<label>(预设8)'+info.keyname['8']+'</label>:'+info.key8)
-            $('#key9').html('<label>(预设9)'+info.keyname['9']+'</label>:'+info.key9)
-            $('#key10').html('<label>(预设10)'+info.keyname['10']+'</label>:'+info.key10)
-            $('#key11').html('<label>(预设11)'+info.keyname['11']+'</label>:'+info.key11)
-            $('#key12').html('<label>(预设12)'+info.keyname['12']+'</label>:'+info.key12)
-
-
-
-
+            $('#myModalLabel').html('设备信息：'+info.inputname);
+            $('#key1').html('<label>(预设1)'+info.keyname['1']+'</label>:'+info.key1);
+            $('#key2').html('<label>(预设2)'+info.keyname['2']+'</label>:'+info.key2);
+            $('#key3').html('<label>(预设3)'+info.keyname['3']+'</label>:'+info.key3);
+            $('#key4').html('<label>(预设4)'+info.keyname['4']+'</label>:'+info.key4);
+            $('#key5').html('<label>(预设5)'+info.keyname['5']+'</label>:'+info.key5);
+            $('#key6').html('<label>(预设6)'+info.keyname['6']+'</label>:'+info.key6);
+            $('#key7').html('<label>(预设7)'+info.keyname['7']+'</label>:'+info.key7);
+            $('#key8').html('<label>(预设8)'+info.keyname['8']+'</label>:'+info.key8);
+            $('#key9').html('<label>(预设9)'+info.keyname['9']+'</label>:'+info.key9);
+            $('#key10').html('<label>(预设10)'+info.keyname['10']+'</label>:'+info.key10);
+            $('#key11').html('<label>(预设11)'+info.keyname['11']+'</label>:'+info.key11);
+            $('#key12').html('<label>(预设12)'+info.keyname['12']+'</label>:'+info.key12);
         }).fail(function () {
 
         })
-
-    })
+    });
 
     $('#search_button').click(function () {
-        var text = $('#search_info').val()
+        var text = $('#search_info').val();
         for(i = 1;i<={{form|length}};i++){
-            var file_name = $('#name_'+ i).text()
-            {#file_name=file_name.replace(".html","");#}
-            if (file_name.indexOf(text) == -1){
+            var file_name = $('#name_'+ i).text();
+            if (file_name.indexOf(text) === -1){
                 $('#id'+ i).attr('style','display:none')
             }else {
                 var str = '<span style="background-color:#eec805">'+text+'</span>';
                 $('#name_'+ i).html($('#name_'+ i).text().replace(text,str));
             }
         }
+    });
 
-    })
     $("#search_info").blur(function () {
-        var text = $(this).val()
-        if(text == ''){
+        var text = $(this).val();
+        if(text === ''){
             for(i = 1;i<={{form|length}};i++){
                 $('#id'+ i).removeAttr('style')
                 $('#id_'+ i + '>span').removeAttr('style')
             }
         }
-    })
-
+    });
 </script>
 {% endblock %}

@@ -10,23 +10,22 @@
 
 {% block content %}
 <div class="row sparse"><label class="head">新建配置模板&nbsp&nbsp&nbsp&nbsp</label></div>
-
-    {% csrf_token %}
-
-
-
+{% csrf_token %}
 <div class="row sparse_min">
     <div class="col-md-5 ">
         <label>模板名称<span class="red">*</span>:&nbsp&nbsp</label>
         <input placeholder="必填项" class="single_line" required=True id="id_name">
-
     </div>
-    <div class="col-md-7">
-            <input type="text" placeholder="按名称关键字搜索" id="search_info">
-            <button class="btn btn-primary" id="search_button">
-            <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
+    <div class="col-md-5">
+        <input type="text" placeholder="按名称关键字搜索" id="search_info">
+        <button class="btn btn-primary" id="search_button">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
     </div>
-
+    <div class="col-md-2">
+        <button class="btn btn-primary" id="save">
+            <span class="glyphicon glyphicon-copy" aria-hidden="true"></span> 保存配置模板
+        </button>
+    </div>
 </div>
 <div class="row sparse_min" id="key_set">
     <div id="key_table_head">
@@ -38,18 +37,9 @@
             <thead>
                 <tr>
                     <th>输出名称</th>
-                    <th>预设1</th>
-                    <th>预设2</th>
-                    <th>预设3</th>
-                    <th>预设4</th>
-                    <th>预设5</th>
-                    <th>预设6</th>
-                    <th>预设7</th>
-                    <th>预设8</th>
-                    <th>预设9</th>
-                    <th>预设10</th>
-                    <th>预设11</th>
-                    <th>预设12</th>
+                    {% for keyname in key_name_list %}
+                        <th><br><input type="text" id="key_name_{{ forloop.counter }}" value="{{ keyname }}" style="width: 100%; border: none; text-align: center" ></span><br></th>
+                    {% endfor %}
                 </tr>
             </thead>
         </table>
@@ -62,20 +52,11 @@
             </colgroup>
             <tbody>
             {% for name in output_name %}
-                <tr id="id{{ forloop.counter }}" >
-                    <td id="name_{{ forloop.counter }}">{{ name.0 }}</td>
-                    <td><input name="key1" type="checkbox" value="{{ name.0 }}" /></td>
-                    <td><input name="key2" type="checkbox" value="{{ name.0 }}" /></td>
-                    <td><input name="key3" type="checkbox" value="{{ name.0 }}" /></td>
-                    <td><input name="key4" type="checkbox" value="{{ name.0 }}" /></td>
-                    <td><input name="key5" type="checkbox" value="{{ name.0 }}" /></td>
-                    <td><input name="key6" type="checkbox" value="{{ name.0 }}" /></td>
-                    <td><input name="key7" type="checkbox" value="{{ name.0 }}" /></td>
-                    <td><input name="key8" type="checkbox" value="{{ name.0 }}" /></td>
-                    <td><input name="key9" type="checkbox" value="{{ name.0 }}" /></td>
-                    <td><input name="key10" type="checkbox" value="{{ name.0 }}" /></td>
-                    <td><input name="key11" type="checkbox" value="{{ name.0 }}" /></td>
-                    <td><input name="key12" type="checkbox" value="{{ name.0 }}" /></td>
+                <tr id="output_{{ forloop.counter }}">
+                    <td id="output_name_{{ forloop.counter }}">{{ name.0 }}</td>
+                    {% for num in key_list %}
+                        <td><input id="config_{{ name.1 }}_{{ num }}" type="checkbox" value="{{ name.0 }}" onchange="clickCheckbox($(this), $(this).prop('checked'))" /></td>
+                    {% endfor %}
                 </tr>
             {% endfor %}
             </tbody>
@@ -89,148 +70,100 @@
             </colgroup>
             <tbody>
                 <tr >
-                    <td><label class="action" >清除此按键设置</label></td>
-                    <td>
-                        <a class="btn config" id="key1">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key2">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key3">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key4">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key5">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key6">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key7">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key8">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key9">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key10">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key11">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn config" id="key12">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </a>
-                    </td>
-
+                    <td><label class="action" style="color: #0f0f0f" >清除此按键设置</label></td>
+                    {% for num in key_list %}
+                        <td><a class="btn config" id="delete_{{ num }}" onclick="clickDelete($(this))"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
+                    {% endfor %}
                 </tr>
-
-
             </tbody>
         </table>
     </div>
 </div>
-<div class="col-md-2 col-md-offset-10">
-    <button class="btn btn-primary" id="save">
-        <span class="glyphicon glyphicon-copy" aria-hidden="true"></span> 保存配置模板
-    </button>
-</div>
-
-
-
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
-
+    var name_set = {"1": "", "2": "", "3": "", "4": "", "5": "", "6": "",
+                    "7": "", "8": "", "9": "", "10": "", "11": "", "12": "", };
     var set_dict = {
-        'name':'',
+        'name':'', 'key_name': name_set,
         'key1':[],'key2':[],'key3':[],'key4':[],'key5':[],'key6':[],
         'key7':[],'key8':[],'key9':[],'key10':[],'key11':[],'key12':[],
-
-    }
+    };
 
     $('#search_button').click(function () {
-        var text = $('#search_info').val()
-        for(i = 1;i<={{output_name|length}};i++){
-            var file_name = $('#name_'+ i).text()
-            if (file_name.indexOf(text) == -1){
-                $('#id'+ i).attr('style','display:none')
-            }else {
+        var text = $('#search_info').val();
+        for(i = 1; i<={{ output_name|length }}; i++){
+            var name = $("#output_name_"+ i).text();
+            if (name.indexOf(text) === -1){
+                $('#output_'+ i).attr('style', 'display:none')
+            } else {
                 var str = '<span style="background-color:#eec805">'+text+'</span>';
-                $('#name_'+ i).html($('#name_'+ i).text().replace(text,str));
+                $('#output_name_'+ i).html($('#output_name_'+ i).text().replace(text, str));
             }
         }
+    });
 
-    })
     $("#search_info").blur(function () {
-        var text = $(this).val()
-        if(text == ''){
-            for(i = 1;i<={{output_name|length}};i++){
-                $('#id'+ i).removeAttr('style')
-                $('#id_'+ i + '>span').removeAttr('style')
+        var text = $(this).val();
+        if(text === '') {
+            console.log('asda')
+            for(i=1;i<={{output_name|length}};i++){
+                $('#output_' + i).removeAttr('style');
+                //$('#output_'+ i + '>span').removeAttr('style')
             }
         }
-    })
-
+    });
 
     $('a#flow').attr('aria-expanded','true');
+
     $('div#collapseExample').attr('class','collapse in');
+
     $('a.config').click(function () {
         var ele = $(this).attr('id')
         $('input[name="'+ele+'"]').attr('checked',false)
-    })
+    });
+
     $('button#save').click(function () {
-
-        for(i=1;i<13;i++){
-            var key = "key"+i
-            $('input[name="'+key+'"]:checked').each(function(){
-            set_dict[key].push($(this).val());//向数组中添加元素
-        });
+        set_dict['name'] = $('input#id_name').val();
+        for(i=1; i<13; i++){
+            set_dict["key_name"][i] = $("input#key_name_" + i).val();
+            $("input[id^='config_']:checked").each(function(){
+                if($(this)[0].id.split('_')[2] === i.toString()) {
+                    set_dict["key"+i].push($(this).val());
+                }
+            });
         }
-        set_dict['name'] = $('input#id_name').val()
-
         var jsonStr = JSON.stringify(set_dict);
         $.post("saveTemplate",{'mes':jsonStr,'csrfmiddlewaretoken': $("[name = 'csrfmiddlewaretoken']").val(),'status':'new'}).done(function () {
             window.location.href ='template.html'
-
         }).fail(function () {
 
         })
+    });
 
-    })
+    function clickCheckbox(checkbox, checked) {
+        var id = checkbox[0].id;
+        /*这里由于传递进来的checked时序问题,下面赋值是反过来的*/
+        if(checked) {
+            $('input#' + id).prop('checked', true);
+        } else {
+            $('input#' + id).prop('checked', false);
+        }
+        var split_list = id.split('_');
+        var id_prefix = split_list[0] + '_' + split_list[1] + '_';
+        for (i=1; i<13 ; i++) {
+            var num = i.toString();
+            if(num !== split_list[2]) {
+                $('input#' + id_prefix + num).prop('checked', false);
+            }
+        }
+    }
 
-
-
-
+    function clickDelete(button) {
+        var id = button[0].id.split('_')[1];
+        $('input[id^="config_"][id$="_' + id + '"]').prop("checked", false);
+    }
 
 </script>
 {% endblock %}
