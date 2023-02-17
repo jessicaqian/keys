@@ -913,9 +913,7 @@ def server_status(request):
             conn.close()
             return JsonResponse({'code': 1, 'msg': 'success'})
         if method =="server disconnect":
-            sql = "Delete from web_status where id = 1"
-            cursor.execute(sql)
-            sql = "INSERT INTO web_status(ip,id,status) values ('{}',{},'{}')".format(ip, 1, 'off')
+            sql = "UPDATE web_status SET status='off' WHERE id=1"
             cursor.execute(sql)
             conn.commit()
             conn.close()
@@ -1012,7 +1010,9 @@ def devices(request):
 # 报告ip冲突
 def ip_conflict(request):
     if request.method == "POST":
-        ip = request.POST['ip']
+        mes = json.loads(request.POST['MultiK'])
+        data = mes['data']
+        ip = data['ip']
         logger.info("发现多按键设备IP冲突（{}）".format(ip))
         msgQueue.put("发现多按键设备IP冲突（{}）".format(ip))
         return JsonResponse({'code': 1, 'msg': 'success'})

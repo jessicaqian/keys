@@ -1,4 +1,8 @@
 # ---> Python
+# by niuyanfei
+keys.tar
+deploy.tar.gz
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
