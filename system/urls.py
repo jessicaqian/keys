@@ -14,6 +14,8 @@ urlpatterns = [
     path('task_edit.html', views.task_edit),
     path('usradmin.html', views.usr_admin),
     path('createip.html', views.save_ip),
+    path('log_user.html', views.log_user),
+    path('log_system.html', views.log_system),
 
     path('configedaction', views.conf_action),
     path('saveTemplate', views.save_temp),
@@ -38,5 +40,8 @@ urlpatterns = [
     path('devices', views.devices),
     path('ipConflict', views.ip_conflict),
     path('consumeMsg', views.consume_msg),
-    path('logDownload', views.log_download),
+    path('userLogDownload', views.user_log_download),
+    path('sysLogDownload', views.sys_log_download),
+    path('updateChannel', views.update_channel),
+    path('getLogInfo', views.get_log_info),
 ]

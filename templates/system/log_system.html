@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}系统运行日志{% endblock %}
+
+{% block css %}
+    <link href="{% static  "system/css/main.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <label class="head" style="margin-left: 0">系统运行日志&nbsp&nbsp&nbsp&nbsp</label>
+        <div class="col-md-24" style="margin:10px 0px 10px 0px">
+            <input type="text" placeholder="按日志关键字搜索" style="width: 30%" id="search_info">
+            <button class="btn btn-primary" id="search_button">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索
+            </button>
+            <a class="btn btn-primary" id="download_button" href="sysLogDownload">
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span> 下载全部日志
+            </a>
+        </div>
+        <div class="panel panel-default col-md-24" style="margin-right: 100px">
+            <div class="panel-body" style=" overflow:scroll; height:800px;">
+                <div class="text" id="data"></div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $('li#log_sys > a').attr('style','color: #efb041;padding-left: 30px;');
+        $('a#flowLog').attr('aria-expanded','true');
+        $('div#collapseLog').attr('class','collapse in');
+
+        var log = 0;    //todo 支持通过日志等级筛选
+        var searchstr = "";
+
+        $('#search_button').click(function () {
+            searchstr = $('#search_info').val();
+        });
+
+        function updateLog() {
+            $.get("getLogInfo", {str: searchstr, type: "system"}).done(function (data) {
+                $('#data').html(data.log);
+            }).fail(function () {
+            });
+        }
+        updateLog();
+        setInterval(updateLog, 2000)
+    </script>
+{% endblock %}

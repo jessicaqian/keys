@@ -76,6 +76,9 @@ WSGI_APPLICATION = 'multikeys.wsgi.application'
 
 DATABASES = {
     'default': {
+        # dev
+        #'DSN': 'localhost:2003/osrdb',
+        # release
         'DSN': '127.0.0.1:2004/keys',
         'NAME': 'SYSDBA',
         'PASSWD':'szoscar55'

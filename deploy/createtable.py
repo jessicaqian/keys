@@ -1,8 +1,8 @@
 import STPython
 
 def main():
+    # conn =STPython.connect('SYSDBA', 'szoscar55', dsn='127.0.0.1:2003/osrdb')
     conn =STPython.connect('SYSDBA', 'szoscar55', dsn='127.0.0.1:2004/keys')
-    #conn =STPython.connect('SYSDBA', 'szoscar55', dsn='10.25.16.12:2003/osrdb')
     cur = conn.cursor()
 
     """
@@ -20,7 +20,7 @@ def main():
     """
     cur.execute('create table input_select (dev_ID integer, description text, free integer)')
     conn.commit()
-    rows = [(51, '一厅首长讲话主1', 0), (52, '一厅首长讲话主2(D01-in02)', 0), (53, '长城主(D01-in03)', 0)]
+    rows = [(1, '测试输入1', 1), (2, '测试输入2', 1), (3, '测试输入3', 1)]
     sql = "insert into input_select (dev_id,description,free) values (:a,:b,:o)"
     cur.executemany(sql, rows)
     conn.commit()
@@ -32,7 +32,7 @@ def main():
     """
     cur.execute('create table output_list (id integer PRIMARY KEY, name text)')
     conn.commit()
-    rows = [(1, '一厅主-音柱A'), (2, '一厅主-音柱B'), (3, '一厅主-低音A')]
+    rows = [(1, '测试输出1'), (2, '测试输出2'), (3, '测试输出3')]
     sql = 'insert into output_list (id,name) values (:a,:b)'
     cur.executemany(sql, rows)
     conn.commit()

@@ -141,7 +141,7 @@
                     'key1_id':[],'key2_id':[],'key3_id':[],'key4_id':[],'key5_id':[],'key6_id':[],'key7_id':[],'key8_id':[],'key9_id':[],'key10_id':[],'key11_id':[],'key12_id':[]};
 
     //load config
-    if('{{ dict.status }}'=='edit'){
+    if('{{ dict.status }}' === 'edit'){
         {% for key in key1 %}
             $('input[id^="config_"][id$="_1"][value="{{ key }}"]').attr("checked","checked");
         {% endfor %}
@@ -195,7 +195,7 @@
     $('a.config').click(function () {
         var ele = $(this).attr('id');
         $('input[name="'+ele+'"]').prop('checked',false)
-    })
+    });
 
     $('a.load').click(function () {
         var val = $(this).attr('name');
@@ -270,6 +270,9 @@
     });
 
     $('button#save').click(function () {
+        if(confirm("多按键设备将重启以更新配置，确认保存吗？") === false) {
+            return false;
+        }
         for(i=1; i<13; i++){
             set_dict["key_name"][i] = $("input#key_name_" + i).val();
             $("input[id^='config_']:checked").each(function(){

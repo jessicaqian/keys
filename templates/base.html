@@ -83,21 +83,26 @@
                     {return confirm('确定放弃正在编辑的模板吗?');}">
                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span> 用户账号管理</a>
                 </li>
-                  <li role="presentation" class="nav_bar" id="ip"><a href="createip.html" onclick="if(window.location.href.indexOf('config.html?id')>0){return confirm('确定放弃正在编辑的配置吗?');}
-                    else if(window.location.href.indexOf('tempAction?name')>0||window.location.href.indexOf('newtemp.html')>0||window.location.href.indexOf('task_edit.html')>0)
-                    {return confirm('确定放弃正在编辑的模板吗?');}">
-                    <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> 可视化管理平台</a>
-                </li>
                 <li role="presentation" class="nav_bar" id="log">
-                    <a id="flow" role="button" data-toggle="collapse" href="#collapseLog" aria-expanded="false" aria-controls="collapseExample">
-                    <span class="glyphicon glyphicon-book" aria-hidden="true"></span> 系统日志管理</a>
+                    <a id="flowLog" role="button" data-toggle="collapse" href="#collapseLog" aria-expanded="false" aria-controls="collapseExample">
+                    <span class="glyphicon glyphicon-book" aria-hidden="true"></span> 运行日志管理</a>
                     <div class="collapse" id="collapseLog">
                         <ul class="nav nav-pills nav-stacked">
-                            <li role="presentation" class="nav_bar_inner" id="dev_free"><a href="logDownload">
-                                <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span> 下载系统日志</a>
+                            <li role="presentation" class="nav_bar_inner" id="log_user"><a href="log_user.html">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span> 用户操作日志</a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-pills nav-stacked">
+                            <li role="presentation" class="nav_bar_inner" id="log_sys"><a href="log_system.html">
+                                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 系统运行日志</a>
                             </li>
                         </ul>
                     </div>
+                </li>
+                <li role="presentation" class="nav_bar" id="ip"><a href="createip.html" onclick="if(window.location.href.indexOf('config.html?id')>0){return confirm('确定放弃正在编辑的配置吗?');}
+                    else if(window.location.href.indexOf('tempAction?name')>0||window.location.href.indexOf('newtemp.html')>0||window.location.href.indexOf('task_edit.html')>0)
+                    {return confirm('确定放弃正在编辑的模板吗?');}">
+                    <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> 可视化管理平台</a>
                 </li>
             </ul>
         </div>
@@ -108,7 +113,6 @@
 
     <script type="text/javascript">
         setInterval(consumeMsg, 2000);
-
         function consumeMsg() {
             $.post("consumeMsg").done(function (data) {
                 if(data && data.msg) {

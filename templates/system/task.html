@@ -102,7 +102,7 @@
                     </td>
                     <!-- 应用 -->
                     <td class="edit">
-                        <a class="btn config" type="button" onclick="deployTask('{{ form.0 }}')">
+                        <a class="btn config" type="button" onclick="if(confirm('多按键设备将重启以更新配置，确认应用吗？') === false) {return false;} else {deployTask('{{ form.0 }}')}">
                             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                         </a>
                     </td>

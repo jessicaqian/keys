@@ -21,10 +21,11 @@ from django.http import FileResponse
 from django.http import HttpResponseRedirect
 
 # Create your views here.
-status_dict = {}
 msgQueue = queue.Queue(0)
 database = settings.DATABASES
 http_timeout = 2  #与终端的HTTP连接超时时间
+
+status_dict = {}
 conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
 cursor = conn.cursor()
 sql = " SELECT inputID,inputName,ip,status FROM keys_set"
@@ -34,32 +35,47 @@ for i in array:
     i = list(i)
     status_dict[i[0]] = i
 
-# logger配置
-logger = logging.getLogger("MULTIKEYS_SERVER")
-logger.setLevel(logging.INFO)
-fh = logging.FileHandler("./log/multikeys_server.log")
-fh.setLevel(logging.INFO)
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
+# 用户操作logger配置
+userlogger = logging.getLogger("MULTIKEYS_SERVER_USER")
+userlogger.setLevel(logging.INFO)
+userfh = logging.FileHandler("./log/multikeys_server_user.log")
+userfh.setLevel(logging.INFO)
+userch = logging.StreamHandler()
+userch.setLevel(logging.INFO)
 formatter = logging.Formatter("%(asctime)s--%(name)s--%(levelname)s - %(message)s")
-ch.setFormatter(formatter)
-fh.setFormatter(formatter)
-logger.addHandler(ch)
-logger.addHandler(fh)
+userch.setFormatter(formatter)
+userfh.setFormatter(formatter)
+userlogger.addHandler(userch)
+userlogger.addHandler(userfh)
+# 系统运行logger配置
+syslogger = logging.getLogger("MULTIKEYS_SERVER_SYSTEM")
+syslogger.setLevel(logging.INFO)
+sysfh = logging.FileHandler("./log/multikeys_server_system.log")
+sysfh.setLevel(logging.INFO)
+sysch = logging.StreamHandler()
+sysch.setLevel(logging.INFO)
+formatter = logging.Formatter("%(asctime)s--%(name)s--%(levelname)s - %(message)s")
+sysch.setFormatter(formatter)
+sysfh.setFormatter(formatter)
+syslogger.addHandler(sysch)
+syslogger.addHandler(sysfh)
 
-def get_STDB_cursor():
-    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
-    cursor = conn.cursor()
-    return cursor
-
-
+# 获取首页信息
 def main(request):
     if request.method == 'GET':
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
+        # 获取设备数量
         sql = "SELECT count(*) FROM keys_set"
         cursor.execute(sql)
         num = cursor.fetchone()
+        # 获取已配置列表
+        sql = " SELECT inputID,inputName,ip,status FROM keys_set"
+        cursor.execute(sql)
+        array = cursor.fetchall()
+        for i in array:
+            i = list(i)
+            status_dict[i[0]][1] = i[1]
         conn.close()
         return render(request, 'system/main.html', {'setnum': num[0], 'form': list(status_dict.values())})
 
@@ -67,8 +83,7 @@ def main(request):
 # 获取已配置列表
 def configed(request):
     if request.method == 'GET':
-        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
-                                dsn=database['default']['DSN'])
+        conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT inputName,ip,description,inputID FROM keys_set"
         cursor.execute(sql)
@@ -138,7 +153,7 @@ def config(request):
                     for index,keyname in enumerate(key_name_list):
                         if keyname == '':
                             key_name_list[index] = '按键' + str(index+1)
-                    logger.info("新建按键配置 " + info_dict['name'])
+                    userlogger.info("创建按键配置： " + info_dict['name'])
                     return render(request, 'system/keyconfig.html', {'dict': info_dict, 'output_name': output_name, 'form_template': form_template,
                                                                      'key_list': key_list, 'key_name_list': key_name_list})
             # 编辑按键配置
@@ -170,7 +185,7 @@ def config(request):
                     key12 = json.loads(val[11])
                     key_name_list = list(json.loads(val[12]).values())
                     conn.close()
-                    logger.info("编辑按键配置 " + info_dict['name'])
+                    userlogger.info("编辑按键配置： " + info_dict['name'])
                     return render(request, 'system/keyconfig.html',
                                   {'dict': info_dict, 'output_name': output_name, 'form_template': form_template,
                                    'key_list': key_list, 'key_name_list': key_name_list,
@@ -183,10 +198,8 @@ def config(request):
         status = request.GET.get('status', default='10000000')
         # 新增设备配置
         if status == 'new':
-            logger.info("新建按键配置")
             return render(request, 'system/config.html', {'name': name, 'id': id, 'form': form, 'status': 'new'})
         if status == 'edit':
-            # conn = sqlite3.connect('db.sqlite3')
             cursor = conn.cursor()
             sql = "SELECT inputID,inputName,ip,description,keyName FROM keys_set WHERE inputID = '" + id + "';"
             cursor.execute(sql)
@@ -197,7 +210,6 @@ def config(request):
                         'key9':val_dict['9'],'key10':val_dict['10'],'key11':val_dict['11'],'key12':val_dict['12']}
             form = ConfigForm()
             conn.close()
-            logger.info("编辑按键配置")
             return render(request, 'system/config.html', {'name': val[1], 'id': val[0], 'form': form, 'dict': key_dict, 'status': 'edit'})
 
 
@@ -210,7 +222,7 @@ def saveconf(request):
         key_set = json.loads(mes)
         status = request.POST['status']
         if status == 'new':
-            # 更新按键设置存储
+            userlogger.info("保存按键设置 ID： " + key_set['id'])
             sql = "UPDATE keys_set SET keyname='" + json.dumps(key_set['key_name'], ensure_ascii=False) + \
                   "',key1='"+ json.dumps(key_set['key1'], ensure_ascii=False) + "',key2='" + json.dumps(key_set['key2'], ensure_ascii=False) + \
                   "',key3='"+ json.dumps(key_set['key3'], ensure_ascii=False) + "',key4='"+ json.dumps(key_set['key4'], ensure_ascii=False) + \
@@ -232,15 +244,14 @@ def saveconf(request):
             cursor.execute(sqlip)
             ip = cursor.fetchone()
             conn.close()
-            logger.info("更新按键设置")
             # 向终端发送按键设置
             data = {"method": "update", "data": {}}
             try:
                 json_data = json.dumps(data)
                 r = requests.post('http://'+ip[0]+':8888', data=json_data, timeout=http_timeout)
-                logger.info("向终端发送按键设置")
+                syslogger.info("向终端发送按键设置 IP： " + ip[0])
             except Exception as e:
-                logger.error("向终端发送按键配置异常")
+                syslogger.error("向终端发送按键配置异常 IP： " + ip[0])
                 print(e)
             return JsonResponse({'code': 1, 'msg': 'success'})
 
@@ -254,6 +265,7 @@ def conf_action(request):
             ip = request.GET.get('ip')
             conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
             cursor = conn.cursor()
+            userlogger.info("删除按键配置： 输入ID：" + id)
             sql = "DELETE FROM keys_set WHERE inputID = '"+id+"';"
             cursor.execute(sql)
             conn.commit()
@@ -261,15 +273,14 @@ def conf_action(request):
             cursor.execute(sql)
             conn.commit()
             conn.close()
-            logger.info("删除按键配置")
             data = {"method": "update", "data": {}}
             try:
                 json_data = json.dumps(data)
                 r = requests.post('http://'+ip+':8888', data=json_data, timeout=http_timeout)
-                logger.info("向终端发送按键配置删除信息")
+                syslogger.info("向终端发送按键配置删除信息： IP：" + ip)
             except Exception as e:
                 print(e)
-                logger.error("向终端发送按键配置异常")
+                syslogger.error("向终端发送按键配置异常： IP：" + ip)
             finally:
                 del status_dict[str(id)]
                 return HttpResponseRedirect("configed.html")
@@ -298,7 +309,7 @@ def loadtemp(request):
         key11 = json.loads(val[11])
         key12 = json.loads(val[12])
         conn.close()
-        logger.info("加载配置模板 " + name)
+        userlogger.info("加载配置模板： " + name)
         return JsonResponse({'key_name_list': key_name_list, 'key1': key1, 'key2': key2, 'key3': key3, 'key4': key4, 'key5': key5, 'key6': key6,
                              'key7': key7, 'key8': key8, 'key9': key9, 'key10': key10, 'key11': key11, 'key12': key12})
 
@@ -333,7 +344,6 @@ def new_temp(request):
         cursor.execute(sql)
         output_name = cursor.fetchall()
         conn.close()
-        logger.info("新增配置模板")
         return render(request, 'system/newtemp.html', {'output_name': output_name, 'key_list': key_list, 'key_name_list': key_name_list})
 
 
@@ -402,7 +412,7 @@ def deploy_temp_action(input_id, template_name):
         key_set['key12_id']) + "' WHERE inputID ='" + input_id + "'"
     cursor.execute(sql)
     conn.commit()
-    logger.info("将配置模板{}应用到{}".format(template_name, input_id))
+    userlogger.info("将配置模板{}应用到输入{}".format(template_name, input_id))
     # 获取终端IP
     sqlip = "SELECT ip FROM keys_set where inputID='" + input_id + "'"
     cursor.execute(sqlip)
@@ -413,9 +423,9 @@ def deploy_temp_action(input_id, template_name):
     try:
         json_data = json.dumps(data)
         r = requests.post('http://' + ip[0] + ':8888', data=json_data, timeout=http_timeout)
-        logger.info("向终端发送按键配置改变信息")
+        syslogger.info("向终端发送按键配置改变信息： IP：" + ip[0])
     except Exception as e:
-        logger.error("向终端发送按键配置信息失败")
+        syslogger.error("向终端发送按键配置信息失败： IP：" + ip[0])
         print(e)
 
 
@@ -481,14 +491,13 @@ def delete_temp(request):
         cursor.execute(sql)
         conn.commit()
         conn.close()
-        logger.info("删除按键配置 " + task_name)
+        userlogger.info("删除按键配置模板： " + temp_name)
         return JsonResponse({'code': 1, 'msg': 'success'})
 
 
 # 保存模板
 def save_temp(request):
     if request.method == 'POST':
-        # conn = sqlite3.connect('db.sqlite3')
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
         mes = request.POST['mes']
@@ -506,7 +515,7 @@ def save_temp(request):
             cursor.execute(sql)
             conn.commit()
             conn.close()
-            logger.info("新增配置模板 " + tem_set['name'])
+            userlogger.info("保存按键配置模板[新增]： " + tem_set['name'])
         elif status == 'edit':
             if tem_set['name'] == tem_set['old_name']:
                 sql = "UPDATE template SET keyname='" + json.dumps(tem_set['key_name'], ensure_ascii=False) + "', key1='" + json.dumps(tem_set['key1'], ensure_ascii=False) + "',key2='"\
@@ -527,7 +536,7 @@ def save_temp(request):
             cursor.execute(sql)
             conn.commit()
             conn.close()
-            logger.info("编辑配置模板 " + tem_set['name'])
+            userlogger.info("保存按键配置模板[编辑]： " + tem_set['name'])
         return JsonResponse({'code': 1, 'msg': 'success'})
 
 
@@ -608,13 +617,13 @@ def task_save(request):
             sql = "INSERT INTO task (name,taskmap) values('" + name + "','" + json.dumps(task_set) + "')"
             cursor.execute(sql)
             conn.commit()
-            logger.info("新增任务模板 " + name)
+            userlogger.info("保存任务模板[新增]： " + name)
         elif status == 'edit':
             old_name = request.POST['old_name']
             sql = "UPDATE task SET name='{}',taskmap='{}' where name='{}'".format(name, json.dumps(task_set), old_name)
             cursor.execute(sql)
             conn.commit()
-            logger.info("编辑任务模板 " + name)
+            userlogger.info("保存任务模板[编辑]： " + name)
         conn.close()
         return JsonResponse({'code': 1, 'msg': 'success'})
 
@@ -629,7 +638,7 @@ def task_delete(request):
         cursor.execute(sql)
         conn.commit()
         conn.close()
-        logger.info("删除任务模板 " + name)
+        userlogger.info("删除任务模板： " + task)
         return JsonResponse({'code': 1, 'msg': 'success'})
 
 
@@ -637,7 +646,7 @@ def task_delete(request):
 def task_deploy(request):
     if request.method == 'POST':
         task_name = request.POST['task_name']
-        logger.info("应用任务模板 " + task_name)
+        userlogger.info("应用任务模板： " + task_name)
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = "SELECT * FROM task WHERE name = '{}'".format(task_name)
@@ -698,7 +707,7 @@ def usr_admin(request):
             sql = "UPDATE usradmin SET username='{}',passwd='{}' where id={}".format(name,newpwd,muser[0])
             cursor.execute(sql)
             conn.commit()
-            logger.info("更新用户账号信息")
+            userlogger.info("更新用户账号信息")
             return HttpResponseRedirect('/')
         else:
             conn.close()
@@ -715,7 +724,7 @@ def getconfig(request):
         data = mes['data']
         id = data['id']
         data_ip = data['ip']
-        # conn = sqlite3.connect('db.sqlite3')
+        syslogger.info("多按键设备请求配置信息： IP：" + data_ip)
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT ip,keyName,key1id,key2id,key3id,key4id,key5id,key6id,key7id" \
@@ -804,7 +813,6 @@ def config_status(request):
         mes = json.loads(request.POST['MultiK'])
         data = mes['data']
         id = data['id']
-
     return JsonResponse({'code': 1, 'msg': 'success'})
 
 
@@ -822,7 +830,7 @@ def check_client(request):
         mes = json.loads(request.POST['MultiK'])
         data = mes['data']
         ip = data['ip']
-        # conn = sqlite3.connect('db.sqlite3')
+        syslogger.info("多按键设备请求设备检查： IP：" + ip)
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT inputID FROM keys_set WHERE ip='"+ip+"'"
@@ -841,7 +849,6 @@ def connect_status(request):
         data = mes['data']
         method = mes['method']
         ip = data['ip']
-        # conn = sqlite3.connect('db.sqlite3')
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT inputID FROM keys_set WHERE ip='" + ip + "'"
@@ -853,12 +860,10 @@ def connect_status(request):
             id = val[0]
             conn.close()
             if method == 'client connect':
-                print(status_dict)
                 status_val = status_dict[str(id)]
                 status_val[3] = 'on'
                 status_dict[str(id)] = status_val
             elif method == 'client disconnect':
-                print(status_dict)
                 status_val = status_dict[str(id)]
                 status_val[3] = 'off'
                 status_dict[str(id)] = status_val
@@ -954,7 +959,7 @@ def save_ip(request):
         sql = "INSERT INTO web_status(id,ip,port) values ({}, '{}', {})".format(1, ip, port)
         cursor.execute(sql)
         conn.commit()
-        logger.info("更新管理平台配置信息")
+        userlogger.info("更新可视化管理平台配置信息")
         dir = os.getcwd()
         file_path = dir + '/configip.ini'
         with open(file=file_path, mode="w", encoding="utf-8") as f:
@@ -964,7 +969,7 @@ def save_ip(request):
         try:
             r = requests.post("http://0.0.0.0:8080", data=json_data, timeout=http_timeout)
         except Exception as e:
-            logger.error("更新管理平台配置信息失败！")
+            userlogger.error("更新可视化管理平台配置信息失败")
             print(e)
         finally:
             conn.close()
@@ -990,7 +995,6 @@ def devices(request):
         pass
     else:
         json_data = []
-        # conn = sqlite3.connect('db.sqlite3')
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT inputID,inputName,description,ip FROM keys_set"
@@ -1013,7 +1017,7 @@ def ip_conflict(request):
         mes = json.loads(request.POST['MultiK'])
         data = mes['data']
         ip = data['ip']
-        logger.info("发现多按键设备IP冲突（{}）".format(ip))
+        syslogger.info("发现多按键设备IP冲突： {}".format(ip))
         msgQueue.put("发现多按键设备IP冲突（{}）".format(ip))
         return JsonResponse({'code': 1, 'msg': 'success'})
 
@@ -1027,12 +1031,203 @@ def consume_msg(request):
         return JsonResponse({'code': 1, 'msg': msg})
 
 
-# 下载日志文件
-def log_download(request):
+# 更新输入输出通道名称
+'''
+-------------------------------------------------------------------------
+request：[URL:http://localhost:8000/system/updateChannel Method：POST, Content-Type：application/json]
+{
+    "data": [
+        {"old_name": "测试输入1", "new_name": "新输入1", "type": "input"},
+        {"old_name": "测试输出1", "new_name": "新输出1", "type": "output"}
+    ]
+}
+-------------------------------------------------------------------------
+response:
+{
+    "code": 200,
+    "msg": "更新成功"
+}
+
+{
+    "code": 500,
+    "msg": "更新失败"
+}
+-------------------------------------------------------------------------
+'''
+def update_channel(request):
     try:
-        response = FileResponse(open('./log/multikeys_server.log', 'rb'))
+        if request.method == "POST":
+            data = json.loads(bytes.decode(request.body, encoding='utf-8'))["data"]
+            for item in data:
+                if item["type"] == "input":
+                    update_input(item)
+                elif item["type"] == "output":
+                    update_output(item)
+                else:
+                    syslogger.error("未知通道类型")
+                    return JsonResponse({'code': 501, 'msg': "更新失败"})
+            syslogger.info("接收到输入输出设备名称变更请求")
+            msgQueue.put("输入输出设备名称已更新！")
+            return JsonResponse({'code': 200, 'msg': "更新成功"})
+    except Exception as e:
+        syslogger.error("更新输入输出名称失败")
+        print(e)
+        return JsonResponse({'code': 500, 'msg': "更新失败"})
+
+
+def update_input(info):
+    syslogger.info("更新输入通道名称： " + info['old_name'] + "->" + info['new_name'])
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
+    cursor = conn.cursor()
+    try:
+        sql = " UPDATE input_select SET description = '" + info['new_name'] + "' WHERE description = '" + info['old_name'] + "' "
+        cursor.execute(sql)
+        conn.commit()
+    except Exception as e:
+        conn.close()
+    try:
+        sql = " UPDATE keys_set SET inputname = '" + info['new_name'] + "' WHERE inputname = '" + info['old_name'] + "' "
+        cursor.execute(sql)
+        conn.commit()
+    except Exception as e:
+        conn.close()
+    conn.close()
+
+
+def update_output(info):
+    syslogger.info("更新输出通道名称： " + info['old_name'] + "->" + info['new_name'])
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
+    cursor = conn.cursor()
+    # 更新output_list
+    try:
+        sql = " UPDATE output_list SET name = '" + info['new_name'] + "' WHERE name = '" + info['old_name'] + "' "
+        cursor.execute(sql)
+        conn.commit()
+    except Exception as e:
+        conn.close()
+        print(e)
+    # 更新keys_set
+    try:
+        sql = " SELECT * FROM keys_set "
+        cursor.execute(sql)
+        configes = cursor.fetchall()
+        for conf in configes:   #遍历每一条config
+            conf = list(conf)[6:18]
+            update_info = handle_key_config(conf, info)
+            if len(update_info) > 0:
+                sql_1 = 'UPDATE keys_set SET ';sql_2 = '';sql_3 = ''
+                for key,val in update_info.items():
+                    sql_2 += 'KEY' + str(key) + '=' + "'" + val["old"] + "' "
+                    sql_3 += 'KEY' + str(key) + '=' + "'" + val["new"] + "' "
+                sql = sql_1 + sql_3 + 'WHERE ' + sql_2
+                cursor.execute(sql)
+                conn.commit()
+    except Exception as e:
+        print(e)
+        conn.close()
+    # 更新template
+    try:
+        sql = " SELECT * FROM template "
+        cursor.execute(sql)
+        templates = cursor.fetchall()
+        for template in templates:   #遍历每一条template
+            template = list(template)[1:13]
+            update_info = handle_key_config(template, info)
+            if len(update_info) > 0:
+                sql_1 = 'UPDATE template SET '
+                sql_2 = ''
+                sql_3 = ''
+                for key,val in update_info.items():
+                    sql_2 += 'KEY' + str(key) + '=' + "'" + val["old"] + "' "
+                    sql_3 += 'KEY' + str(key) + '=' + "'" + val["new"] + "' "
+                sql = sql_1 + sql_3 + 'WHERE ' + sql_2
+                cursor.execute(sql)
+                conn.commit()
+    except Exception as e:
+        print(e)
+        conn.close()
+    conn.close()
+
+
+'''
+处理key配置的字符串替换
+输入:key配置list
+输出:整理后的需要更改的key配置字典
+    { 1: {'old': '["测试输出1","测试输入12","测试输入123"]', 'new': '["新输出1","测试输入12","测试输入123"]'}}
+'''
+def handle_key_config(conf, info):
+    update_info = {}
+    for index, old_key in enumerate(conf):  # 遍历每个KEY配置
+        new_key = old_key.replace('"' + info["old_name"] + '"', '"' + info["new_name"] + '"')
+        if old_key != new_key:
+            update_info[index + 1] = {"old": old_key, "new": new_key}
+    return update_info
+
+
+# 查看用户操作日志
+def log_user(request):
+    if request.method == 'GET':
+        return render(request, 'system/log_user.html', {})
+
+
+#查看系统运行日志
+def log_system(request):
+    if request.method == 'GET':
+        return render(request, 'system/log_system.html', {})
+
+
+# 根据类型获取操作日志
+def get_log_info(request):
+    if request.method == 'GET':
+        log = []
+        type = request.GET["type"]
+        str = request.GET["str"]
+        try:
+            if type == "user":
+                path = "./log/multikeys_server_user.log"
+            elif type == "system":
+                path = "./log/multikeys_server_system.log"
+            else:
+                return JsonResponse({'code': 200, 'log': log})
+            with open(path, 'r') as f:
+                content = f.readlines()
+                content.reverse()
+                content = content[0:500]  # 默认前端最多显示500条
+                for line in content:
+                    if str != '' and not line.__contains__(str):
+                        continue
+                    else:
+                        if line.__contains__("--INFO"):
+                            line = '<div class="panel panel-info" style="border-width:medium;">' + line + '</div>'
+                        elif line.__contains__("--WARRING"):
+                            line = '<div class="panel panel-warring" style="border-width:medium;">' + line + '</div>'
+                        elif line.__contains__("--ERROR"):
+                            line = '<div class="panel panel-danger" style="border-width:medium;">' + line + '</div>'
+                        log.append(line)
+        except Exception as e:
+            log = []
+        return JsonResponse({'code': 200, 'log': log})
+
+
+# 下载用户操作日志文件
+def user_log_download(request):
+    try:
+        syslogger.info("下载用户操作日志")
+        response = FileResponse(open('./log/multikeys_server_user.log', 'rb'))
         response['content-type'] = "application/octet-stream"
-        response['content-Disposition'] = "attachment; filename= server.log"
+        response['content-Disposition'] = "attachment; filename= server_user.log"
         return response
     except Exception:
-        logger.error("下载系统日志失败")
+        syslogger.error("下载用户操作日志失败")
+
+# 下载系统运行日志文件
+def sys_log_download(request):
+    try:
+        syslogger.info("下载系统运行日志")
+        response = FileResponse(open('./log/multikeys_server_user.log', 'rb'))
+        response['content-type'] = "application/octet-stream"
+        response['content-Disposition'] = "attachment; filename= server_system.log"
+        return response
+    except Exception:
+        syslogger.error("下载系统运行日志失败")
+

@@ -152,7 +152,6 @@
                 $('#mem').html('--/--');
             })
         }
-
         setInterval(getServerUsage, 3000);
 
         // 轮询资产状况
@@ -188,7 +187,6 @@
             }).fail(function () {
             })
         }
-
         setInterval(getStatus, 2000);
 
         // 轮询转发状态
@@ -203,7 +201,6 @@
                 $('a#tcp_a').html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
             })
         }
-
         setInterval(getTcpstatus, 10000);
 
         // 轮询管理平台连接状态
@@ -220,7 +217,6 @@
                 $('a#plattcp_a').html('<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>')
             })
         }
-
         setInterval(getPlatTcpstatus, 10000);
 
     </script>

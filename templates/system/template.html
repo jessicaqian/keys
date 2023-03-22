@@ -118,7 +118,7 @@
                     <td>{{ forloop.counter }}</td>
                     <td>{{ input.1 }}</td>
                     <td>{{ input.2 }}</td>
-                    <td><a class="btn config" type="button" id="deploy_on_{{ input.0 }}" onclick="deploy($(this))">
+                    <td><a class="btn config" type="button" id="deploy_on_{{ input.0 }}" onclick="if(confirm('多按键设备将重启以更新配置，确认应用吗？') === false) {return false;} else {deploy($(this))}">
                         <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a>
                     </td>
                 </tr>
@@ -232,14 +232,14 @@
     $('a#deploy').click(function () {
         $('#deploy_body').removeAttr('style','display:none');
         $('#scan_body').attr('style','display:none');
-        var name =$(this).attr('name')
+        var name =$(this).attr('name');
         $('#myModalLabel').html('模板名称：' + name);
     });
 
     $('#search_button').click(function () {
-        var text = $('#search_info').val()
+        var text = $('#search_info').val();
         for(i = 1;i<={{form|length}};i++){
-            var file_name = $('#name_'+ i).text()
+            var file_name = $('#name_'+ i).text();
             if (file_name.indexOf(text) === -1){
                 $('#id'+ i).attr('style','display:none')
             }else {
@@ -251,10 +251,10 @@
     });
 
     $("#search_info").blur(function () {
-        var text = $(this).val()
+        var text = $(this).val();
         if(text === ''){
             for(i = 1;i<={{form|length}};i++){
-                $('#id'+ i).removeAttr('style')
+                $('#id'+ i).removeAttr('style');
                 $('#id_'+ i + '>span').removeAttr('style')
             }
         }
