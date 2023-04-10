@@ -1,8 +1,8 @@
 import STPython
 
 def main():
-    # conn =STPython.connect('SYSDBA', 'szoscar55', dsn='127.0.0.1:2003/osrdb')
-    conn =STPython.connect('SYSDBA', 'szoscar55', dsn='127.0.0.1:2004/keys')
+    conn =STPython.connect('SYSDBA', 'szoscar55', dsn='127.0.0.1:2003/SYSDBA')
+    # conn =STPython.connect('SYSDBA', 'szoscar55', dsn='127.0.0.1:2004/keys')
     cur = conn.cursor()
 
     """
