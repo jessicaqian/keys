@@ -77,9 +77,9 @@ WSGI_APPLICATION = 'multikeys.wsgi.application'
 DATABASES = {
     'default': {
         # dev
-        'DSN': 'localhost:2003/SYSDBA',
+        # 'DSN': 'localhost:2003/SYSDBA',
         # release
-        #'DSN': '127.0.0.1:2004/keys',
+        'DSN': '127.0.0.1:2004/keys',
         'NAME': 'SYSDBA',
         'PASSWD':'szoscar55'
     }
@@ -123,7 +123,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '/static/'),
+    os.path.join(BASE_DIR, 'static'),
     'static',
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'static_root')

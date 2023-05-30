@@ -26,8 +26,94 @@ database = settings.DATABASES
 http_timeout = 2  #与终端的HTTP连接超时时间
 
 status_dict = {}
+
+#创建数据库
 conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
 cursor = conn.cursor()
+
+sql = "SELECT RELNAME FROM sys_class WHERE RELKIND='r'"
+cursor.execute(sql)
+array = cursor.fetchall()
+tabel1 = ('USRADMIN',)
+tabel2 = ('INPUT_SELECT',)
+tabel3 = ('OUTPUT_LIST',)
+tabel4 = ('KEYS_SET',)
+tabel5 = ('TEMPLATE',)
+tabel6 = ('TASK',)
+tabel7 = ('WEB_STATUS',)
+
+#判断USRADMIN是否存在，如果不存在创建
+if tabel1 in array:
+    pass
+else:
+    cursor.execute('create table usradmin (id integer PRIMARY KEY AUTO_INCREMENT,username text,passwd text)')
+    conn.commit()
+    cursor.execute('INSERT INTO usradmin (username,passwd)values (:a,:b)', ('admin', '4c635087df1041bd13681ee3c6eb04d5'))
+    conn.commit()
+    print('USRADMIN表创建成功')
+
+#判断INPUT_SELECT是否存在，如果不存在创建
+if tabel2 in array:
+    pass
+else:
+    cursor.execute('create table input_select (dev_ID integer, description text, free integer)')
+    conn.commit()
+    rows = [(1, '测试输入1', 1), (2, '测试输入2', 1), (3, '测试输入3', 1)]
+    sql = "insert into input_select (dev_id,description,free) values (:a,:b,:o)"
+    cursor.executemany(sql, rows)
+    conn.commit()
+    print('INPUT_SELECT表创建成功')
+
+#判断OUTPUT_LIST是否存在，如果不存在创建
+if tabel3 in array:
+    pass
+else:
+    cursor.execute('create table output_list (id integer PRIMARY KEY, name text)')
+    conn.commit()
+    rows = [(1, '测试输出1'), (2, '测试输出2'), (3, '测试输出3')]
+    sql = 'insert into output_list (id,name) values (:a,:b)'
+    cursor.executemany(sql, rows)
+    conn.commit()
+    print('OUTPUT_LIST表创建成功')
+
+#判断KEYS_SET是否存在，如果不存在创建
+if tabel4 in array:
+    pass
+else:
+    sql = "create table keys_set (id integer PRIMARY KEY AUTO_INCREMENT,inputID text ,inputName text,ip text,description text,keyName varchar (1000),key1 varchar (200),key2 varchar(200),key3 varchar(200),key4 varchar(200),key5 varchar(200),key6 varchar(200),key7 varchar(200),key8 varchar(200),key9 varchar(200),key10 varchar(200),key11 varchar(200),key12 varchar(200),key1id varchar (200),key2id varchar(200),key3id varchar(200),key4id varchar(200),key5id varchar(200),key6id varchar(200),key7id varchar(200),key8id varchar(200),key9id varchar(200),key10id varchar(200),key11id varchar(200),key12id varchar(200),status text)"
+    cursor.execute(sql)
+    conn.commit()
+    print('KEYS_SET表创建成功')
+
+# 判断TEMPLATE是否存在，如果不存在创建
+if tabel5 in array:
+    pass
+else:
+    sql = "create table template (name text,key1 varchar (200),key2 varchar(200),key3 varchar(200),key4 varchar(200),key5 varchar(200),key6 varchar(200),key7 varchar(200),key8 varchar(200),key9 varchar(200),key10 varchar(200),key11 varchar(200),key12 varchar(200),keyName varchar (1000))"
+    cursor.execute(sql)
+    conn.commit()
+    print('TEMPLATE表创建成功')
+
+# 判断TASK是否存在，如果不存在创建
+if tabel6 in array:
+    pass
+else:
+
+    sql = "create table task (name text ,taskmap varchar (1000))"
+    cursor.execute(sql)
+    conn.commit()
+    print('TASK表创建成功')
+
+
+# 判断WEB_STATUS是否存在，如果不存在创建
+if tabel7 in array:
+    pass
+else:
+    cursor.execute('create table web_status (id integer PRIMARY KEY AUTO_INCREMENT,ip text ,status text,port text)')
+    conn.commit()
+    print('WEB_STATUS表创建成功')
+
+
 sql = " SELECT inputID,inputName,ip,status FROM keys_set"
 cursor.execute(sql)
 array = cursor.fetchall()
@@ -961,7 +1047,7 @@ def save_ip(request):
         conn.commit()
         userlogger.info("更新可视化管理平台配置信息")
         dir = os.getcwd()
-        file_path = dir + '/configip.ini'
+        file_path = dir + '/conf/configip.ini'
         with open(file=file_path, mode="w", encoding="utf-8") as f:
             f.write(f'[serverinfo]\nip = {ip}\nport = {port}')
         data = {"method": "update server configure", "data": {"ip": ip, "port": port}}
@@ -1057,11 +1143,13 @@ response:
 def update_channel(request):
     try:
         if request.method == "POST":
+            # data1 = json.loads(request.POST['MultiK'])
             data = json.loads(bytes.decode(request.body, encoding='utf-8'))["data"]
+            # data = data1['data']
             for item in data:
-                if item["type"] == "input":
+                if item["type"] == "INPUT":
                     update_input(item)
-                elif item["type"] == "output":
+                elif item["type"] == "OUTPUT":
                     update_output(item)
                 else:
                     syslogger.error("未知通道类型")
@@ -1076,35 +1164,34 @@ def update_channel(request):
 
 
 def update_input(info):
-    syslogger.info("更新输入通道名称： " + info['old_name'] + "->" + info['new_name'])
+    syslogger.info("更新输入通道名称： ID"+str(info['id']) + info['old_name'] + "->" + info['new_name'])
     conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
     cursor = conn.cursor()
     try:
-        sql = " UPDATE input_select SET description = '" + info['new_name'] + "' WHERE description = '" + info['old_name'] + "' "
+        sql = " UPDATE input_select SET description = '" + info['new_name'] + "' WHERE dev_id = '" + str(info['id']) + "'"
         cursor.execute(sql)
         conn.commit()
     except Exception as e:
-        conn.close()
+        print(e)
     try:
-        sql = " UPDATE keys_set SET inputname = '" + info['new_name'] + "' WHERE inputname = '" + info['old_name'] + "' "
+        sql = " UPDATE keys_set SET inputname = '" + info['new_name'] + "' WHERE id = '" + str(info['id']) + "'"
         cursor.execute(sql)
         conn.commit()
     except Exception as e:
-        conn.close()
+        print(e)
     conn.close()
 
 
 def update_output(info):
-    syslogger.info("更新输出通道名称： " + info['old_name'] + "->" + info['new_name'])
+    syslogger.info("更新输出通道名称：ID " +str(info['id']) + info['old_name'] + "->" + info['new_name'])
     conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
     cursor = conn.cursor()
     # 更新output_list
     try:
-        sql = " UPDATE output_list SET name = '" + info['new_name'] + "' WHERE name = '" + info['old_name'] + "' "
+        sql = " UPDATE output_list SET name = '" + info['new_name'] + "' WHERE id = '" + str(info['id']) + "' "
         cursor.execute(sql)
         conn.commit()
     except Exception as e:
-        conn.close()
         print(e)
     # 更新keys_set
     try:
@@ -1117,14 +1204,13 @@ def update_output(info):
             if len(update_info) > 0:
                 sql_1 = 'UPDATE keys_set SET ';sql_2 = '';sql_3 = ''
                 for key,val in update_info.items():
-                    sql_2 += 'KEY' + str(key) + '=' + "'" + val["old"] + "' "
-                    sql_3 += 'KEY' + str(key) + '=' + "'" + val["new"] + "' "
+                    sql_2 += 'ID =' + "'" + val["id"] + "' "
+                    sql_3 += 'KEY' + str(key) + '=' + "'" + val["new_name"] + "' "
                 sql = sql_1 + sql_3 + 'WHERE ' + sql_2
                 cursor.execute(sql)
                 conn.commit()
     except Exception as e:
         print(e)
-        conn.close()
     # 更新template
     try:
         sql = " SELECT * FROM template "
@@ -1145,7 +1231,6 @@ def update_output(info):
                 conn.commit()
     except Exception as e:
         print(e)
-        conn.close()
     conn.close()
 
 
