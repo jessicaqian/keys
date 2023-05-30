@@ -1309,7 +1309,7 @@ def user_log_download(request):
 def sys_log_download(request):
     try:
         syslogger.info("下载系统运行日志")
-        response = FileResponse(open('./log/multikeys_server_user.log', 'rb'))
+        response = FileResponse(open('./log/multikeys_server_system.log', 'rb'))
         response['content-type'] = "application/octet-stream"
         response['content-Disposition'] = "attachment; filename= server_system.log"
         return response
