@@ -9,6 +9,7 @@ import sqlite3
 import STPython
 import logging
 import queue
+import configparser
 
 from multikeys import settings
 from .forms import ConfigForm
@@ -42,6 +43,9 @@ tabel5 = ('TEMPLATE',)
 tabel6 = ('TASK',)
 tabel7 = ('WEB_STATUS',)
 
+global syndatamark
+syndatamark = 0
+
 #判断USRADMIN是否存在，如果不存在创建
 if tabel1 in array:
     pass
@@ -56,12 +60,12 @@ else:
 if tabel2 in array:
     pass
 else:
-    cursor.execute('create table input_select (dev_ID integer, description text, free integer)')
+    cursor.execute('create table input_select (dev_ID integer PRIMARY KEY, description text, free integer)')
     conn.commit()
-    rows = [(1, '测试输入1', 1), (2, '测试输入2', 1), (3, '测试输入3', 1)]
-    sql = "insert into input_select (dev_id,description,free) values (:a,:b,:o)"
-    cursor.executemany(sql, rows)
-    conn.commit()
+    # rows = [(1, '测试输入1', 1), (2, '测试输入2', 1), (3, '测试输入3', 1)]
+    # sql = "insert into input_select (dev_id,description,free) values (:a,:b,:o)"
+    # cursor.executemany(sql, rows)
+    # conn.commit()
     print('INPUT_SELECT表创建成功')
 
 #判断OUTPUT_LIST是否存在，如果不存在创建
@@ -70,10 +74,10 @@ if tabel3 in array:
 else:
     cursor.execute('create table output_list (id integer PRIMARY KEY, name text)')
     conn.commit()
-    rows = [(1, '测试输出1'), (2, '测试输出2'), (3, '测试输出3')]
-    sql = 'insert into output_list (id,name) values (:a,:b)'
-    cursor.executemany(sql, rows)
-    conn.commit()
+    # rows = [(1, '测试输出1'), (2, '测试输出2'), (3, '测试输出3')]
+    # sql = 'insert into output_list (id,name) values (:a,:b)'
+    # cursor.executemany(sql, rows)
+    # conn.commit()
     print('OUTPUT_LIST表创建成功')
 
 #判断KEYS_SET是否存在，如果不存在创建
@@ -120,7 +124,7 @@ array = cursor.fetchall()
 for i in array:
     i = list(i)
     status_dict[i[0]] = i
-
+conn.close()
 # 用户操作logger配置
 userlogger = logging.getLogger("MULTIKEYS_SERVER_USER")
 userlogger.setLevel(logging.INFO)
@@ -145,6 +149,8 @@ sysch.setFormatter(formatter)
 sysfh.setFormatter(formatter)
 syslogger.addHandler(sysch)
 syslogger.addHandler(sysfh)
+
+
 
 # 获取首页信息
 def main(request):
@@ -1072,7 +1078,7 @@ def save_ip(request):
         for i in array:
             i = list(i)
             json_dict[i[0]] = i
-        return render(request, 'system/createip.html', {'form': form, 'tcpstatus': list(json_dict.values()), 'status': 0})
+        return render(request, 'system/createip.html', {'form': form, 'tcpstatus': list(json_dict.values()), 'status': 0,'mark':syndatamark})
 
 
 # 获取输入设备
@@ -1315,4 +1321,76 @@ def sys_log_download(request):
         return response
     except Exception:
         syslogger.error("下载系统运行日志失败")
+
+
+#同步星启数据库
+# 已实现改/增，删除暂不同步
+def synData(request):
+    global syndatamark
+    syndatamark = 1
+    config = configparser.ConfigParser()
+    config.read("conf/configip.ini", encoding='utf-8-sig')
+    user = config.get("exdatabase", "user")
+    password = config.get("exdatabase", "password")
+    dsn = config.get("exdatabase", "dsn")
+    conn1 = STPython.connect(user=user, password=password,dsn=dsn)
+    cursor1 = conn1.cursor()
+    conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
+                            dsn=database['default']['DSN'])
+    cursor = conn.cursor()
+
+# 更新表INPUT_SELECT
+    sql = "SELECT ID,NAME FROM NJ.CHANNEL_VIEW WHERE TYPE = 'INPUT'"
+    cursor1.execute(sql)
+    input = cursor1.fetchall()
+    for i in input:
+        try:
+            sql = "INSERT INTO INPUT_SELECT VALUES (" + str(i[0]) + ",'" + i[1] + "',1)"
+
+            cursor.execute(sql)
+            conn.commit()
+        except Exception as e:
+            print("input插入错误:" + str(e))
+            try:
+
+                sql = "UPDATE INPUT_SELECT SET description = '" + i[1] + "'  WHERE dev_id = " + str(i[0])
+                cursor.execute(sql)
+                conn.commit()
+            except Exception as e:
+                print("input更新错误:"+ str(e))
+                conn.close()
+                conn1.close()
+                syndatamark = 0
+                return JsonResponse({'code': 500})
+
+# 更新表OUTPUT_LIST
+    sql = "SELECT ID,NAME FROM NJ.CHANNEL_VIEW WHERE TYPE = 'OUTPUT'"
+    cursor1.execute(sql)
+    output = cursor1.fetchall()
+    for i in output:
+        try:
+            sql = "INSERT INTO OUTPUT_LIST VALUES (" + str(i[0]) + ",'" + i[1] + "')"
+
+            cursor.execute(sql)
+            conn.commit()
+        except Exception as e:
+            print("output插入错误:" + str(e))
+            try:
+
+                sql = "UPDATE OUTPUT_LIST SET NAME = '" + i[1] + "'  WHERE ID = " + str(i[0])
+                cursor.execute(sql)
+                conn.commit()
+            except Exception as e:
+                print("output更新错误:"+ str(e))
+                conn.close()
+                conn1.close()
+                syndatamark = 0
+                return JsonResponse({'code': 500})
+
+    conn.close()
+    conn1.close()
+    syndatamark = 0
+    return JsonResponse({'code':200 })
+
+
 

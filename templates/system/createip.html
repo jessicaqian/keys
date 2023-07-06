@@ -46,6 +46,7 @@
 {% endblock %}
 
 {% block content %}
+
     <div class="row sparse"><label class="head">管理平台状态&nbsp&nbsp&nbsp&nbsp</label></div>
     <div class="row">
         <div class="col-md-9">
@@ -84,11 +85,41 @@
     <div class="row sparse">
         <button class="btn btn-primary" id="edit_usrinfo" type="button" data-toggle="modal" data-target="#myModal">
             <span aria-hidden="true" ></span> 编辑管理平台配置</button>
+        <button class="btn btn-primary" id="Syndata"> 同步管理平台数据</button>
     </div>
+    <div id="mode">
+        <div id="wait">
+            <label id="syndata_wait">同步中请稍候...</label>
+
+        </div>
+    </div>
+
+
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
+
+    $('button#Syndata').click(function () {
+        $('#mode').attr('style','display:block;')
+
+        $.get('synData').done(function (info) {
+            $('#mode').attr('style','display:none;')
+
+
+        }).fail(function () {
+
+        })
+
+
+    })
+
+    if({{ mark }}){
+        $('#mode').attr('style','display:block;')
+
+    }
+
+
 
     if({{ status }}){
         $('#myModal').modal('show')

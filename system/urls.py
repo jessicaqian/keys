@@ -44,4 +44,5 @@ urlpatterns = [
     path('sysLogDownload', views.sys_log_download),
     path('updateChannel', views.update_channel),
     path('getLogInfo', views.get_log_info),
+    path('synData',views.synData)
 ]
