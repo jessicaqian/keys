@@ -84,7 +84,7 @@ else:
 if tabel4 in array:
     pass
 else:
-    sql = "create table keys_set (id integer PRIMARY KEY AUTO_INCREMENT,inputID text ,inputName text,ip text,description text,keyName varchar (1000),key1 varchar (200),key2 varchar(200),key3 varchar(200),key4 varchar(200),key5 varchar(200),key6 varchar(200),key7 varchar(200),key8 varchar(200),key9 varchar(200),key10 varchar(200),key11 varchar(200),key12 varchar(200),key1id varchar (200),key2id varchar(200),key3id varchar(200),key4id varchar(200),key5id varchar(200),key6id varchar(200),key7id varchar(200),key8id varchar(200),key9id varchar(200),key10id varchar(200),key11id varchar(200),key12id varchar(200),status text)"
+    sql = "create table keys_set (inputID text PRIMARY KEY ,inputName text,ip text,description text,keyName varchar (1000),key1 varchar (2000),key2 varchar(2000),key3 varchar(2000),key4 varchar(2000),key5 varchar(2000),key6 varchar(2000),key7 varchar(2000),key8 varchar(2000),key9 varchar(2000),key10 varchar(2000),key11 varchar(2000),key12 varchar(2000),key1id varchar (2000),key2id varchar(2000),key3id varchar(2000),key4id varchar(2000),key5id varchar(2000),key6id varchar(2000),key7id varchar(2000),key8id varchar(2000),key9id varchar(2000),key10id varchar(2000),key11id varchar(2000),key12id varchar(2000),status text)"
     cursor.execute(sql)
     conn.commit()
     print('KEYS_SET表创建成功')
@@ -93,7 +93,7 @@ else:
 if tabel5 in array:
     pass
 else:
-    sql = "create table template (name text,key1 varchar (200),key2 varchar(200),key3 varchar(200),key4 varchar(200),key5 varchar(200),key6 varchar(200),key7 varchar(200),key8 varchar(200),key9 varchar(200),key10 varchar(200),key11 varchar(200),key12 varchar(200),keyName varchar (1000))"
+    sql = "create table template (name text,key1 varchar (2000),key2 varchar(2000),key3 varchar(2000),key4 varchar(2000),key5 varchar(2000),key6 varchar(2000),key7 varchar(2000),key8 varchar(2000),key9 varchar(2000),key10 varchar(2000),key11 varchar(2000),key12 varchar(2000),keyName varchar (1000),key1id varchar (2000),key2id varchar(2000),key3id varchar(2000),key4id varchar(2000),key5id varchar(2000),key6id varchar(2000),key7id varchar(2000),key8id varchar(2000),key9id varchar(2000),key10id varchar(2000),key11id varchar(2000),key12id varchar(2000))"
     cursor.execute(sql)
     conn.commit()
     print('TEMPLATE表创建成功')
@@ -161,14 +161,18 @@ def main(request):
         sql = "SELECT count(*) FROM keys_set"
         cursor.execute(sql)
         num = cursor.fetchone()
+        # print(num)
         # 获取已配置列表
         sql = " SELECT inputID,inputName,ip,status FROM keys_set"
         cursor.execute(sql)
         array = cursor.fetchall()
+        # print(array)
         for i in array:
             i = list(i)
+            # print(i)
             status_dict[i[0]][1] = i[1]
         conn.close()
+        # print(status_dict)
         return render(request, 'system/main.html', {'setnum': num[0], 'form': list(status_dict.values())})
 
 
@@ -596,19 +600,25 @@ def save_temp(request):
         status = request.POST['status']
         tem_set = json.loads(mes)
         if status == 'new':
-            sql = "INSERT INTO template (name,keyname,key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12) values('" +\
+            sql = "INSERT INTO template (name,keyname,key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12," \
+                  "key1id,key2id,key3id,key4id,key5id,key6id,key7id,key8id,key9id,key10id,key11id,key12id) values('" +\
                   tem_set['name'] + "','" + json.dumps(tem_set['key_name'], ensure_ascii=False) + "','" +\
                   json.dumps(tem_set['key1'], ensure_ascii=False) + "','" + json.dumps(tem_set['key2'], ensure_ascii=False) + "','" +\
                   json.dumps(tem_set['key3'], ensure_ascii=False) + "','" + json.dumps(tem_set['key4'], ensure_ascii=False) + "','" +\
                   json.dumps(tem_set['key5'], ensure_ascii=False) + "','" + json.dumps(tem_set['key6'], ensure_ascii=False) + "','" +\
                   json.dumps(tem_set['key7'], ensure_ascii=False) + "','" + json.dumps(tem_set['key8'], ensure_ascii=False) + "','" +\
                   json.dumps(tem_set['key9'], ensure_ascii=False) + "','" + json.dumps(tem_set['key10'], ensure_ascii=False) + "','" +\
-                  json.dumps(tem_set['key11'], ensure_ascii=False) + "','" + json.dumps(tem_set['key12'], ensure_ascii=False)+"')"
+                  json.dumps(tem_set['key11'], ensure_ascii=False) + "','" + json.dumps(tem_set['key12'], ensure_ascii=False)+"','"+\
+                  json.dumps(tem_set['key1_id']) + "','" + json.dumps(tem_set['key2_id']) + "','" + json.dumps(tem_set['key3_id']) + "','" + \
+                  json.dumps(tem_set['key4_id']) + "','" + json.dumps(tem_set['key5_id']) + "','" + json.dumps(tem_set['key6_id']) + "','" + \
+                  json.dumps(tem_set['key7_id']) + "','" + json.dumps(tem_set['key8_id']) + "','" + json.dumps(tem_set['key9_id']) + "','" + \
+                  json.dumps(tem_set['key10_id']) + "','" + json.dumps(tem_set['key11_id']) + "','" + json.dumps(tem_set['key12_id'])+"')"
             cursor.execute(sql)
             conn.commit()
             conn.close()
             userlogger.info("保存按键配置模板[新增]： " + tem_set['name'])
         elif status == 'edit':
+            print(tem_set)
             if tem_set['name'] == tem_set['old_name']:
                 sql = "UPDATE template SET keyname='" + json.dumps(tem_set['key_name'], ensure_ascii=False) + "', key1='" + json.dumps(tem_set['key1'], ensure_ascii=False) + "',key2='"\
                   + json.dumps(tem_set['key2'], ensure_ascii=False) + "',key3='"+ json.dumps(tem_set['key3'], ensure_ascii=False)+"',key4='"\
@@ -616,7 +626,13 @@ def save_temp(request):
                   + json.dumps(tem_set['key6'], ensure_ascii=False) +"',key7='"+ json.dumps(tem_set['key7'], ensure_ascii=False) +"',key8='"\
                   + json.dumps(tem_set['key8'], ensure_ascii=False) +"',key9='"+ json.dumps(tem_set['key9'], ensure_ascii=False) +"',key10='"\
                   + json.dumps(tem_set['key10'], ensure_ascii=False) +"',key11='"+ json.dumps(tem_set['key11'], ensure_ascii=False) +"',key12='"\
-                  + json.dumps(tem_set['key12'], ensure_ascii=False) +"' WHERE name='"+tem_set['name']+"'"
+                  + json.dumps(tem_set['key12'], ensure_ascii=False) + \
+                  "',key1id='" + json.dumps(tem_set['key1_id']) + "',key2id='" + json.dumps(tem_set['key2_id']) + \
+                  "',key3id='" + json.dumps(tem_set['key3_id']) + "',key4id='" + json.dumps(tem_set['key4_id']) + \
+                  "',key5id='" + json.dumps(tem_set['key5_id']) + "',key6id='" + json.dumps(tem_set['key6_id']) + \
+                  "',key7id='" + json.dumps(tem_set['key7_id']) + "',key8id='" + json.dumps(tem_set['key8_id']) + \
+                  "',key9id='" + json.dumps(tem_set['key9_id']) + "',key10id='" + json.dumps(tem_set['key10_id']) + \
+                  "',key11id='" + json.dumps(tem_set['key11_id']) + "',key12id='" + json.dumps(tem_set['key12_id']) +"' WHERE name='"+tem_set['name']+"'"
             else:
                 sql = "UPDATE template SET keyname='" + json.dumps(tem_set['key_name'], ensure_ascii=False) + "', name='"+tem_set['name']+"',key1='" + json.dumps(tem_set['key1'], ensure_ascii=False) + "',key2='"\
                   + json.dumps(tem_set['key2'], ensure_ascii=False) + "',key3='"+ json.dumps(tem_set['key3'], ensure_ascii=False)+"',key4='"\
@@ -624,7 +640,13 @@ def save_temp(request):
                   + json.dumps(tem_set['key6'], ensure_ascii=False) +"',key7='"+ json.dumps(tem_set['key7'], ensure_ascii=False) +"',key8='"\
                   + json.dumps(tem_set['key8'], ensure_ascii=False) +"',key9='"+ json.dumps(tem_set['key9'], ensure_ascii=False) +"',key10='"\
                   + json.dumps(tem_set['key10'], ensure_ascii=False) +"',key11='"+ json.dumps(tem_set['key11'], ensure_ascii=False) +"',key12='"\
-                  + json.dumps(tem_set['key12'], ensure_ascii=False) +"' WHERE name='"+tem_set['old_name']+"'"
+                  + json.dumps(tem_set['key12'], ensure_ascii=False) + \
+                  "',key1id='" + json.dumps(tem_set['key1_id']) + "',key2id='" + json.dumps(tem_set['key2_id']) + \
+                  "',key3id='" + json.dumps(tem_set['key3_id']) + "',key4id='" + json.dumps(tem_set['key4_id']) + \
+                  "',key5id='" + json.dumps(tem_set['key5_id']) + "',key6id='" + json.dumps(tem_set['key6_id']) + \
+                  "',key7id='" + json.dumps(tem_set['key7_id']) + "',key8id='" + json.dumps(tem_set['key8_id']) + \
+                  "',key9id='" + json.dumps(tem_set['key9_id']) + "',key10id='" + json.dumps(tem_set['key10_id']) + \
+                  "',key11id='" + json.dumps(tem_set['key11_id']) + "',key12id='" + json.dumps(tem_set['key12_id']) +"' WHERE name='"+tem_set['old_name']+"'"
             cursor.execute(sql)
             conn.commit()
             conn.close()
@@ -1386,6 +1408,39 @@ def synData(request):
                 conn1.close()
                 syndatamark = 0
                 return JsonResponse({'code': 500})
+
+# 更新表KEYS_SET
+    name_dict = {}
+    sql = "SELECT ID,NAME FROM NJ.CHANNEL_VIEW "
+    cursor1.execute(sql)
+    name = cursor1.fetchall()
+    for i in name:
+        i = list(i)
+        name_dict[str(i[0])] = i[1]
+
+    sql = "SELECT INPUTID,KEY1ID,KEY2ID,KEY3ID,KEY4ID,KEY5ID,KEY6ID,KEY7ID,KEY8ID,KEY9ID,KEY10ID,KEY11ID,KEY12ID FROM KEYS_SET"
+    cursor.execute(sql)
+    conn.commit()
+    keyset = cursor.fetchall()
+    for i in keyset:
+        sql = "UPDATE KEYS_SET SET INPUTNAME = '" + name_dict[i[0]] + "'  WHERE INPUTID = '" + i[0] + "'"
+        print(sql)
+        cursor.execute(sql)
+        j = 1
+        while j <13:
+            val = json.loads(i[j])
+            newname = []
+
+            for k in val:
+                newname.append(name_dict[k])
+            namedata = json.dumps(newname)
+            sql = "UPDATE KEYS_SET SET KEY" + str(j)+" = '" + namedata + "'  WHERE INPUTID = '" + i[0] + "'"
+            print(sql)
+            cursor.execute(sql)
+            conn.commit()
+            j = j + 1
+
+# 更新表TEMPLATE
 
     conn.close()
     conn1.close()
