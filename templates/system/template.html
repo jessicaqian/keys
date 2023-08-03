@@ -147,7 +147,7 @@
         <div id="table_box" >
              <table class="table table-hover table-condensed table-striped" id="template_table">
                 <colgroup>
-                    <col style="width: 40px"><col style="width: 50%"><col style="width: 70px"><col style="width: 70px"><col style="width: 70px">
+                    <col style="width: 40px"><col style="width: 60%"><col style="width: 70px"><col style="width: 70px">
                     <col style="width: 70px">
                 </colgroup>
                 <thead>
@@ -156,7 +156,7 @@
                         <th>模板名称</th>
                         <th>查看信息</th>
                         <th>编辑模板</th>
-                        <th>应用到输入</th>
+{#                        <th>应用到输入</th>#}
                         <th>删除</th>
                     </tr>
                 </thead>
@@ -165,7 +165,7 @@
         <div id="template_table_box" >
             <table class="table table-hover table-condensed table-striped" id="template_table_body">
                 <colgroup>
-                    <col style="width: 40px"><col style="width: 50%"><col style="width: 70px"><col style="width: 70px"><col style="width: 70px">
+                    <col style="width: 40px"><col style="width: 60%"><col style="width: 70px"><col style="width: 70px">
                     <col style="width: 70px">
                 </colgroup>
             <tbody>
@@ -189,13 +189,13 @@
                         </a>
                     </td>
                     <!-- 应用 -->
-                    <td class="edit">
-                        <a class="btn config" type="button" data-toggle="modal" data-target="#myModal" id="deploy" name="{{form.0}}"
-                           key1="{{ form.1 }}" key2="{{ form.2 }}" key3="{{ form.3 }}" key4="{{ form.4 }}" key5="{{ form.5 }}"
-                           key6="{{ form.6 }}" key7="{{ form.7 }}" key8="{{ form.8 }}" key9="{{ form.9 }}" key10="{{ form.10 }}"
-                           key11="{{ form.11 }}" key12="{{ form.12 }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-                        </a>
-                    </td>
+{#                    <td class="edit">#}
+{#                        <a class="btn config" type="button" data-toggle="modal" data-target="#myModal" id="deploy" name="{{form.0}}"#}
+{#                           key1="{{ form.1 }}" key2="{{ form.2 }}" key3="{{ form.3 }}" key4="{{ form.4 }}" key5="{{ form.5 }}"#}
+{#                           key6="{{ form.6 }}" key7="{{ form.7 }}" key8="{{ form.8 }}" key9="{{ form.9 }}" key10="{{ form.10 }}"#}
+{#                           key11="{{ form.11 }}" key12="{{ form.12 }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>#}
+{#                        </a>#}
+{#                    </td>#}
                     <!-- 删除 -->
                     <td class="delete">
                         <a class="btn config" type="button" onclick="deleteTemp('{{ form.0 }}')">
