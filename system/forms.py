@@ -60,6 +60,8 @@ class IpForm(forms.Form):
     这里是闫翔宇做的deMO，
     实现的功能是配置ip 端口号的功能
     """
-    ip = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '必填项', 'class': 'single_line'}), label='ip', required=True)
-    description = forms.CharField(widget=forms.TextInput(attrs={'class': 'single_line'}), label='端口', required=False)
-
+    ip = forms.CharField(widget=forms.TextInput(attrs={ 'class': 'single_line'}), label='ip', required=True)
+    description = forms.CharField(widget=forms.TextInput(attrs={'class': 'single_line'}), label='端口', required=True)
+    user = forms.CharField(widget=forms.TextInput(attrs={'class': 'single_line'}), label='USER', required=True)
+    password = forms.CharField(widget=forms.TextInput(attrs={'class': 'single_line'}), label='PASSWORD', required=True)
+    dns = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '000.000.000.000:00000/XXXXXX', 'class': 'single_line'}), label='DSN', required=True)

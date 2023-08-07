@@ -152,6 +152,8 @@ syslogger.addHandler(sysfh)
 
 
 
+
+
 # 获取首页信息
 def main(request):
     if request.method == 'GET':
@@ -1063,30 +1065,53 @@ def getServerUsage(request):
 
 # 更新、获取管理平台配置
 def save_ip(request):
+    config = configparser.ConfigParser()
+    config.read("conf/configip.ini", encoding='utf-8-sig')
     conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
     cursor = conn.cursor()
+
+
+
     if request.method == 'POST':
-        ip = request.POST.get("ip")
-        port = request.POST.get("description")
-        sql = "Delete from web_status where id = 1"
-        cursor.execute(sql)
-        sql = "INSERT INTO web_status(id,ip,port) values ({}, '{}', {})".format(1, ip, port)
-        cursor.execute(sql)
-        conn.commit()
-        userlogger.info("更新可视化管理平台配置信息")
-        dir = os.getcwd()
-        file_path = dir + '/conf/configip.ini'
-        with open(file=file_path, mode="w", encoding="utf-8") as f:
-            f.write(f'[serverinfo]\nip = {ip}\nport = {port}')
-        data = {"method": "update server configure", "data": {"ip": ip, "port": port}}
-        json_data = json.dumps(data)
-        try:
-            r = requests.post("http://0.0.0.0:8080", data=json_data, timeout=http_timeout)
-        except Exception as e:
-            userlogger.error("更新可视化管理平台配置信息失败")
-            print(e)
-        finally:
-            conn.close()
+        mark = request.POST.get("mark")
+        if mark == 'ip':
+            ip = request.POST.get("ip")
+            port = request.POST.get("description")
+            sql = "Delete from web_status where id = 1"
+            cursor.execute(sql)
+            sql = "INSERT INTO web_status(id,ip,port) values ({}, '{}', {})".format(1, ip, port)
+            cursor.execute(sql)
+            conn.commit()
+            userlogger.info("更新可视化管理平台配置信息")
+            dir = os.getcwd()
+            config.set('serverinfo', 'ip',ip)
+            config.set('serverinfo', 'port', port)
+            config.write(open("conf/configip.ini", "w", encoding='utf-8-sig'))
+
+
+            data = {"method": "update server configure", "data": {"ip": ip, "port": port}}
+            json_data = json.dumps(data)
+            try:
+                r = requests.post("http://0.0.0.0:8080", data=json_data, timeout=http_timeout)
+            except Exception as e:
+                userlogger.error("更新可视化管理平台配置信息失败")
+                print(e)
+            finally:
+                conn.close()
+                return HttpResponseRedirect('/system/createip.html')
+        elif mark == 'data':
+            usr = request.POST.get("user")
+            pw = request.POST.get("password")
+            dns = request.POST.get("dns")
+            config.set('exdatabase','user',usr)
+            config.set('exdatabase', 'password', pw)
+            config.set('exdatabase', 'dns', dns)
+            config.write(open("conf/configip.ini", "w", encoding='utf-8-sig'))
+
+
+
+            return HttpResponseRedirect('/system/createip.html')
+        else:
             return HttpResponseRedirect('/system/createip.html')
     else:
         form = IpForm()
@@ -1100,7 +1125,15 @@ def save_ip(request):
         for i in array:
             i = list(i)
             json_dict[i[0]] = i
-        return render(request, 'system/createip.html', {'form': form, 'tcpstatus': list(json_dict.values()), 'status': 0,'mark':syndatamark})
+
+        ip = config.get('serverinfo', 'ip')
+        port = config.get('serverinfo', 'port')
+        usr = config.get('exdatabase', 'user')
+        pw = config.get('exdatabase', 'password')
+        dns = config.get('exdatabase', 'dsn')
+
+        return render(request, 'system/createip.html', {'form': form, 'tcpstatus': list(json_dict.values()), 'status': 0,'mark':syndatamark,
+                                                        'ip':ip,'port':port,'usr':usr,'pw':pw,'dns':dns})
 
 
 # 获取输入设备
@@ -1350,12 +1383,20 @@ def sys_log_download(request):
 def synData(request):
     global syndatamark
     syndatamark = 1
+
     config = configparser.ConfigParser()
+
     config.read("conf/configip.ini", encoding='utf-8-sig')
     user = config.get("exdatabase", "user")
     password = config.get("exdatabase", "password")
     dsn = config.get("exdatabase", "dsn")
-    conn1 = STPython.connect(user=user, password=password,dsn=dsn)
+    try:
+        conn1 = STPython.connect(user=user, password=password,dsn=dsn)
+    except Exception as e:
+        syndatamark = 0
+        syslogger.error("连接第三方数据库失败")
+        return JsonResponse({'code': 500,'mes':'连接管理平台数据库失败'})
+
     cursor1 = conn1.cursor()
     conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'],
                             dsn=database['default']['DSN'])
@@ -1383,7 +1424,7 @@ def synData(request):
                 conn.close()
                 conn1.close()
                 syndatamark = 0
-                return JsonResponse({'code': 500})
+                return JsonResponse({'code': 500,'mes':'同步失败'})
 
 # 更新表OUTPUT_LIST
     sql = "SELECT ID,NAME FROM NJ.CHANNEL_VIEW WHERE TYPE = 'OUTPUT'"
@@ -1407,7 +1448,7 @@ def synData(request):
                 conn.close()
                 conn1.close()
                 syndatamark = 0
-                return JsonResponse({'code': 500})
+                return JsonResponse({'code': 500,'mes':'同步失败'})
 
 # 更新表KEYS_SET
     name_dict = {}
@@ -1445,7 +1486,7 @@ def synData(request):
     conn.close()
     conn1.close()
     syndatamark = 0
-    return JsonResponse({'code':200 })
+    return JsonResponse({'code':200,'mes':'同步成功' })
 
 
 

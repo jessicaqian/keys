@@ -42,7 +42,7 @@ urlpatterns = [
     path('consumeMsg', views.consume_msg),
     path('userLogDownload', views.user_log_download),
     path('sysLogDownload', views.sys_log_download),
-    path('updateChannel', views.update_channel),
+    # path('updateChannel', views.update_channel),
     path('getLogInfo', views.get_log_info),
     path('synData',views.synData)
 ]

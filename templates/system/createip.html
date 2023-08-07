@@ -21,7 +21,7 @@
                     {{ error_msg }}
                     <div class="row sparse_min">
                         <div class="left">
-                        {{ form.ip.label_tag }}
+                        {{ form.ip.label_tag }}&nbsp;&nbsp;&nbsp;&nbsp;
                         {{ form.ip}}
                         </div>
                     </div>
@@ -38,12 +38,55 @@
                         </div>
                     </div>
                         {{form.non_field_errors}}
+                    <input value="ip" name="mark" class="none">
                     <input type="submit" value="提&nbsp&nbsp交" id="submit" class="btn btn-primary">
                 </form>
             </div>
         </div>
     </div>
 {% endblock %}
+
+{% block modal-content-1 %}
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">可视化管理平台数据库</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <form method="post">
+                {% csrf_token %}
+
+                    <div class="row sparse_min">
+                        <div class="left">
+                            {{ form.user.label_tag }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            {{ form.user}}
+                        </div>
+                    </div>
+                    <div class="row sparse_min">
+                        <div class="left">
+                            {{ form.password.label_tag }}
+                            {{ form.password}}
+                        </div>
+                    </div>
+                    <div class="row sparse">
+                        <div class="left">
+                            {{ form.dns.label_tag }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            {{ form.dns}}
+
+                        </div>
+                    </div>
+                    <input value="data" name="mark" class="none">
+
+                    <input type="submit" value="提&nbsp&nbsp交" id="submit" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
 
 {% block content %}
 
@@ -85,7 +128,11 @@
     <div class="row sparse">
         <button class="btn btn-primary" id="edit_usrinfo" type="button" data-toggle="modal" data-target="#myModal">
             <span aria-hidden="true" ></span> 编辑管理平台配置</button>
-        <button class="btn btn-primary" id="Syndata"> 同步管理平台数据</button>
+    </div>
+    <div class="row sparse">
+        <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal1" >
+            <span aria-hidden="true" ></span> 配置管理平台数据库</button>
+        <button class="btn btn-primary" id="Syndata" type="button" >同步管理平台数据</button>
     </div>
     <div id="mode">
         <div id="wait">
@@ -99,14 +146,18 @@
 
 {% block js %}
 <script type="text/javascript">
+$('#id_ip').val('{{ ip }}')
+$('#id_description').val('{{ port }}')
+$('#id_user').val('{{ usr }}')
+$('#id_password').val('{{ pw }}')
+$('#id_dns').val('{{ dns }}')
 
     $('button#Syndata').click(function () {
         $('#mode').attr('style','display:block;')
 
         $.get('synData').done(function (info) {
             $('#mode').attr('style','display:none;')
-
-
+            alert(info.mes)
         }).fail(function () {
 
         })
