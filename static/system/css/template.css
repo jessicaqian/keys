@@ -26,7 +26,7 @@ td{
     font-size: 13px;
 }
 
-table#template_table{
+table#template_table,#scan_table{
     margin-bottom: 0px;
 }
 

@@ -844,7 +844,7 @@ def getconfig(request):
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
         sql = " SELECT ip,keyName,key1id,key2id,key3id,key4id,key5id,key6id,key7id" \
-              ",key8id,key9id,key10id,key11id,key12id,inputName FROM keys_set WHERE inputID='" + id + "'"
+              ",key8id,key9id,key10id,key11id,key12id,inputName FROM keys_set WHERE inputID='" + str(id) + "'"
         cursor.execute(sql)
         val = cursor.fetchone()
         if val == None:
@@ -1102,10 +1102,10 @@ def save_ip(request):
         elif mark == 'data':
             usr = request.POST.get("user")
             pw = request.POST.get("password")
-            dns = request.POST.get("dns")
+            dsn = request.POST.get("dns")
             config.set('exdatabase','user',usr)
             config.set('exdatabase', 'password', pw)
-            config.set('exdatabase', 'dns', dns)
+            config.set('exdatabase', 'dsn', dsn)
             config.write(open("conf/configip.ini", "w", encoding='utf-8-sig'))
 
 

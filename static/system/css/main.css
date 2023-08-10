@@ -17,6 +17,15 @@ div#sum{
     text-align: center;
 }
 
+div#sum1{
+    height: 100px;
+    width: 140px;
+    background-color: #a879c8;
+    margin: 70px 0;
+    border-radius: 8px;
+    text-align: center;
+}
+
 div#free{
     height: 100px;
     width: 140px;
