@@ -507,12 +507,12 @@ def deploy_temp_action(input_id, template_name):
           "',key7id='" + json.dumps(key_set['key7_id']) + "',key8id='" + json.dumps(key_set['key8_id']) + \
           "',key9id='" + json.dumps(key_set['key9_id']) + "',key10id='" + json.dumps(key_set['key10_id']) + \
           "',key11id='" + json.dumps(key_set['key11_id']) + "',key12id='" + json.dumps(
-        key_set['key12_id']) + "' WHERE inputID ='" + input_id + "'"
+        key_set['key12_id']) + "' WHERE INPUTNAME ='" + input_id + "'"
     cursor.execute(sql)
     conn.commit()
     userlogger.info("将配置模板{}应用到输入{}".format(template_name, input_id))
     # 获取终端IP
-    sqlip = "SELECT ip FROM keys_set where inputID='" + input_id + "'"
+    sqlip = "SELECT ip FROM keys_set where INPUTNAME='" + input_id + "'"
     cursor.execute(sqlip)
     ip = cursor.fetchone()
     conn.close()
@@ -722,6 +722,7 @@ def task_save(request):
         status = request.POST['status']
         name = request.POST['name']
         task_set = json.loads(mes)
+        print(task_set)
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
         if status == 'new':
@@ -772,6 +773,7 @@ def task_deploy(request):
         task_info = json.loads(task_info[1])
         for id, temp in task_info.items():
             if temp != '':
+                print(id)
                 deploy_temp_action(id, temp)
         conn.close()
         return JsonResponse({'code': 1, 'msg': 'success'})
@@ -853,11 +855,11 @@ def getconfig(request):
             ip = val[0]
             if data_ip == ip:
                 keyname = json.loads(val[1])
-                m=re.search(r'[0-9]',i[2])
-                if m is None:
-                    return JsonResponse({"method":"registe success"})
-                else:
-                     return JsonResponse({"method": "registe success", "data": {
+                # m=re.search(r'[0-9]',i[2])
+                # if m is None:
+                #     return JsonResponse({"method":"registe success"})
+                # else:
+                return JsonResponse({"method": "registe success", "data": {
                             "preset": [{
                             "channel_in": id,
                             "channel_out": json.loads(val[2]),
@@ -1452,6 +1454,7 @@ def synData(request):
 
 # 更新表KEYS_SET
     name_dict = {}
+    name_dict[' '] = ' '
     sql = "SELECT ID,NAME FROM NJ.CHANNEL_VIEW "
     cursor1.execute(sql)
     name = cursor1.fetchall()
