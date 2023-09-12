@@ -19,7 +19,7 @@ input#id_usrname,input#id_old_password,input#id_new_password{
     width: 80%;
 }
 
-input#id_dns,input#id_user,input#id_password{
+input#id_dns,input#id_user,input#id_password,input#id_model{
     width: 300px;
 }
 

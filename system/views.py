@@ -1105,9 +1105,11 @@ def save_ip(request):
             usr = request.POST.get("user")
             pw = request.POST.get("password")
             dsn = request.POST.get("dns")
+            model = request.POST.get("model")
             config.set('exdatabase','user',usr)
             config.set('exdatabase', 'password', pw)
             config.set('exdatabase', 'dsn', dsn)
+            config.set('exdatabase', 'name', model)
             config.write(open("conf/configip.ini", "w", encoding='utf-8-sig'))
 
 
@@ -1133,9 +1135,10 @@ def save_ip(request):
         usr = config.get('exdatabase', 'user')
         pw = config.get('exdatabase', 'password')
         dns = config.get('exdatabase', 'dsn')
+        model = config.get('exdatabase', 'name')
 
         return render(request, 'system/createip.html', {'form': form, 'tcpstatus': list(json_dict.values()), 'status': 0,'mark':syndatamark,
-                                                        'ip':ip,'port':port,'usr':usr,'pw':pw,'dns':dns})
+                                                        'ip':ip,'port':port,'usr':usr,'pw':pw,'dns':dns,'model':model})
 
 
 # 获取输入设备
@@ -1392,6 +1395,7 @@ def synData(request):
     user = config.get("exdatabase", "user")
     password = config.get("exdatabase", "password")
     dsn = config.get("exdatabase", "dsn")
+    model = config.get("exdatabase", "name")
     try:
         conn1 = STPython.connect(user=user, password=password,dsn=dsn)
     except Exception as e:
@@ -1405,7 +1409,7 @@ def synData(request):
     cursor = conn.cursor()
 
 # 更新表INPUT_SELECT
-    sql = "SELECT ID,NAME FROM NJ.CHANNEL_VIEW WHERE TYPE = 'INPUT'"
+    sql = "SELECT ID,NAME FROM " + model + " WHERE TYPE = 'INPUT'"
     cursor1.execute(sql)
     input = cursor1.fetchall()
     for i in input:
@@ -1429,7 +1433,7 @@ def synData(request):
                 return JsonResponse({'code': 500,'mes':'同步失败'})
 
 # 更新表OUTPUT_LIST
-    sql = "SELECT ID,NAME FROM NJ.CHANNEL_VIEW WHERE TYPE = 'OUTPUT'"
+    sql = "SELECT ID,NAME FROM " + model + " WHERE TYPE = 'OUTPUT'"
     cursor1.execute(sql)
     output = cursor1.fetchall()
     for i in output:
@@ -1455,7 +1459,7 @@ def synData(request):
 # 更新表KEYS_SET
     name_dict = {}
     name_dict[' '] = ' '
-    sql = "SELECT ID,NAME FROM NJ.CHANNEL_VIEW "
+    sql = "SELECT ID,NAME FROM " + model
     cursor1.execute(sql)
     name = cursor1.fetchall()
     for i in name:

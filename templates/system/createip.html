@@ -76,6 +76,13 @@
 
                         </div>
                     </div>
+                    <div class="row sparse">
+                        <div class="left">
+                            {{ form.model.label_tag }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            {{ form.model}}
+
+                        </div>
+                    </div>
                     <input value="data" name="mark" class="none">
 
                     <input type="submit" value="提&nbsp&nbsp交" id="submit" class="btn btn-primary">
@@ -151,6 +158,7 @@ $('#id_description').val('{{ port }}')
 $('#id_user').val('{{ usr }}')
 $('#id_password').val('{{ pw }}')
 $('#id_dns').val('{{ dns }}')
+$('#id_model').val('{{ model }}')
 
     $('button#Syndata').click(function () {
         $('#mode').attr('style','display:block;')

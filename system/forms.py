@@ -65,3 +65,4 @@ class IpForm(forms.Form):
     user = forms.CharField(widget=forms.TextInput(attrs={'class': 'single_line'}), label='USER', required=True)
     password = forms.CharField(widget=forms.TextInput(attrs={'class': 'single_line'}), label='PASSWORD', required=True)
     dns = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '000.000.000.000:00000/XXXXXX', 'class': 'single_line'}), label='DSN', required=True)
+    model = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'XX.XXVIEW', 'class': 'single_line'}),label='MODEL', required=True)
