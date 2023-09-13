@@ -1409,8 +1409,14 @@ def synData(request):
     cursor = conn.cursor()
 
 # 更新表INPUT_SELECT
+
     sql = "SELECT ID,NAME FROM " + model + " WHERE TYPE = 'INPUT'"
-    cursor1.execute(sql)
+    try:
+        cursor1.execute(sql)
+    except Exception as e:
+        syndatamark = 0
+        syslogger.error("数据库模式名错误或视图名错误")
+        return JsonResponse({'code': 500,'mes':'数据库模式名错误或视图名错误'})
     input = cursor1.fetchall()
     for i in input:
         try:
@@ -1434,7 +1440,12 @@ def synData(request):
 
 # 更新表OUTPUT_LIST
     sql = "SELECT ID,NAME FROM " + model + " WHERE TYPE = 'OUTPUT'"
-    cursor1.execute(sql)
+    try:
+        cursor1.execute(sql)
+    except Exception as e:
+        syndatamark = 0
+        syslogger.error("数据库模式名错误或视图名错误")
+        return JsonResponse({'code': 500,'mes':'数据库模式名错误或视图名错误'})
     output = cursor1.fetchall()
     for i in output:
         try:
@@ -1460,7 +1471,12 @@ def synData(request):
     name_dict = {}
     name_dict[' '] = ' '
     sql = "SELECT ID,NAME FROM " + model
-    cursor1.execute(sql)
+    try:
+        cursor1.execute(sql)
+    except Exception as e:
+        syndatamark = 0
+        syslogger.error("数据库模式名错误或视图名错误")
+        return JsonResponse({'code': 500,'mes':'数据库模式名错误或视图名错误'})
     name = cursor1.fetchall()
     for i in name:
         i = list(i)
