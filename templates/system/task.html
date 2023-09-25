@@ -34,8 +34,8 @@
             {% for input in input_list %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td id="input_name_{{ input.1 }}">{{ input.2 }}</td>
-                    <td id="temp_name_{{ input.1 }}"></td>
+                    <td >{{ input.1 }}</td>
+                    <td id="temp_name_{{ input.0 }}"></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -153,6 +153,7 @@
     function openDetail(name, info) {
         $('#myModalLabel').html('任务名称：' + name);
         var temp_list = JSON.parse(info);
+        console.log(info)
         for(var id in temp_list) {
             if(temp_list[id] !== "") {
                 $('#temp_name_' + id).html(temp_list[id])

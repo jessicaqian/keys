@@ -163,18 +163,18 @@ def main(request):
         sql = "SELECT count(*) FROM keys_set"
         cursor.execute(sql)
         num = cursor.fetchone()
-        # print(num)
+
         # 获取已配置列表
         sql = " SELECT inputID,inputName,ip,status FROM keys_set"
         cursor.execute(sql)
         array = cursor.fetchall()
-        # print(array)
+
         for i in array:
             i = list(i)
-            # print(i)
+
             status_dict[i[0]][1] = i[1]
         conn.close()
-        # print(status_dict)
+
         return render(request, 'system/main.html', {'setnum': num[0], 'form': list(status_dict.values())})
 
 
@@ -426,6 +426,13 @@ def template(request):
         cursor.execute(sql)
         input_list = cursor.fetchall()
     conn.close()
+    form_template = list(form_template)
+    for i in range(0,len(form_template)):
+
+        form_template[i] = list(form_template[i])
+        for j in range(1,13):
+            form_template[i][j] = json.loads(form_template[i][j])
+
     return render(request, 'system/template.html', {'form': form_template, 'input_list': input_list})
 
 
@@ -460,13 +467,11 @@ def deploy_temp_action(input_id, template_name):
     key_set = {}
     conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
     cursor = conn.cursor()
-    sql = "SELECT * FROM key_set WHERE NAME = '" + template_name + "'"
-
     sql = "SELECT * FROM TEMPLATE WHERE NAME = '" + template_name + "'"
     cursor.execute(sql)
     conn.commit()
     temp = cursor.fetchall()[0]
-    test = temp[13]
+
     key_set["key_name"] = temp[13]
     template = temp[1:13]
     for index, key in enumerate(template):
@@ -475,12 +480,20 @@ def deploy_temp_action(input_id, template_name):
         key_set["key" + keyid + "_id"] = []
         name_list = []
         id_list = []
-        key_config = key.replace('[', '').replace(']', '').replace(' ', '').replace('"', '').split(',')
+        key_config = json.loads(key)
+
         for index, output_name in enumerate(key_config):
+
+
+
             if output_name != '':
                 sql = "SELECT ID FROM OUTPUT_LIST WHERE NAME = '" + output_name + "'"
                 cursor.execute(sql)
-                output_id = cursor.fetchall()[0][0]
+                output_id1 = cursor.fetchall()
+
+                output_id = output_id1[0][0]
+
+
                 name_list.append(output_name)
                 id_list.append(str(output_id))
             else:
@@ -507,12 +520,12 @@ def deploy_temp_action(input_id, template_name):
           "',key7id='" + json.dumps(key_set['key7_id']) + "',key8id='" + json.dumps(key_set['key8_id']) + \
           "',key9id='" + json.dumps(key_set['key9_id']) + "',key10id='" + json.dumps(key_set['key10_id']) + \
           "',key11id='" + json.dumps(key_set['key11_id']) + "',key12id='" + json.dumps(
-        key_set['key12_id']) + "' WHERE INPUTNAME ='" + input_id + "'"
+        key_set['key12_id']) + "' WHERE INPUTID ='" + input_id + "'"
     cursor.execute(sql)
     conn.commit()
     userlogger.info("将配置模板{}应用到输入{}".format(template_name, input_id))
     # 获取终端IP
-    sqlip = "SELECT ip FROM keys_set where INPUTNAME='" + input_id + "'"
+    sqlip = "SELECT ip FROM keys_set where INPUTID='" + input_id + "'"
     cursor.execute(sqlip)
     ip = cursor.fetchone()
     conn.close()
@@ -620,7 +633,7 @@ def save_temp(request):
             conn.close()
             userlogger.info("保存按键配置模板[新增]： " + tem_set['name'])
         elif status == 'edit':
-            print(tem_set)
+
             if tem_set['name'] == tem_set['old_name']:
                 sql = "UPDATE template SET keyname='" + json.dumps(tem_set['key_name'], ensure_ascii=False) + "', key1='" + json.dumps(tem_set['key1'], ensure_ascii=False) + "',key2='"\
                   + json.dumps(tem_set['key2'], ensure_ascii=False) + "',key3='"+ json.dumps(tem_set['key3'], ensure_ascii=False)+"',key4='"\
@@ -666,6 +679,10 @@ def get_temp_detail(request):
         cursor.execute(sql)
         temp = cursor.fetchone()
         conn.close()
+        temp = list(temp)
+        for i in range(1,13):
+            temp[i] = json.loads(temp[i])
+
         return JsonResponse({'code': 1, 'msg': 'success', 'temp': temp})
 
 
@@ -721,10 +738,12 @@ def task_save(request):
         mes = request.POST['mes']
         status = request.POST['status']
         name = request.POST['name']
-        task_set = json.loads(mes)
-        print(task_set)
+
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
+        task_set = eval(mes)
+
+
         if status == 'new':
             sql = "SELECT * FROM task WHERE name = '" + name + "'"
             cursor.execute(sql)
@@ -773,7 +792,6 @@ def task_deploy(request):
         task_info = json.loads(task_info[1])
         for id, temp in task_info.items():
             if temp != '':
-                print(id)
                 deploy_temp_action(id, temp)
         conn.close()
         return JsonResponse({'code': 1, 'msg': 'success'})
@@ -1488,7 +1506,7 @@ def synData(request):
     keyset = cursor.fetchall()
     for i in keyset:
         sql = "UPDATE KEYS_SET SET INPUTNAME = '" + name_dict[i[0]] + "'  WHERE INPUTID = '" + i[0] + "'"
-        print(sql)
+
         cursor.execute(sql)
         j = 1
         while j <13:
@@ -1499,12 +1517,37 @@ def synData(request):
                 newname.append(name_dict[k])
             namedata = json.dumps(newname)
             sql = "UPDATE KEYS_SET SET KEY" + str(j)+" = '" + namedata + "'  WHERE INPUTID = '" + i[0] + "'"
-            print(sql)
+
             cursor.execute(sql)
             conn.commit()
             j = j + 1
 
 # 更新表TEMPLATE
+    sql = "SELECT NAME,KEY1ID,KEY2ID,KEY3ID,KEY4ID,KEY5ID,KEY6ID,KEY7ID,KEY8ID,KEY9ID,KEY10ID,KEY11ID,KEY12ID FROM TEMPLATE"
+    cursor.execute(sql)
+    conn.commit()
+    template = cursor.fetchall()
+    for i in template:
+
+        for j in range(1,13):
+            val = json.loads(i[j])
+            newname = []
+
+            for k in val:
+                newname.append(name_dict[k])
+
+            namedata = json.dumps(newname)
+
+
+            sql = "UPDATE TEMPLATE SET KEY" + str(j) + " = '" + namedata + "'  WHERE NAME = '" + i[0] + "'"
+
+
+
+            cursor.execute(sql)
+            conn.commit()
+
+
+# 更新表TASK
 
     conn.close()
     conn1.close()
