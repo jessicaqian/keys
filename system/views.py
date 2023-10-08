@@ -266,7 +266,7 @@ def config(request):
                 else:
                     status_dict[info_dict['id']] = [info_dict['id'], info_dict['name'], info_dict['ip'], 'off']
                     conn.commit()
-                    sql = "SELECT key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12,keyname FROM keys_set WHERE inputID='"+info_dict['id']+"'"
+                    sql = "SELECT key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12,keyname,key1id,key2id,key3id,key4id,key5id,key6id,key7id,key8id,key9id,key10id,key11id,key12id FROM keys_set WHERE inputID='"+info_dict['id']+"'"
                     cursor.execute(sql)
                     val = cursor.fetchone()
                     key1 = json.loads(val[0])
@@ -282,13 +282,27 @@ def config(request):
                     key11 = json.loads(val[10])
                     key12 = json.loads(val[11])
                     key_name_list = list(json.loads(val[12]).values())
+                    key1id = json.loads(val[13])
+                    key2id = json.loads(val[14])
+                    key3id = json.loads(val[15])
+                    key4id = json.loads(val[16])
+                    key5id = json.loads(val[17])
+                    key6id = json.loads(val[18])
+                    key7id = json.loads(val[19])
+                    key8id = json.loads(val[20])
+                    key9id = json.loads(val[21])
+                    key10id = json.loads(val[22])
+                    key11id = json.loads(val[23])
+                    key12id = json.loads(val[24])
                     conn.close()
                     userlogger.info("编辑按键配置： " + info_dict['name'])
                     return render(request, 'system/keyconfig.html',
                                   {'dict': info_dict, 'output_name': output_name, 'form_template': form_template,
                                    'key_list': key_list, 'key_name_list': key_name_list,
                                    'key1': key1, 'key2': key2, 'key3': key3, 'key4': key4, 'key5': key5, 'key6': key6,
-                                   'key7': key7, 'key8': key8, 'key9': key9, 'key10': key10, 'key11': key11, 'key12': key12})
+                                   'key7': key7, 'key8': key8, 'key9': key9, 'key10': key10, 'key11': key11, 'key12': key12,
+                                   'key1id': key1id, 'key2id': key2id, 'key3id': key3id, 'key4id': key4id, 'key5id': key5id, 'key6id': key6id,
+                                   'key7id': key7id, 'key8id': key8id, 'key9id': key9id, 'key10id': key10id, 'key11id': key11id, 'key12id': key12id})
     else:
         form = ConfigForm()
         id = request.GET.get('id', default='10000000')
@@ -394,18 +408,18 @@ def loadtemp(request):
         cursor.execute(sql)
         val = cursor.fetchone()
         key_name_list = list(json.loads(val[13]).values())
-        key1 = json.loads(val[1])
-        key2 = json.loads(val[2])
-        key3 = json.loads(val[3])
-        key4 = json.loads(val[4])
-        key5 = json.loads(val[5])
-        key6 = json.loads(val[6])
-        key7 = json.loads(val[7])
-        key8 = json.loads(val[8])
-        key9 = json.loads(val[9])
-        key10 = json.loads(val[10])
-        key11 = json.loads(val[11])
-        key12 = json.loads(val[12])
+        key1 = json.loads(val[14])
+        key2 = json.loads(val[15])
+        key3 = json.loads(val[16])
+        key4 = json.loads(val[17])
+        key5 = json.loads(val[18])
+        key6 = json.loads(val[19])
+        key7 = json.loads(val[20])
+        key8 = json.loads(val[21])
+        key9 = json.loads(val[22])
+        key10 = json.loads(val[23])
+        key11 = json.loads(val[24])
+        key12 = json.loads(val[25])
         conn.close()
         userlogger.info("加载配置模板： " + name)
         return JsonResponse({'key_name_list': key_name_list, 'key1': key1, 'key2': key2, 'key3': key3, 'key4': key4, 'key5': key5, 'key6': key6,
@@ -568,6 +582,19 @@ def temp_action(request):
             key11 = json.loads(val[11])
             key12 = json.loads(val[12])
             key_name_list = list(json.loads(val[13]).values())
+            key1id = json.loads(val[14])
+            key2id = json.loads(val[15])
+            key3id = json.loads(val[16])
+            key4id = json.loads(val[17])
+            key5id = json.loads(val[18])
+            key6id = json.loads(val[19])
+            key7id = json.loads(val[20])
+            key8id = json.loads(val[21])
+            key9id = json.loads(val[22])
+            key10id = json.loads(val[23])
+            key11id = json.loads(val[24])
+            key12id = json.loads(val[25])
+
             sql = " SELECT NAME,ID FROM output_list "
             cursor.execute(sql)
             form = cursor.fetchall()
@@ -575,7 +602,10 @@ def temp_action(request):
             return render(request, 'system/edittemp.html', {'name': temp_name, 'key_list': key_list, 'key_name_list': key_name_list, 'output_name': form,
                                                             'key1': key1, 'key2': key2, 'key3': key3, 'key4': key4,
                                                             'key5': key5, 'key6': key6, 'key7': key7, 'key8': key8,
-                                                            'key9': key9, 'key10': key10, 'key11': key11, 'key12': key12})
+                                                            'key9': key9, 'key10': key10, 'key11': key11, 'key12': key12,
+                                                            'key1id': key1id, 'key2id': key2id, 'key3id': key3id, 'key4id': key4id,
+                                                            'key5id': key5id, 'key6id': key6id,'key7id': key7id, 'key8id': key8id,
+                                                            'key9id': key9id, 'key10id': key10id, 'key11id': key11id, 'key12id': key12id})
 
 
 #删除模板

@@ -54,6 +54,7 @@
                 <table class="table table-hover table-condensed table-striped" id="configed_table">
                     <colgroup>
                         <col style="width: 40px">
+                        <col style="width: 80px">
                         <col/>
                         <col style="width: 25%">
                         <col style="width: 25%">
@@ -61,7 +62,9 @@
                     <thead>
                     <tr>
                         <th>序号</th>
+                        <th>输入设备ID</th>
                         <th>输入设备描述</th>
+
                         <th>多按键设备IP</th>
                         <th>设备在线状态</th>
                     </tr>
@@ -72,6 +75,7 @@
                 <table class="table table-hover table-condensed table-striped" id="table_body">
                     <colgroup>
                         <col style="width: 40px">
+                        <col style="width: 80px">
                         <col/>
                         <col style="width: 25%">
                         <col style="width: 25%">
@@ -80,6 +84,7 @@
                     {% for form in form %}
                         <tr id="id{{ forloop.counter }}">
                             <td>{{ forloop.counter }}</td>
+                            <td>{{ form.0 }}</td>
                             <td id="name_{{ forloop.counter }}">{{ form.1 }}</td>
                             <td id="ip{{ forloop.counter }}">{{ form.2 }}</td>
                             <td><a class=" status" id="{{ forloop.counter }}" name="{{ form.3 }}"></a></td>

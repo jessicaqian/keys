@@ -55,7 +55,7 @@
                 <tr id="output_{{ forloop.counter }}">
                     <td id="output_name_{{ forloop.counter }}">{{ name.0 }}</td>
                     {% for num in key_list %}
-                        <td><input id="config_{{ name.1 }}_{{ num }}" type="checkbox" value="{{ name.0 }}" onchange="clickCheckbox($(this), $(this).prop('checked'))" /></td>
+                        <td><input id="config_{{ name.1 }}_{{ num }}" type="checkbox" value="{{ name.0 }}" name="{{ name.1 }}" onchange="clickCheckbox($(this), $(this).prop('checked'))" /></td>
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -84,41 +84,41 @@
 {% block js %}
 <script type="text/javascript">
 
-    {% for key in key1 %}
-        $('input[id^="config_"][id$="_1"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key1id %}
+        $('input[id^="config_"][id$="_1"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
-    {% for key in key2 %}
-        $('input[id^="config_"][id$="_2"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key2id %}
+        $('input[id^="config_"][id$="_2"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
-    {% for key in key3 %}
-        $('input[id^="config_"][id$="_3"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key3id %}
+        $('input[id^="config_"][id$="_3"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
-    {% for key in key4 %}
-        $('input[id^="config_"][id$="_4"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key4id %}
+        $('input[id^="config_"][id$="_4"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
-    {% for key in key5 %}
-        $('input[id^="config_"][id$="_5"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key5id %}
+        $('input[id^="config_"][id$="_5"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
-    {% for key in key6 %}
-        $('input[id^="config_"][id$="_6"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key6id %}
+        $('input[id^="config_"][id$="_6"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
-    {% for key in key7 %}
-        $('input[id^="config_"][id$="_7"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key7id %}
+        $('input[id^="config_"][id$="_7"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
-    {% for key in key8 %}
-        $('input[id^="config_"][id$="_8"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key8id %}
+        $('input[id^="config_"][id$="_8"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
-    {% for key in key9 %}
-        $('input[id^="config_"][id$="_9"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key9id %}
+        $('input[id^="config_"][id$="_9"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
-    {% for key in key10 %}
-        $('input[id^="config_"][id$="_10"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key10id %}
+        $('input[id^="config_"][id$="_10"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
-    {% for key in key11 %}
-        $('input[id^="config_"][id$="_11"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key11id %}
+        $('input[id^="config_"][id$="_11"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
-    {% for key in key12 %}
-        $('input[id^="config_"][id$="_12"][value="{{ key }}"]').attr("checked","checked")
+    {% for key in key12id %}
+        $('input[id^="config_"][id$="_12"][name="{{ key }}"]').attr("checked","checked")
     {% endfor %}
 
     var name_set = {"1": "", "2": "", "3": "", "4": "", "5": "", "6": "",
