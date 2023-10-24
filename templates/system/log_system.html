@@ -16,6 +16,9 @@
             <button class="btn btn-primary" id="search_button">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索
             </button>
+            <button class="btn btn-primary" id="updata">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 刷新
+            </button>
             <a class="btn btn-primary" id="download_button" href="sysLogDownload">
                 <span class="glyphicon glyphicon-download" aria-hidden="true"></span> 下载全部日志
             </a>
@@ -40,6 +43,7 @@
 
         $('#search_button').click(function () {
             searchstr = $('#search_info').val();
+            updateLog();
         });
 
         function updateLog() {
@@ -49,6 +53,9 @@
             });
         }
         updateLog();
-        setInterval(updateLog, 2000)
+//        setInterval(updateLog, 2000)ssss
+        $('button#updata').click(function () {
+            updateLog()
+        });
     </script>
 {% endblock %}
