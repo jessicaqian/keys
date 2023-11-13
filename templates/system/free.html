@@ -25,11 +25,12 @@
         <div id="table_box">
             <table class="table table-hover table-condensed table-striped" id="free_table">
                 <colgroup>
-                    <col style="width: 40px"><col style="width: 70%"><col style="width: 100px">
+                    <col style="width: 40px"><col style="width: 70px"><col style="width: 70%"><col style="width: 100px">
                 </colgroup>
                 <thead>
                     <tr>
                         <th>序号</th>
+                        <th>输入设备ID</th>
                         <th>名称</th>
                         <th class="download">绑定多按键设备</th>
                     </tr>
@@ -39,12 +40,13 @@
         <div id="free_table_box">
             <table class="table table-hover table-condensed table-striped" id="free_table_body">
                 <colgroup>
-                    <col style="width: 40px"><col style="width: 70%"><col style="width: 100px">
+                    <col style="width: 40px"><col style="width: 70px"><col style="width: 70%"><col style="width: 100px">
                 </colgroup>
                 <tbody >
                 {% for form in form %}
                     <tr id="id{{ forloop.counter }}">
                         <td>{{ forloop.counter }}</td>
+                        <td>{{ form.0 }}</td>
                         <td id="name_{{ forloop.counter }}">{{ form.1 }}</td>
                         <td class="download">
                             <a class="btn config" href="/system/config.html?id={{ form.0 }}&name={{ form.1 }}&status=new">
