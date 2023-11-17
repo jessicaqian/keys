@@ -1017,7 +1017,7 @@ def connect_status(request):
         ip = data['ip']
         conn = STPython.connect(user=database['default']['NAME'], password=database['default']['PASSWD'], dsn=database['default']['DSN'])
         cursor = conn.cursor()
-        sql = " SELECT inputID FROM keys_set WHERE ip='" + ip + "'"
+        sql = " SELECT inputID,inputName FROM keys_set WHERE ip='" + ip + "'"
         cursor.execute(sql)
         val = cursor.fetchone()
         if val == None:
@@ -1027,10 +1027,14 @@ def connect_status(request):
             conn.close()
             if method == 'client connect':
                 status_val = status_dict[str(id)]
+                if status_val[3] == 'off':
+                    syslogger.info('名为'+val[1]+',ID为'+id+'的设备上线。')
                 status_val[3] = 'on'
                 status_dict[str(id)] = status_val
             elif method == 'client disconnect':
                 status_val = status_dict[str(id)]
+                if status_val[3] == 'on':
+                    syslogger.info('名为'+val[1]+',ID为'+id+'的设备下线。')
                 status_val[3] = 'off'
                 status_dict[str(id)] = status_val
             else:
